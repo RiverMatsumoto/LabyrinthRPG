@@ -1,25 +1,25 @@
-[gd_scene load_steps=2 format=3 uid="uid://c4s8l5dmdr1u5"]
+[gd_scene load_steps=2 format=3 uid="uid://cvjrptcamfpq4"]
 
-[ext_resource type="Script" path="res://src/menu_scripts/SkillMenu.cs" id="1_ncd4r"]
+[ext_resource type="Script" path="res://src/menu_scripts/ItemMenu.cs" id="1_c65jw"]
 
-[node name="SkillMenu" type="Control"]
+[node name="ItemMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_ncd4r")
+script = ExtResource("1_c65jw")
 
 [node name="BackButton" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.021
-anchor_top = 0.03
+anchor_left = 0.022
+anchor_top = 0.035
 anchor_right = 0.119
 anchor_bottom = 0.109
-offset_left = -0.320004
-offset_top = -0.400002
+offset_left = -0.240002
+offset_top = 0.200001
 offset_right = 0.519989
 offset_bottom = 0.280006
 grow_horizontal = 2

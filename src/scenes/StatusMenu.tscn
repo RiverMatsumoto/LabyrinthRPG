@@ -1,0 +1,102 @@
+[gd_scene load_steps=2 format=3 uid="uid://dgi8bkbxg7c40"]
+
+[ext_resource type="Script" path="res://src/scenes/StatusMenu.cs" id="1_i5qn6"]
+
+[node name="StatusMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_i5qn6")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Stats" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Name" type="Label" parent="Stats"]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 258.0
+offset_right = 301.0
+offset_bottom = 330.0
+theme_override_font_sizes/font_size = 50
+text = "None"
+
+[node name="HPLabel" type="Label" parent="Stats"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 131.0
+offset_top = 332.0
+offset_right = -1674.0
+offset_bottom = -690.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+text = "HP:"
+
+[node name="HP" type="Label" parent="Stats"]
+layout_mode = 0
+offset_left = 248.0
+offset_top = 332.0
+offset_right = 386.0
+offset_bottom = 390.0
+theme_override_font_sizes/font_size = 40
+text = "-1"
+
+[node name="TPLabel" type="Label" parent="Stats"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 131.0
+offset_top = 400.0
+offset_right = -1723.0
+offset_bottom = -608.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+text = "TP:"
+
+[node name="TP" type="Label" parent="Stats"]
+layout_mode = 0
+offset_left = 248.0
+offset_top = 400.0
+offset_right = 386.0
+offset_bottom = 458.0
+theme_override_font_sizes/font_size = 40
+text = "-1"
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.021
+anchor_top = 0.032
+anchor_right = 0.119
+anchor_bottom = 0.109
+offset_left = 0.679996
+offset_top = 0.439999
+offset_right = 0.519989
+offset_bottom = 0.280006
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 30
+text = "Back
+"
+
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]

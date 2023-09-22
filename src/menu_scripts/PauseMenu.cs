@@ -1,4 +1,3 @@
-using System.Security.AccessControl;
 using Godot;
 
 public partial class PauseMenu : Control
@@ -20,25 +19,29 @@ public partial class PauseMenu : Control
 	public override void _Input(InputEvent @event)
 	{
 		if (@event.IsActionPressed("Menu"))
-		{
 			if (Game.State == GameState.Labyrinth || Game.State == GameState.Town)
-			{
-				Game.State = GameState.PauseMenu;
-				Visible = true;
-			}
+				OpenMenu();
 			else if (Game.State == GameState.PauseMenu)
-			{
-				if (subMenuOpened)
-				{ 
-					openSubMenu.Disconnect("tree_exited", 
-						new Callable(this, "_SubMenuClosed"));
-					subMenuOpened = false;
-					openSubMenu.QueueFree();
-				}
-				Visible = false;
-				Game.State = GameState.Labyrinth;
-			}
-		}
+				CloseMenu();
+	}
+
+	public void OpenMenu()
+	{
+		 Game.State = GameState.PauseMenu;
+		 Visible = true;
+	}
+	
+	public void CloseMenu()
+	{
+		 if (subMenuOpened)
+		 { 
+			   openSubMenu.Disconnect("tree_exited", 
+					new Callable(this, "_SubMenuClosed"));
+			   subMenuOpened = false;
+			   openSubMenu.QueueFree();
+		 }
+		 Visible = false;
+		 Game.State = GameState.Labyrinth;
 	}
 
 	public void OpenSubMenu(string subMenuPath)
@@ -60,15 +63,11 @@ public partial class PauseMenu : Control
 		subMenuOpened = false;
 	}
 
-	public void _on_item_pressed()
-	{
-		GD.Print("Item pressed");
-	}
+	public void _on_item_pressed() => OpenSubMenu("res://src/scenes/ItemMenu.tscn");
 
-	public void _on_skill_pressed()
-	{
-		OpenSubMenu("res://src/scenes/SkillMenu.tscn");
-	}
+	public void _on_skill_pressed() => OpenSubMenu("res://src/scenes/SkillMenu.tscn");
+
+	public void _on_status_pressed() => OpenSubMenu("res://src/scenes/StatusMenu.tscn");
 
 	public void _on_visibility_changed()
 	{
@@ -79,5 +78,10 @@ public partial class PauseMenu : Control
 		// Tween tween = CreateTween();
 		// tween.TweenProperty(this, "position", Vector2.Zero, 0.01f)
 		// 	.SetTrans(Tween.TransitionType.Sine).SetEase(Tween.EaseType.Out);
+	}
+
+	public void _on_back_button_pressed()
+	{
+		CloseMenu();
 	}
 }

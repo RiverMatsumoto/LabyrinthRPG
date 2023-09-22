@@ -18,6 +18,7 @@ config/icon="res://src/icon.svg"
 [autoload]
 
 Settings="*res://src/Settings.cs"
+Game="*res://src/Game.cs"
 
 [display]
 

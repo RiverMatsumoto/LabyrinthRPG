@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://4s1i17gso80f"]
 
-[ext_resource type="Script" path="res://src/PauseMenu.cs" id="1_nkrol"]
+[ext_resource type="Script" path="res://src/menu_scripts/PauseMenu.cs" id="1_lthlp"]
 
 [sub_resource type="SystemFont" id="SystemFont_hea54"]
 subpixel_positioning = 0
@@ -11,6 +11,7 @@ default_font_size = 40
 
 [node name="PauseMenu" type="Control"]
 layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -19,7 +20,7 @@ pivot_offset = Vector2(0, -3)
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme = SubResource("Theme_ktmhr")
-script = ExtResource("1_nkrol")
+script = ExtResource("1_lthlp")
 metadata/_edit_use_anchors_ = true
 
 [node name="Panel" type="Panel" parent="."]
@@ -49,10 +50,9 @@ text = "Item"
 layout_mode = 2
 text = "Skill"
 
-[node name="X" type="Button" parent="VBoxContainer"]
+[node name="Status" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-text = "Item
-"
+text = "Status"
 
 [node name="X1" type="Button" parent="VBoxContainer"]
 layout_mode = 2
@@ -64,6 +64,25 @@ layout_mode = 2
 text = "Item
 "
 
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.055
+anchor_top = 0.063
+anchor_right = 0.119
+anchor_bottom = 0.109
+offset_left = 0.399994
+offset_top = -0.0400009
+offset_right = 0.519989
+offset_bottom = 0.279991
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 30
+text = "Back
+"
+
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="pressed" from="VBoxContainer/Item" to="." method="_on_item_pressed"]
 [connection signal="pressed" from="VBoxContainer/Skill" to="." method="_on_skill_pressed"]
+[connection signal="pressed" from="VBoxContainer/Status" to="." method="_on_status_pressed"]
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]

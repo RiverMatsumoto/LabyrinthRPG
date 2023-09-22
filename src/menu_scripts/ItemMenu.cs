@@ -1,6 +1,6 @@
 using Godot;
 
-public partial class SkillMenu : Control
+public partial class ItemMenu : Node
 {
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -11,10 +11,9 @@ public partial class SkillMenu : Control
 	public override void _Process(double delta)
 	{
 	}
-
-	public void CloseSkillMenu()
+	
+	public void _on_back_button_pressed()
 	{
-		// delete this node
 		QueueFree();
 	}
 }

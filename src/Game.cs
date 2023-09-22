@@ -1,11 +1,17 @@
 using Godot;
+using Godot.NativeInterop;
 
 public partial class Game : Node
 {
     public static GameState State { get; set; }
+    public Party CurrentParty { get; set; }
 
     public override void _Ready()
     {
+        CurrentParty = new Party();
+        CurrentParty.AddToFrontRow(new Character());
+        CurrentParty.AddToFrontRow(new Character());
+        CurrentParty.AddToBackRow(new Character());
         State = GameState.Labyrinth;
     }
 }
