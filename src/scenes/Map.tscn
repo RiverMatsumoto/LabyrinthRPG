@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://dtiy8yayysdb8"]
+
+[ext_resource type="Script" path="res://src/Player.cs" id="1_kd05e"]
+[ext_resource type="PackedScene" uid="uid://4s1i17gso80f" path="res://src/scenes/PauseMenu.tscn" id="2_w1dgk"]
+
+[node name="MapScene" type="Node3D"]
+
+[node name="Player" type="Node3D" parent="."]
+script = ExtResource("1_kd05e")
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="Player"]
+
+[node name="Camera3D" type="Camera3D" parent="Player"]
+transform = Transform3D(-4.37114e-08, 0.34325, -0.939244, 0, 0.939244, 0.34325, 1, 1.50039e-08, -4.10557e-08, -1.58019, 0.93464, 0.0722826)
+fov = 100.7
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="."]
+transform = Transform3D(15.3981, 0, 0, 0, 1, 0, 0, 0, 7.23734, -6.52762, -2.68983, 3.60155)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.631001, 0.775782, 0, -0.775782, 0.631001, 0, 3.75777, 0)
+
+[node name="PauseMenu" parent="." instance=ExtResource("2_w1dgk")]
+anchors_preset = 15

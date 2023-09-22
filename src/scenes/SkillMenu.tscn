@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=3 uid="uid://c4s8l5dmdr1u5"]
+
+[ext_resource type="Script" path="res://src/SkillMenu.cs" id="1_n7v15"]
+
+[node name="SkillMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_n7v15")
+
+[node name="Back" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.074
+anchor_top = 0.076
+anchor_right = 0.159
+anchor_bottom = 0.164
+offset_left = -0.0800018
+offset_top = -0.0800018
+offset_right = -0.280029
+offset_bottom = -0.12001
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+text = "Back"
+
+[connection signal="pressed" from="Back" to="." method="CloseSkillMenu"]
