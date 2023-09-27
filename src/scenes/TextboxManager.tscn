@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://dtq2f6bnt12my"]
+
+[ext_resource type="Script" path="res://src/TextboxManager.cs" id="1_6huhw"]
+[ext_resource type="PackedScene" uid="uid://c7n88tqx78we7" path="res://src/scenes/Textbox.tscn" id="1_u4080"]
+
+[node name="TextboxManager" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6huhw")
+
+[node name="TextboxScene" parent="." instance=ExtResource("1_u4080")]
+layout_mode = 1

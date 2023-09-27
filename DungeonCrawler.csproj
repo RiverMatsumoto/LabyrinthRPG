@@ -9,16 +9,16 @@
     </DefaultItemExcludes>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="addons\dialogueeditor\dialogueeditor.gd" />
+    <Content Include="addons\dialogueeditor\plugin.cfg" />
     <Content Include="data\settings.json" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="addons\csharpConsole\**" />
-    <Compile Remove="addons\**" />
     <Compile Remove="DungeonCrawlerTests\**" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Remove="addons\csharpConsole\**" />
-    <EmbeddedResource Remove="addons\**" />
     <EmbeddedResource Remove="DungeonCrawlerTests\**" />
   </ItemGroup>
   <ItemGroup>
@@ -29,6 +29,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="data\dialogues\" />
     <Folder Include="src\scenes\" />
   </ItemGroup>
 </Project>

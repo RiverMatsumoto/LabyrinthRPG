@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://1jxe57ixjf3x"]
+
+[ext_resource type="BoxMesh" uid="uid://g7e1skl0fb7" path="res://resources/new_box_mesh.tres" id="1_3t7xx"]
+[ext_resource type="CylinderMesh" uid="uid://by4byr1037f6d" path="res://resources/new_cylinder_mesh.tres" id="2_d4niy"]
+
+[node name="GridMeshes" type="Node3D"]
+
+[node name="NewBoxMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+mesh = ExtResource("1_3t7xx")
+
+[node name="NewCylinderMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+mesh = ExtResource("2_d4niy")

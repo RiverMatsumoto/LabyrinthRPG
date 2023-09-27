@@ -1,0 +1,4 @@
+[gd_scene format=3 uid="uid://2bmcu7tofkwc"]
+
+[node name="ChoiceButtonContainer" type="HBoxContainer"]
+size_flags_vertical = 3
