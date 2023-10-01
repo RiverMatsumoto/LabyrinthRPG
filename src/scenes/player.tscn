@@ -3,10 +3,11 @@
 [ext_resource type="Script" path="res://src/Player.cs" id="1_448oe"]
 
 [node name="Player" type="Node3D"]
+process_mode = 1
 script = ExtResource("1_448oe")
 
 [node name="CSGSphere3D" type="CSGSphere3D" parent="."]
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0.34325, -0.939244, 0, 0.939244, 0.34325, 1, 1.50039e-08, -4.10557e-08, -1.58019, 0.93464, 0.0722826)
+transform = Transform3D(-4.37114e-08, -0.0348995, -0.999391, 0, 0.999391, -0.0348995, 1, -1.52551e-09, -4.36848e-08, 0, 0, 0)
 fov = 100.7

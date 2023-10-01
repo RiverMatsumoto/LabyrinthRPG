@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://bauc1kpri8vsu"]
+
+[ext_resource type="Texture2D" uid="uid://cusqubahm73gm" path="res://resources/sprites/grass.png" id="1_841k4"]
+
+[resource]
+albedo_texture = ExtResource("1_841k4")
+metallic_specular = 0.26
+roughness = 0.41
+uv1_scale = Vector3(10, 10, 10)
+uv1_triplanar_sharpness = 0.255045
+texture_filter = 0

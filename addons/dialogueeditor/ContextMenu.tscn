@@ -1,0 +1,29 @@
+[gd_scene load_steps=2 format=3 uid="uid://cx8ybdpdebq1c"]
+
+[ext_resource type="Script" path="res://addons/dialogueeditor/ContextMenu.gd" id="1_2vqqb"]
+
+[node name="Panel" type="Panel"]
+offset_left = -98.0
+offset_top = -89.0
+offset_right = 91.0
+offset_bottom = 77.0
+
+[node name="Buttons" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2vqqb")
+
+[node name="CreateTextNode" type="Button" parent="Buttons"]
+layout_mode = 2
+text = "Add Text Node"
+
+[node name="AddChoiceNode" type="Button" parent="Buttons"]
+layout_mode = 2
+text = "Add Choice Node"
+
+[connection signal="pressed" from="Buttons/CreateTextNode" to="Buttons" method="_on_create_text_node_pressed"]
+[connection signal="pressed" from="Buttons/AddChoiceNode" to="Buttons" method="_on_add_choice_node_pressed"]

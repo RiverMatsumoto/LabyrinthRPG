@@ -1,16 +1,44 @@
-[gd_scene load_steps=3 format=3 uid="uid://dtq2f6bnt12my"]
+[gd_scene load_steps=2 format=3 uid="uid://c7n88tqx78we7"]
 
-[ext_resource type="Script" path="res://src/TextboxManager.cs" id="1_6huhw"]
-[ext_resource type="PackedScene" uid="uid://c7n88tqx78we7" path="res://src/scenes/Textbox.tscn" id="1_u4080"]
+[ext_resource type="Script" path="res://src/TextboxManager.cs" id="1_xrmsa"]
 
 [node name="TextboxManager" type="Control"]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 64.0
+offset_top = 791.0
+offset_right = -63.0
+offset_bottom = -56.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_6huhw")
+script = ExtResource("1_xrmsa")
 
-[node name="TextboxScene" parent="." instance=ExtResource("1_u4080")]
-layout_mode = 1
+[node name="Background" type="Panel" parent="."]
+layout_mode = 2
+offset_left = -13.0
+offset_right = 1795.0
+offset_bottom = 233.0
+
+[node name="TextboxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_top = 16.0
+offset_right = 1771.0
+offset_bottom = 215.0
+
+[node name="Textbox" type="RichTextLabel" parent="TextboxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 36
+theme_override_font_sizes/bold_font_size = 36
+theme_override_font_sizes/italics_font_size = 36
+theme_override_font_sizes/bold_italics_font_size = 36
+theme_override_font_sizes/mono_font_size = 36
+text = "Hello"
+scroll_active = false
+visible_characters = 5
+
+[node name="ChoiceButtonContainer" type="HBoxContainer" parent="TextboxContainer"]
+layout_mode = 2

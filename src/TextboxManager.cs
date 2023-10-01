@@ -1,68 +1,78 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Godot;
-using MEC;
 
 public partial class TextboxManager : Control
 {
-    [Signal]
-    public delegate void DialogueStartedEventHandler();
-    [Signal]
-    public delegate void DialogueFinishedEventHandler();
+    [Signal] public delegate void DialogueStartedEventHandler();
+    [Signal] public delegate void DialogueFinishedEventHandler();
 
-    private Control textboxNode;
+    [Signal] public delegate void DialogueClosedEventHandler();
+
+    private VBoxContainer textboxContainer;
     private RichTextLabel textbox;
     private DialogueNode currNode;
-    private bool printAllTextFlag;
-    private const string TextboxContainer = "./VBoxContainer";
-    private const string ChoiceButtonContainer = "./VBoxContainer/ChoiceButtonContainer";
-    private const string ChoiceButtonContainerPath = "res://src/scenes/ChoiceButtonContainer.tscn";
-    private const string ChoiceButtonPath = "res://src/scenes/ChoiceButton.tscn";
-    private const double TextboxTimeout = 0.1;
+    private HBoxContainer choiceButtonContainerNode;
+    
+    public const string ChoiceButtonPath = "res://src/scenes/ChoiceButton.tscn";
+    public const double TextboxTimeout = 0.1;
     private double textboxTimer;
-    private bool CanInteract => textboxTimer > TextboxTimeout;
+    private bool FinishedTextboxCooldown => textboxTimer > TextboxTimeout;
+    private void StartTextboxCooldown() => textboxTimer = 0;
+    private bool IsTextDisplayed => textbox.VisibleCharacters >= textbox.GetTotalCharacterCount();
+    private bool CurrentlyDisplayingChoices => choiceButtonContainerNode.SizeFlagsVertical.HasFlag(SizeFlags.ExpandFill);
     private Callable displayChoicesHook;
+    private double timePerCharacter = 0.01;
+    private double textboxInterpolation;
+    private int prevVisibleCharacters;
 
     public override void _Ready()
     {
         textboxTimer = 0;
-        printAllTextFlag = false;
-        textboxNode = GetNode<Control>("TextboxScene");
-        textbox = textboxNode.GetNode<RichTextLabel>("./VBoxContainer/Textbox");
-        textboxNode.Visible = false;
+        textbox = GetNode<RichTextLabel>("./TextboxContainer/Textbox");
+        choiceButtonContainerNode = GetNode<HBoxContainer>("./TextboxContainer/ChoiceButtonContainer");
+        Visible = false;
+        DialogueStarted += () => GetTree().Paused = true;
+        DialogueClosed += () => GetTree().Paused = false;
     }
 
     public override void _Process(double delta)
     {
         textboxTimer += delta;
+        textboxInterpolation += delta;
+        if (!IsTextDisplayed)
+            ScrollText();
     }
 
-    IEnumerator<double> ScrollText()
+    public void ScrollText()
     {
-        printAllTextFlag = false;
-        textbox.VisibleCharacters = 0;
-        while (!printAllTextFlag && textbox.VisibleCharacters < textbox.GetTotalCharacterCount())
-        {
-            textbox.VisibleCharacters += 1;
-            yield return Timing.WaitForOneFrame;
-        }
-        printAllTextFlag = false;
-        textbox.VisibleCharacters = textbox.GetTotalCharacterCount();
-        EmitSignal(nameof(DialogueFinished));
+        int visibleChars = Tween.InterpolateValue(0, textbox.GetTotalCharacterCount(),
+            textboxInterpolation, timePerCharacter * textbox.GetTotalCharacterCount(),
+        Tween.TransitionType.Linear, Tween.EaseType.In).AsInt32();
+        if (textbox.VisibleCharacters >= textbox.GetTotalCharacterCount())
+            textbox.VisibleCharacters = textbox.GetTotalCharacterCount();
+        else
+            textbox.VisibleCharacters = visibleChars;
+        if (prevVisibleCharacters < textbox.GetTotalCharacterCount() &&
+            visibleChars >= textbox.GetTotalCharacterCount())
+            EmitSignal(nameof(DialogueFinished));
+        prevVisibleCharacters = visibleChars;
     }
-
+    
     public override void _Input(InputEvent @event)
     {
         if (@event.IsActionPressed("ui_accept") && textbox.Visible)
         {
-            if (!CanInteract) return;
+            if (!FinishedTextboxCooldown) return;
             
             if (textbox.VisibleCharacters == textbox.GetTotalCharacterCount() && 
-                !textboxNode.HasNode(ChoiceButtonContainer))
+                !CurrentlyDisplayingChoices)
                 NextTextBox();
-            else 
-                printAllTextFlag = true;
+            else
+            {
+                EmitSignal(nameof(DialogueFinished));
+                textbox.VisibleCharacters = textbox.GetTotalCharacterCount();
+            }
             textboxTimer = 0;
         }
         else if (@event.IsActionPressed("DEBUG_1"))
@@ -89,7 +99,7 @@ public partial class TextboxManager : Control
 
     public void OpenDialogue()
     {
-        textboxNode.Visible = true;
+        Visible = true;
         NextTextBox();
     }
 
@@ -121,13 +131,14 @@ public partial class TextboxManager : Control
     public void CloseDialogue()
     {
         textbox.Text = "";
-        textboxNode.Visible = false;
+        Visible = false;
+        EmitSignal(nameof(DialogueClosed));
     }
 
     public void TextBoxWithTextNode()
     {
         textbox.Text = currNode.Texts[0];
-        Timing.RunCoroutine(ScrollText());
+        PlayTextbox();
         currNode = currNode.Next.First();
     }
 
@@ -136,39 +147,39 @@ public partial class TextboxManager : Control
         displayChoicesHook = new Callable(this, nameof(DisplayChoices));
         Connect(nameof(DialogueFinished), displayChoicesHook);
         textbox.Text = currNode.Texts[0];
-        ScrollText().RunCoroutine();
+        PlayTextbox();
     }
 
     public void DisplayChoices()
     {
         // add choice buttons with the path
         // add choice button container:
-        Node choiceButtonContainer = ResourceLoader.Load<PackedScene>(ChoiceButtonContainerPath).Instantiate();
-        Node textboxContainer = textboxNode.GetNode(TextboxContainer);
-        textboxContainer.AddChild(choiceButtonContainer);
+        choiceButtonContainerNode.SizeFlagsVertical = SizeFlags.ExpandFill;
         
         int numChoices = currNode.Texts.Length - 1;
         for (int i = 0; i < numChoices; i++)
         {
             Button choiceNode = ResourceLoader.Load<PackedScene>(ChoiceButtonPath).Instantiate<Button>();
-            choiceButtonContainer.AddChild(choiceNode);
+            choiceButtonContainerNode.AddChild(choiceNode);
             int choiceNum = i;
             choiceNode.Pressed += () => ChoiceButtonPressed(choiceNum);
         }
+        // Disconnect the hook after being called once
         Disconnect(nameof(DialogueFinished), displayChoicesHook);
     }
     
     public void RemoveChoices()
     {
-        Node textboxContainer = textboxNode.GetNode(ChoiceButtonContainer);
-        textboxContainer.QueueFree();
+        choiceButtonContainerNode.SizeFlagsVertical = SizeFlags.ShrinkEnd;
+        foreach (var child in choiceButtonContainerNode.GetChildren())
+            child.QueueFree();
     }
     
     
     public void ChoiceButtonPressed(int choiceNum)
     {
         if (choiceNum >= currNode.Next.Length || choiceNum < 0)
-            GD.PrintErr($"Choice button pressed out of range {choiceNum}");
+            GD.PrintErr($"Choice button pressed out of range: choiceNum = {choiceNum}");
         currNode = currNode.Next[choiceNum];
         RemoveChoices();
         NextTextBox();
@@ -176,5 +187,12 @@ public partial class TextboxManager : Control
     
     public void BranchNode()
     {
+    }
+
+    private void PlayTextbox()
+    {
+        EmitSignal(nameof(DialogueStarted));
+        textboxInterpolation = 0;
+        textbox.VisibleCharacters = 0;
     }
 }
