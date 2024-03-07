@@ -1,4 +1,4 @@
-<Project Sdk="Godot.NET.Sdk/4.1.1">
+<Project Sdk="Godot.NET.Sdk/4.2.1">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
@@ -11,7 +11,54 @@
   <ItemGroup>
     <Content Include="addons\dialogueeditor\dialogueeditor.gd" />
     <Content Include="addons\dialogueeditor\plugin.cfg" />
+    <Content Include="data\characters\Character1.tres" />
+    <Content Include="data\dialogues\InspectBushF1.txt" />
     <Content Include="data\settings.json" />
+    <Content Include="resources\materials\bark.jpg" />
+    <Content Include="resources\materials\bark.jpg.import" />
+    <Content Include="resources\materials\bark\ao.jpg" />
+    <Content Include="resources\materials\bark\ao.jpg.import" />
+    <Content Include="resources\materials\bark\color.jpg" />
+    <Content Include="resources\materials\bark\color.jpg.import" />
+    <Content Include="resources\materials\bark\displacement.jpg" />
+    <Content Include="resources\materials\bark\displacement.jpg.import" />
+    <Content Include="resources\materials\bark\normal.jpg" />
+    <Content Include="resources\materials\bark\normal.jpg.import" />
+    <Content Include="resources\materials\bark\roughness.jpg" />
+    <Content Include="resources\materials\bark\roughness.jpg.import" />
+    <Content Include="resources\materials\bark\uploaded.jpg" />
+    <Content Include="resources\materials\bark\uploaded.jpg.import" />
+    <Content Include="resources\materials\mat_grass.tres" />
+    <Content Include="resources\new_box_mesh.tres" />
+    <Content Include="resources\new_cylinder_mesh.tres" />
+    <Content Include="resources\obj\tree.obj" />
+    <Content Include="resources\obj\tree.obj.import" />
+    <Content Include="resources\obj\tree_improved.mtl" />
+    <Content Include="resources\obj\tree_improved.obj" />
+    <Content Include="resources\obj\tree_improved.obj.import" />
+    <Content Include="resources\sprites\grass-export.png" />
+    <Content Include="resources\sprites\grass-export.png.import" />
+    <Content Include="resources\sprites\grass.aseprite" />
+    <Content Include="resources\sprites\grass.png" />
+    <Content Include="resources\sprites\grass.png.import" />
+    <Content Include="resources\tiles.tres" />
+    <Content Include="resources\tiles2.tres" />
+    <Content Include="src\Dialogue.gd" />
+    <Content Include="src\icon.svg" />
+    <Content Include="src\icon.svg.import" />
+    <Content Include="src\README.md" />
+    <Content Include="src\scenes\BattleScene.tscn" />
+    <Content Include="src\scenes\ChoiceButton.tscn" />
+    <Content Include="src\scenes\ChoiceButtonContainer.tscn" />
+    <Content Include="src\scenes\Game.tscn" />
+    <Content Include="src\scenes\GridMeshes.tscn" />
+    <Content Include="src\scenes\ItemMenu.tscn" />
+    <Content Include="src\scenes\Map.tscn" />
+    <Content Include="src\scenes\PauseMenu.tscn" />
+    <Content Include="src\scenes\player.tscn" />
+    <Content Include="src\scenes\SkillMenu.tscn" />
+    <Content Include="src\scenes\StatusMenu.tscn" />
+    <Content Include="src\scenes\TextboxManager.tscn" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="addons\csharpConsole\**" />
@@ -27,9 +74,5 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="data\dialogues\" />
-    <Folder Include="src\scenes\" />
   </ItemGroup>
 </Project>

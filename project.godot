@@ -12,7 +12,7 @@ config_version=5
 
 config/name="DungeonCrawler"
 run/main_scene="res://src/scenes/Game.tscn"
-config/features=PackedStringArray("4.1", "C#", "Forward Plus")
+config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 run/max_fps=165
 run/delta_smoothing=false
 config/icon="res://src/icon.svg"
@@ -24,8 +24,10 @@ Game="*res://src/Game.cs"
 
 [display]
 
-window/size/viewport_width=1080
-window/size/viewport_height=720
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/mode=3
+window/size/initial_position_type=2
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/vsync/vsync_mode=0

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://c4s8l5dmdr1u5"]
 
-[ext_resource type="Script" path="res://src/menu_scripts/SkillMenu.cs" id="1_ncd4r"]
+[ext_resource type="Script" path="res://src/menu/SkillMenu.cs" id="1_ncd4r"]
 
 [node name="SkillMenu" type="Control"]
 layout_mode = 3

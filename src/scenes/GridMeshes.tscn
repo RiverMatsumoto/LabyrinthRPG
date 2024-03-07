@@ -1,14 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://1jxe57ixjf3x"]
+[gd_scene load_steps=4 format=3 uid="uid://1jxe57ixjf3x"]
 
 [ext_resource type="BoxMesh" uid="uid://g7e1skl0fb7" path="res://resources/new_box_mesh.tres" id="1_3t7xx"]
-[ext_resource type="ArrayMesh" uid="uid://dxuxd0wu1cykl" path="res://resources/obj/tree.obj" id="2_u5odb"]
+[ext_resource type="Material" uid="uid://bauc1kpri8vsu" path="res://resources/materials/mat_grass.tres" id="1_kuwf0"]
+[ext_resource type="ArrayMesh" uid="uid://cpgtbdkiig4d4" path="res://resources/obj/tree_improved.obj" id="3_tqriw"]
 
 [node name="GridMeshes" type="Node3D"]
 
 [node name="NewBoxMesh" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+material_override = ExtResource("1_kuwf0")
 mesh = ExtResource("1_3t7xx")
 
 [node name="Tree" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -1, 1.50996e-07, 0, -1.50996e-07, -1, 0, 0, -1)
-mesh = ExtResource("2_u5odb")
+mesh = ExtResource("3_tqriw")

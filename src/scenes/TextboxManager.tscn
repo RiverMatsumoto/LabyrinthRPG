@@ -1,34 +1,48 @@
-[gd_scene load_steps=2 format=3 uid="uid://c7n88tqx78we7"]
+[gd_scene load_steps=3 format=3 uid="uid://c7n88tqx78we7"]
 
 [ext_resource type="Script" path="res://src/TextboxManager.cs" id="1_xrmsa"]
+[ext_resource type="PackedScene" uid="uid://crhpr2qsh3xe3" path="res://src/scenes/ChoiceButton.tscn" id="2_hh5bc"]
 
-[node name="TextboxManager" type="Control"]
-visible = false
+[node name="TextboxManager" type="Control" node_paths=PackedStringArray("textbox", "choiceButtonContainerNode")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 64.0
-offset_top = 791.0
-offset_right = -63.0
-offset_bottom = -56.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_xrmsa")
+textbox = NodePath("CanvasLayer/TextboxContainer/Textbox")
+choiceButtonContainerNode = NodePath("CanvasLayer/TextboxContainer/ChoiceButtonContainer")
+choiceButtonScene = ExtResource("2_hh5bc")
 
 [node name="Background" type="Panel" parent="."]
-layout_mode = 2
-offset_left = -13.0
-offset_right = 1795.0
-offset_bottom = 233.0
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 70.0
+offset_top = -257.0
+offset_right = -69.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 0
 
-[node name="TextboxContainer" type="VBoxContainer" parent="."]
-layout_mode = 0
-offset_top = 16.0
-offset_right = 1771.0
-offset_bottom = 215.0
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="Textbox" type="RichTextLabel" parent="TextboxContainer"]
+[node name="TextboxContainer" type="VBoxContainer" parent="CanvasLayer"]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 117.0
+offset_top = -235.0
+offset_right = -118.0
+offset_bottom = -57.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Textbox" type="RichTextLabel" parent="CanvasLayer/TextboxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/normal_font_size = 36
@@ -36,9 +50,10 @@ theme_override_font_sizes/bold_font_size = 36
 theme_override_font_sizes/italics_font_size = 36
 theme_override_font_sizes/bold_italics_font_size = 36
 theme_override_font_sizes/mono_font_size = 36
-text = "Hello"
+text = "Hellofsdfsadf"
 scroll_active = false
-visible_characters = 5
+visible_characters = 4
+visible_ratio = 0.384615
 
-[node name="ChoiceButtonContainer" type="HBoxContainer" parent="TextboxContainer"]
+[node name="ChoiceButtonContainer" type="HBoxContainer" parent="CanvasLayer/TextboxContainer"]
 layout_mode = 2

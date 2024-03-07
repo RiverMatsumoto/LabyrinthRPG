@@ -13,5 +13,9 @@
 process_mode = 3
 
 [node name="PauseMenu" parent="." instance=ExtResource("3_8oyut")]
+anchors_preset = 12
+anchor_top = 1.0
+offset_top = -1080.0
+grow_vertical = 0
 
 [node name="BattleScene" parent="." instance=ExtResource("4_ekgif")]

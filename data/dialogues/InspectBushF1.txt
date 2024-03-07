@@ -1,7 +1,9 @@
 <InspectBushF1>
 Text:You hear a strange squeak comes from the bush.\n You become curious and decide to move a bit closer
+
 Choice:What do you do?
 	1:Shake the bush.
 		Text:As you shake the bush, you hear a click before you see a monster jolt at you. Prepare to fight!
 	2:Burn the bush.
 		Text:When the bush catches fire, a monster shrieks and jumps out. After patting itself down and being slightly weakened, it notices you and lunges at you. Prepare to fight!
+

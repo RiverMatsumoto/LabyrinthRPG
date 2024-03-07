@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://dtiy8yayysdb8"]
+[gd_scene load_steps=5 format=3 uid="uid://dtiy8yayysdb8"]
 
 [ext_resource type="MeshLibrary" uid="uid://p41k6o747l45" path="res://resources/tiles2.tres" id="1_fxt75"]
 [ext_resource type="PackedScene" uid="uid://cu36onp4rktu" path="res://src/scenes/player.tscn" id="1_lplyj"]
+[ext_resource type="Material" uid="uid://bauc1kpri8vsu" path="res://resources/materials/mat_grass.tres" id="3_3qd7o"]
+[ext_resource type="BoxMesh" uid="uid://g7e1skl0fb7" path="res://resources/new_box_mesh.tres" id="4_ias0q"]
 
 [node name="MapScene" type="Node3D"]
 
@@ -22,7 +24,14 @@ data = {
 }
 
 [node name="Player" parent="." instance=ExtResource("1_lplyj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, 0)
+moveCooldown = 0.005
 
 [node name="Timer" type="Timer" parent="Player"]
 wait_time = 0.05
 one_shot = true
+
+[node name="NewBoxMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.4044, 0, -3.82168)
+material_override = ExtResource("3_3qd7o")
+mesh = ExtResource("4_ias0q")

@@ -9,12 +9,11 @@ public partial class TextboxManager : Control
 
     [Signal] public delegate void DialogueClosedEventHandler();
 
-    private VBoxContainer textboxContainer;
-    private RichTextLabel textbox;
+    [Export] private RichTextLabel textbox;
+    [Export] private HBoxContainer choiceButtonContainerNode;
+    [Export] private PackedScene choiceButtonScene;
     private DialogueNode currNode;
-    private HBoxContainer choiceButtonContainerNode;
     
-    public const string ChoiceButtonPath = "res://src/scenes/ChoiceButton.tscn";
     public const double TextboxTimeout = 0.1;
     private double textboxTimer;
     private bool FinishedTextboxCooldown => textboxTimer > TextboxTimeout;
@@ -29,8 +28,6 @@ public partial class TextboxManager : Control
     public override void _Ready()
     {
         textboxTimer = 0;
-        textbox = GetNode<RichTextLabel>("./TextboxContainer/Textbox");
-        choiceButtonContainerNode = GetNode<HBoxContainer>("./TextboxContainer/ChoiceButtonContainer");
         Visible = false;
         DialogueStarted += () => GetTree().Paused = true;
         DialogueClosed += () => GetTree().Paused = false;
@@ -159,7 +156,8 @@ public partial class TextboxManager : Control
         int numChoices = currNode.Texts.Length - 1;
         for (int i = 0; i < numChoices; i++)
         {
-            Button choiceNode = ResourceLoader.Load<PackedScene>(ChoiceButtonPath).Instantiate<Button>();
+            // Button choiceNode = ResourceLoader.Load<PackedScene>(ChoiceButtonPath).Instantiate<Button>();
+            Button choiceNode = choiceButtonScene.Instantiate<Button>();
             choiceButtonContainerNode.AddChild(choiceNode);
             int choiceNum = i;
             choiceNode.Pressed += () => ChoiceButtonPressed(choiceNum);
