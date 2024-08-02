@@ -3,21 +3,20 @@ using Godot;
 
 public partial class Player : Node3D
 {
-	private GridMap gridMap;
-	private float moveTime = 0.15f;
-	private bool isMoving = false;
-	[Export] private double moveCooldown = 0.01;
-	private double cooldownTimer = 0;
-	private Timer cooldownTimerNode;
-	private void StartTurn() => td.Turning = true;
-	private TurnData td;
+	[Export] Node map;
+	[Export] GridMap gridMap;
+	[Export] Timer cooldownTimerNode;
+	[Export] public double moveCooldown = 0.01;
+	double cooldownTimer = 0;
+	float moveTime = 0.15f;
+	bool isMoving = false;
+	void StartTurn() => td.Turning = true;
+	TurnData td;
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		td = new TurnData();
-		gridMap = GetNode<GridMap>("../GridMap");
-		cooldownTimerNode = GetNode<Timer>("Timer");
 		cooldownTimerNode.OneShot = true;
 		cooldownTimerNode.Timeout += () => isMoving = false;
 	}
@@ -70,7 +69,7 @@ public partial class Player : Node3D
 		Tween tween = CreateTween();
 		tween.TweenProperty(this, "position", dir, moveTime)
 			.AsRelative().SetTrans(Tween.TransitionType.Sine).SetEase(Tween.EaseType.Out)
-			.Finished += () => StartCooldown();
+			.Finished += () => StartMoveCooldown();
 	}
 
 	public override void _Input(InputEvent @event)
@@ -107,19 +106,26 @@ public partial class Player : Node3D
 		Rotation = new Vector3(Rotation.X, y, Rotation.Z);
 		if (td.TimeTurning > moveTime)
 		{
+			StartTurnCooldown();
 			td.Turning = false;
-			StartCooldown();
 			Rotation = new Vector3(Rotation.X, (float)td.EndRot, Rotation.Z);
 		}
 	}
 
-	private void StartCooldown()
+	void StartMoveCooldown()
+	{
+		isMoving = true;
+		cooldownTimerNode.Start();
+		map.EmitSignal(nameof(MapScene.MoveEnded));
+	}
+
+	void StartTurnCooldown()
 	{
 		isMoving = true;
 		cooldownTimerNode.Start();
 	}
 
-	private struct TurnData
+	struct TurnData
 	{
 		public bool Turning;
 		public double StartRot;
@@ -127,5 +133,5 @@ public partial class Player : Node3D
 		public double TimeTurning;
 	}
 	
-	private double EaseOutSine(double x) => Math.Sin(x * (Math.PI / 2));
+	double EaseOutSine(double x) => Math.Sin(x * (Math.PI / 2));
 }

@@ -9,21 +9,21 @@ public partial class TextboxManager : Control
 
     [Signal] public delegate void DialogueClosedEventHandler();
 
-    [Export] private RichTextLabel textbox;
-    [Export] private HBoxContainer choiceButtonContainerNode;
-    [Export] private PackedScene choiceButtonScene;
-    private DialogueNode currNode;
+    [Export] RichTextLabel textbox;
+    [Export] HBoxContainer choiceButtonContainerNode;
+    [Export] PackedScene choiceButtonScene;
+    DialogueNode currNode;
     
-    public const double TextboxTimeout = 0.1;
-    private double textboxTimer;
-    private bool FinishedTextboxCooldown => textboxTimer > TextboxTimeout;
-    private void StartTextboxCooldown() => textboxTimer = 0;
-    private bool IsTextDisplayed => textbox.VisibleCharacters >= textbox.GetTotalCharacterCount();
-    private bool CurrentlyDisplayingChoices => choiceButtonContainerNode.SizeFlagsVertical.HasFlag(SizeFlags.ExpandFill);
-    private Callable displayChoicesHook;
-    private double timePerCharacter = 0.01;
-    private double textboxInterpolation;
-    private int prevVisibleCharacters;
+    public double TextboxTimeout = 0.1;
+    double textboxTimer;
+    bool FinishedTextboxCooldown => textboxTimer > TextboxTimeout;
+    void StartTextboxCooldown() => textboxTimer = 0;
+    bool IsTextDisplayed => textbox.VisibleCharacters >= textbox.GetTotalCharacterCount();
+    bool CurrentlyDisplayingChoices => choiceButtonContainerNode.SizeFlagsVertical.HasFlag(SizeFlags.ExpandFill);
+    Callable displayChoicesHook;
+    double timePerCharacter = 0.01;
+    double textboxInterpolation;
+    int prevVisibleCharacters;
 
     public override void _Ready()
     {
@@ -187,7 +187,7 @@ public partial class TextboxManager : Control
     {
     }
 
-    private void PlayTextbox()
+    void PlayTextbox()
     {
         EmitSignal(nameof(DialogueStarted));
         textboxInterpolation = 0;

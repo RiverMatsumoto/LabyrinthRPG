@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://c7n88tqx78we7"]
 
 [ext_resource type="Script" path="res://src/TextboxManager.cs" id="1_xrmsa"]
-[ext_resource type="PackedScene" uid="uid://crhpr2qsh3xe3" path="res://src/scenes/ChoiceButton.tscn" id="2_hh5bc"]
+[ext_resource type="PackedScene" uid="uid://crhpr2qsh3xe3" path="res://src/scenes/ui/ChoiceButton.tscn" id="2_hh5bc"]
 
 [node name="TextboxManager" type="Control" node_paths=PackedStringArray("textbox", "choiceButtonContainerNode")]
 layout_mode = 3
@@ -50,9 +50,8 @@ theme_override_font_sizes/bold_font_size = 36
 theme_override_font_sizes/italics_font_size = 36
 theme_override_font_sizes/bold_italics_font_size = 36
 theme_override_font_sizes/mono_font_size = 36
-text = "Hellofsdfsadf"
 scroll_active = false
-visible_characters = 4
+visible_characters = 0
 visible_ratio = 0.384615
 
 [node name="ChoiceButtonContainer" type="HBoxContainer" parent="CanvasLayer/TextboxContainer"]

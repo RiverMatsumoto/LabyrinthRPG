@@ -2,16 +2,15 @@ using Godot;
 
 public partial class PauseMenu : Control
 {
-	private bool subMenuOpened = false;
-	private Node openSubMenu = null;
+	bool subMenuOpened = false;
+	Node openSubMenu = null;
 	
-	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		Visible = false;
+		Size = GetWindow().Size;
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
 	}
@@ -75,9 +74,9 @@ public partial class PauseMenu : Control
 
 		// scale tween
 		// Position = new Vector2(-100, 0);
-		// Tween tween = CreateTween();
-		// tween.TweenProperty(this, "position", Vector2.Zero, 0.01f)
-		// 	.SetTrans(Tween.TransitionType.Sine).SetEase(Tween.EaseType.Out);
+		Tween tween = CreateTween();
+		tween.TweenProperty(this, "position", Vector2.Zero, 0.01f)
+			.SetTrans(Tween.TransitionType.Sine).SetEase(Tween.EaseType.Out);
 	}
 
 	public void _on_back_button_pressed()
