@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dwarlyfe3542a"]
 
-[ext_resource type="Script" path="res://addons/dialogueeditor/TextNode.gd" id="1_grcsu"]
+[ext_resource type="Script" uid="uid://dppl85b3vmccd" path="res://addons/dialogueeditor/TextNode.gd" id="1_grcsu"]
 
 [node name="TextNode" type="GraphNode"]
 offset_right = 323.0

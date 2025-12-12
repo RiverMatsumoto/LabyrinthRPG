@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://4s1i17gso80f"]
 
-[ext_resource type="Script" path="res://src/menu/PauseMenu.cs" id="1_lthlp"]
+[ext_resource type="Script" uid="uid://bf84qjn2x2b5a" path="res://src/menu/PauseMenu.cs" id="1_lthlp"]
 
 [sub_resource type="SystemFont" id="SystemFont_hea54"]
 subpixel_positioning = 0

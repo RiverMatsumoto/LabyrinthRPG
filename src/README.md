@@ -7,32 +7,32 @@ example:
 using Godot;
 public partial class Example : Node
 {
-    public override void _Ready()
-    {
-        CommandConsole.AddCommand("print", Print);
-        CommandConsole.AddCommandDescription("print", "Prints the given text in the console.");
-        CommandConsole.AddParameterDescription(CommandName: "print", param:"text", description:"The text to print.");
+	public override void _Ready()
+	{
+		CommandConsole.AddCommand("print", Print);
+		CommandConsole.AddCommandDescription("print", "Prints the given text in the console.");
+		CommandConsole.AddParameterDescription(CommandName: "print", param:"text", description:"The text to print.");
 
-        CommandConsole.AddCommand("heloworld", HelloWorld);
-        CommandConsole.AddCommandDescription("heloworld", "Prints 'Hola Mundo!' in the console.");
-    }
+		CommandConsole.AddCommand("heloworld", HelloWorld);
+		CommandConsole.AddCommandDescription("heloworld", "Prints 'Hola Mundo!' in the console.");
+	}
 
-    void Print(string text)
-    {
-        GD.Print(text);
-    }
+	void Print(string text)
+	{
+		GD.Print(text);
+	}
 
-    void HelloWorld()
-    {
-        GD.PrintErr("Hola Mundo!");
-    }
+	void HelloWorld()
+	{
+		GD.PrintErr("Hola Mundo!");
+	}
 
-    //also you can add the Attribute
-    [AddCommand("testing"), AddCommandDescription("[color=red]Prints on GD Console[/color]")]
-    public void testing(string text)
-    {
-        GD.Print(text);
-    }
+	//also you can add the Attribute
+	[AddCommand("testing"), AddCommandDescription("[color=red]Prints on GD Console[/color]")]
+	public void testing(string text)
+	{
+		GD.Print(text);
+	}
 }
 
 ```

@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://c7n88tqx78we7" path="res://src/scenes/ui/TextboxManager.tscn" id="2_lh52w"]
 [ext_resource type="PackedScene" uid="uid://4s1i17gso80f" path="res://src/scenes/PauseMenu.tscn" id="3_4rk4b"]
 [ext_resource type="PackedScene" uid="uid://depbhnarlfr3u" path="res://src/scenes/BattleScene.tscn" id="4_itb8o"]
-[ext_resource type="Script" path="res://src/RandomBattleTracker.cs" id="5_e2xpy"]
+[ext_resource type="Script" uid="uid://bopv712vf0clm" path="res://src/RandomBattleTracker.cs" id="5_e2xpy"]
 
 [node name="Game" type="Node3D"]
 

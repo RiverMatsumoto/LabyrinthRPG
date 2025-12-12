@@ -6,4 +6,3 @@ Choice:What do you do?
 		Text:As you shake the bush, you hear a click before you see a monster jolt at you. Prepare to fight!
 	2:Burn the bush.
 		Text:When the bush catches fire, a monster shrieks and jumps out. After patting itself down and being slightly weakened, it notices you and lunges at you. Prepare to fight!
-

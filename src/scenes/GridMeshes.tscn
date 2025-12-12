@@ -1,16 +1,26 @@
-[gd_scene load_steps=4 format=3 uid="uid://1jxe57ixjf3x"]
+[gd_scene load_steps=6 format=3 uid="uid://1jxe57ixjf3x"]
 
 [ext_resource type="BoxMesh" uid="uid://g7e1skl0fb7" path="res://resources/new_box_mesh.tres" id="1_3t7xx"]
 [ext_resource type="Material" uid="uid://bauc1kpri8vsu" path="res://resources/materials/mat_grass.tres" id="1_kuwf0"]
 [ext_resource type="ArrayMesh" uid="uid://cpgtbdkiig4d4" path="res://resources/obj/tree_improved.obj" id="3_tqriw"]
+[ext_resource type="Texture2D" uid="uid://bitrka5va5mdw" path="res://resources/materials/bark.jpg" id="4_evc2a"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_80tyl"]
+albedo_texture = ExtResource("4_evc2a")
 
 [node name="GridMeshes" type="Node3D"]
 
-[node name="NewBoxMesh" type="MeshInstance3D" parent="."]
+[node name="Floor" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 material_override = ExtResource("1_kuwf0")
 mesh = ExtResource("1_3t7xx")
 
 [node name="Tree" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -1, 1.50996e-07, 0, -1.50996e-07, -1, 0, 0, -1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.411648, -1)
 mesh = ExtResource("3_tqriw")
+
+[node name="TreeWall" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 4.30618, 0, 0, 0, 1, 0, 1.16865, 1)
+material_override = SubResource("StandardMaterial3D_80tyl")
+mesh = ExtResource("1_3t7xx")
+skeleton = NodePath("../Floor")

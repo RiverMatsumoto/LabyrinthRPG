@@ -1,9 +1,9 @@
 [gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://bauc1kpri8vsu"]
 
-[ext_resource type="Texture2D" uid="uid://cusqubahm73gm" path="res://resources/sprites/grass.png" id="1_841k4"]
+[ext_resource type="Texture2D" uid="uid://cb342vonh5p8o" path="res://resources/sprites/grass-export.png" id="1_bhwxh"]
 
 [resource]
-albedo_texture = ExtResource("1_841k4")
+albedo_texture = ExtResource("1_bhwxh")
 metallic_specular = 0.26
 roughness = 0.41
 uv1_offset = Vector3(0.5, 0.5, 0.5)

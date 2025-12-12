@@ -30,4 +30,3 @@ func _make_visible(visible):
 func _get_plugin_name():
 	return "Dialogue Editor"
 	
-

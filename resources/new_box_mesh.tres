@@ -1,10 +1,9 @@
 [gd_resource type="BoxMesh" load_steps=3 format=3 uid="uid://g7e1skl0fb7"]
 
-[ext_resource type="Texture2D" uid="uid://cusqubahm73gm" path="res://resources/sprites/grass.png" id="1_fn2km"]
+[ext_resource type="Texture2D" uid="uid://bitrka5va5mdw" path="res://resources/materials/bark.jpg" id="1_1dppm"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bxnrh"]
-albedo_texture = ExtResource("1_fn2km")
-texture_filter = 0
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8w7l5"]
+albedo_texture = ExtResource("1_1dppm")
 
 [resource]
-material = SubResource("StandardMaterial3D_bxnrh")
+material = SubResource("StandardMaterial3D_8w7l5")

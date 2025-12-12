@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://djngtr0nrfws2"]
 
-[ext_resource type="Script" path="res://addons/dialogueeditor/GraphEditor.gd" id="1_sb36e"]
+[ext_resource type="Script" uid="uid://c3w2hifj6yq7h" path="res://addons/dialogueeditor/GraphEditor.gd" id="1_sb36e"]
 [ext_resource type="PackedScene" uid="uid://dwarlyfe3542a" path="res://addons/dialogueeditor/TextNode.tscn" id="2_n5q01"]
 [ext_resource type="PackedScene" uid="uid://cx8ybdpdebq1c" path="res://addons/dialogueeditor/ContextMenu.tscn" id="3_alo6s"]
 

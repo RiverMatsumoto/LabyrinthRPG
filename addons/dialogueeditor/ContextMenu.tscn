@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cx8ybdpdebq1c"]
 
-[ext_resource type="Script" path="res://addons/dialogueeditor/ContextMenu.gd" id="1_2vqqb"]
+[ext_resource type="Script" uid="uid://dh7l5v73phqji" path="res://addons/dialogueeditor/ContextMenu.gd" id="1_2vqqb"]
 
 [node name="Panel" type="Panel"]
 offset_left = -98.0
