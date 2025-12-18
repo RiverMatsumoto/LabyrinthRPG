@@ -1,9 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://c7n88tqx78we7"]
+[gd_scene load_steps=3 format=3 uid="uid://c7n88tqx78we7"]
 
-[ext_resource type="Script" path="res://src/TextboxManager.cs" id="1_xrmsa"]
+[ext_resource type="Script" uid="uid://qe7ah7suqmss" path="res://src/TextboxManager.cs" id="1_xrmsa"]
+[ext_resource type="PackedScene" uid="uid://crhpr2qsh3xe3" path="res://src/scenes/ChoiceButton.tscn" id="2_5efo7"]
 
-[node name="TextboxManager" type="Control"]
-visible = false
+[node name="TextboxManager" type="Control" node_paths=PackedStringArray("textboxContainer", "textbox", "choiceButtonContainerNode")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,10 +14,15 @@ offset_right = -63.0
 offset_bottom = -56.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 script = ExtResource("1_xrmsa")
+textboxContainer = NodePath("TextboxContainer")
+textbox = NodePath("TextboxContainer/Textbox")
+choiceButtonContainerNode = NodePath("TextboxContainer/ChoiceButtonContainer")
+choiceButtonScene = ExtResource("2_5efo7")
 
 [node name="Background" type="Panel" parent="."]
-layout_mode = 2
+layout_mode = 0
 offset_left = -13.0
 offset_right = 1795.0
 offset_bottom = 233.0
@@ -33,8 +38,8 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/normal_font_size = 36
 theme_override_font_sizes/bold_font_size = 36
-theme_override_font_sizes/italics_font_size = 36
 theme_override_font_sizes/bold_italics_font_size = 36
+theme_override_font_sizes/italics_font_size = 36
 theme_override_font_sizes/mono_font_size = 36
 text = "Hello"
 scroll_active = false

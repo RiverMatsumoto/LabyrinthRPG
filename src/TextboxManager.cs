@@ -6,32 +6,37 @@ public partial class TextboxManager : Control
 {
     [Signal] public delegate void DialogueStartedEventHandler();
     [Signal] public delegate void DialogueFinishedEventHandler();
-
     [Signal] public delegate void DialogueClosedEventHandler();
 
-    private VBoxContainer textboxContainer;
-    private RichTextLabel textbox;
+    [Export] private VBoxContainer textboxContainer;
+    [Export] private RichTextLabel textbox;
+    [Export] private HBoxContainer choiceButtonContainerNode;
     private DialogueNode currNode;
-    private HBoxContainer choiceButtonContainerNode;
-    
-    public const string ChoiceButtonPath = "res://src/scenes/ChoiceButton.tscn";
-    public const double TextboxTimeout = 0.1;
+
+    [Export] private PackedScene choiceButtonScene;
+    private Callable displayChoicesCallable;
+
+    public double TextboxTimeout = 0.1;
     private double textboxTimer;
     private bool FinishedTextboxCooldown => textboxTimer > TextboxTimeout;
-    private void StartTextboxCooldown() => textboxTimer = 0;
     private bool IsTextDisplayed => textbox.VisibleCharacters >= textbox.GetTotalCharacterCount();
     private bool CurrentlyDisplayingChoices => choiceButtonContainerNode.SizeFlagsVertical.HasFlag(SizeFlags.ExpandFill);
-    private Callable displayChoicesHook;
     private double timePerCharacter = 0.01;
     private double textboxInterpolation;
     private int prevVisibleCharacters;
 
+
     public override void _Ready()
     {
         textboxTimer = 0;
-        textbox = GetNode<RichTextLabel>("./TextboxContainer/Textbox");
-        choiceButtonContainerNode = GetNode<HBoxContainer>("./TextboxContainer/ChoiceButtonContainer");
         Visible = false;
+
+        // Flow of one text box: DialogueStarted -> DialogueFinished -> DialogueClosed
+
+        // Connect dialogue finished once and manage flow internally
+        displayChoicesCallable = new Callable(this, nameof(OnDialogueFinished));
+        Connect(nameof(DialogueFinished), displayChoicesCallable);
+
         DialogueStarted += () => GetTree().Paused = true;
         DialogueClosed += () => GetTree().Paused = false;
     }
@@ -49,25 +54,26 @@ public partial class TextboxManager : Control
         int visibleChars = Tween.InterpolateValue(0, textbox.GetTotalCharacterCount(),
             textboxInterpolation, timePerCharacter * textbox.GetTotalCharacterCount(),
         Tween.TransitionType.Linear, Tween.EaseType.In).AsInt32();
-        if (textbox.VisibleCharacters >= textbox.GetTotalCharacterCount())
-            textbox.VisibleCharacters = textbox.GetTotalCharacterCount();
-        else
-            textbox.VisibleCharacters = visibleChars;
+
+        textbox.VisibleCharacters = Math.Min(visibleChars, textbox.GetTotalCharacterCount());
+
         if (prevVisibleCharacters < textbox.GetTotalCharacterCount() &&
             visibleChars >= textbox.GetTotalCharacterCount())
+        {
             EmitSignal(nameof(DialogueFinished));
+        }
         prevVisibleCharacters = visibleChars;
     }
-    
+
     public override void _Input(InputEvent @event)
     {
         if (@event.IsActionPressed("ui_accept") && textbox.Visible)
         {
             if (!FinishedTextboxCooldown) return;
-            
-            if (textbox.VisibleCharacters == textbox.GetTotalCharacterCount() && 
+
+            if (textbox.VisibleCharacters == textbox.GetTotalCharacterCount() &&
                 !CurrentlyDisplayingChoices)
-                NextTextBox();
+                DisplayNextTextBox();
             else
             {
                 EmitSignal(nameof(DialogueFinished));
@@ -83,15 +89,15 @@ public partial class TextboxManager : Control
         }
         else if (@event.IsActionPressed("DEBUG_2"))
         {
-            DialogueNode[] nexts = 
+            DialogueNode[] nexts =
             {
                 new TextNode("Choice 1 was chosen", null),
                 new TextNode("Choice 2 was chosen", null),
                 new TextNode("Choice 3 was chosen", null),
                 new TextNode("Choice 4 was chosen", null)
             };
-            string[] choices = {"Choice 1", "Choice 2", "Choice 3", "Choice 4"};
-            var choiceNode = new ChoiceNode("Helloasdjkfa; PROMPT PROMPT PROMPT PROMPT PROMPT", choices, nexts);
+            string[] choices = { "Choice 1", "Choice 2", "Choice 3", "Choice 4" };
+            var choiceNode = new ChoiceNode("Prompt Text :)", choices, nexts);
             currNode = new StartNode(choiceNode);
             OpenDialogue();
         }
@@ -100,32 +106,18 @@ public partial class TextboxManager : Control
     public void OpenDialogue()
     {
         Visible = true;
-        NextTextBox();
+        DisplayNextTextBox();
     }
 
-    public void NextTextBox()
+    public void DisplayNextTextBox()
     {
+        // always close the textbox on null to be safe
         if (currNode == null)
         {
             CloseDialogue();
             return;
         }
-        
-        Type nodeType = currNode.GetType();
-        if (nodeType == typeof(StartNode))
-        {
-            currNode = currNode.Next.First();
-            NextTextBox();
-        }
-        else if (nodeType == typeof(TextNode))
-        {
-            TextBoxWithTextNode();
-        }
-        else if (nodeType == typeof(ChoiceNode))
-        {
-            GD.Print("Choicenode");
-            TextBoxWithChoiceNode();
-        }
+        DisplayNode(currNode);
     }
 
     public void CloseDialogue()
@@ -135,56 +127,95 @@ public partial class TextboxManager : Control
         EmitSignal(nameof(DialogueClosed));
     }
 
-    public void TextBoxWithTextNode()
+    public void DisplayNode(DialogueNode node)
     {
-        textbox.Text = currNode.Texts[0];
+        switch (node)
+        {
+            case StartNode startNode:
+                currNode = startNode.Next.FirstOrDefault();
+                if (currNode != null)
+                    DisplayNode(currNode);
+                else
+                    CloseDialogue();
+                break;
+
+            case TextNode textNode:
+                ShowTextNode(textNode);
+                break;
+
+            case ChoiceNode choiceNode:
+                ShowChoiceNode(choiceNode);
+                break;
+
+            case EndNode:
+                CloseDialogue();
+                break;
+
+            default:
+                GD.PrintErr($"Unknown DialogueNode type: {node.GetType()}");
+                CloseDialogue();
+                break;
+        }
+    }
+
+    public void ShowTextNode(TextNode node)
+    {
+        RemoveChoices();
+        textbox.Text = node.Texts.First();
         PlayTextbox();
         currNode = currNode.Next.First();
     }
 
-    public void TextBoxWithChoiceNode()
+    public void ShowChoiceNode(ChoiceNode node)
     {
-        displayChoicesHook = new Callable(this, nameof(DisplayChoices));
-        Connect(nameof(DialogueFinished), displayChoicesHook);
-        textbox.Text = currNode.Texts[0];
+        RemoveChoices();
+        textbox.Text = node.Prompt;
         PlayTextbox();
+        currNode = node;
+    }
+
+    private void OnDialogueFinished()
+    {
+        // Only show choices if current node is ChoiceNode and choices are not already shown
+        if (currNode is ChoiceNode && !CurrentlyDisplayingChoices)
+        {
+            DisplayChoices();
+        }
     }
 
     public void DisplayChoices()
     {
-        // add choice buttons with the path
-        // add choice button container:
         choiceButtonContainerNode.SizeFlagsVertical = SizeFlags.ExpandFill;
-        
-        int numChoices = currNode.Texts.Length - 1;
+
+        int numChoices = currNode.Texts.Length - 1; // texts[0] is the prompt
         for (int i = 0; i < numChoices; i++)
         {
-            Button choiceNode = ResourceLoader.Load<PackedScene>(ChoiceButtonPath).Instantiate<Button>();
-            choiceButtonContainerNode.AddChild(choiceNode);
-            int choiceNum = i;
-            choiceNode.Pressed += () => ChoiceButtonPressed(choiceNum);
+            var choiceBtn = choiceButtonScene.Instantiate<Button>();
+            choiceBtn.Text = currNode.Texts[i + 1];
+            choiceButtonContainerNode.AddChild(choiceBtn);
+
+            int choiceIndex = i;
+            choiceBtn.Pressed += () => ChoiceButtonPressed(choiceIndex);
         }
-        // Disconnect the hook after being called once
-        Disconnect(nameof(DialogueFinished), displayChoicesHook);
     }
-    
+
     public void RemoveChoices()
     {
         choiceButtonContainerNode.SizeFlagsVertical = SizeFlags.ShrinkEnd;
         foreach (var child in choiceButtonContainerNode.GetChildren())
             child.QueueFree();
     }
-    
-    
+
+
     public void ChoiceButtonPressed(int choiceNum)
     {
         if (choiceNum >= currNode.Next.Length || choiceNum < 0)
             GD.PrintErr($"Choice button pressed out of range: choiceNum = {choiceNum}");
         currNode = currNode.Next[choiceNum];
         RemoveChoices();
-        NextTextBox();
+        DisplayNextTextBox();
     }
-    
+
     public void BranchNode()
     {
     }

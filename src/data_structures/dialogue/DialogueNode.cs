@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 
 public abstract class DialogueNode
 {
@@ -11,9 +10,10 @@ public abstract class DialogueNode
         Next = Array.Empty<DialogueNode>();
         Texts = Array.Empty<string>();
     }
-    protected DialogueNode(DialogueNode[] next) : this()
+
+    protected DialogueNode(string[] texts, DialogueNode[] next = null) : this()
     {
-        Next = Next.Concat(next).ToArray();
-        Texts = Array.Empty<string>();
+        Texts = texts ?? Array.Empty<string>();
+        Next = next ?? Array.Empty<DialogueNode>();
     }
 }

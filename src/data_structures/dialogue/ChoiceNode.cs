@@ -2,11 +2,12 @@ using System.Linq;
 
 public class ChoiceNode : DialogueNode
 {
-    
-    public ChoiceNode(string prompt, string[] choices, DialogueNode[] next) : base(next)
-    {
-        Texts = Texts.Append(prompt).ToArray();
-        Texts = Texts.Concat(choices).ToArray();
-    }
+    public string Prompt { get; }
 
+    public ChoiceNode(string prompt, string[] choices, DialogueNode[] nextNodes)
+        : base(texts: new string[0], next: nextNodes)
+    {
+        Prompt = prompt;
+        Texts = new[] { prompt }.Concat(choices).ToArray();
+    }
 }

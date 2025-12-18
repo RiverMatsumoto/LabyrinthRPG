@@ -1,9 +1,8 @@
-using System.Linq;
 
 public class StartNode : DialogueNode
 {
-    public StartNode(DialogueNode next) : base()
+    public StartNode(DialogueNode next)
+        : base(new string[0], new[] { next })
     {
-        Next = Next.Append(next).ToArray();
     }
 }
