@@ -8,9 +8,9 @@ public partial class Game : Node
     public override void _Ready()
     {
         CurrentParty = new Party();
-        CurrentParty.AddToFrontRow(new Character());
-        CurrentParty.AddToFrontRow(new Character());
-        CurrentParty.AddToBackRow(new Character());
+        CurrentParty.AddToFrontRow(new CharacterDef());
+        CurrentParty.AddToFrontRow(new CharacterDef());
+        CurrentParty.AddToBackRow(new CharacterDef());
         State = GameState.Labyrinth;
     }
 }

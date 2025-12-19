@@ -1,6 +1,6 @@
 using Godot;
 
-public partial class Character : Resource
+public partial class CharacterDef : Resource
 {
     [Export] public string Name { get; set; }
     [Export] public string Class { get; set; }
@@ -10,14 +10,14 @@ public partial class Character : Resource
     [Export] public int Tp { get; set; }
     [Export] public int Strength { get; set; }
 
-    public Character()
+    public CharacterDef()
     {
-        Name       = "Default";
-        Class      = "Default";
-        Level      = 1;
+        Name = "Default";
+        Class = "Default";
+        Level = 1;
         Experience = 0;
-        Hp         = 10;
-        Tp         = 10;
-        Strength   = 1;
+        Hp = 10;
+        Tp = 10;
+        Strength = 1;
     }
 }

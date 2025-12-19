@@ -1,9 +1,124 @@
-[gd_scene format=3 uid="uid://depbhnarlfr3u"]
+[gd_scene load_steps=4 format=3 uid="uid://bi3k3nqxeq27o"]
 
-[node name="Control" type="Control"]
+[ext_resource type="Script" uid="uid://mlyjv3o5gfg6" path="res://src/scenes/EnemyContainer.cs" id="1_6ynkr"]
+[ext_resource type="PackedScene" uid="uid://chn25mltsiwkj" path="res://src/scenes/CharacterUI.tscn" id="1_acp3n"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nip0a"]
+bg_color = Color(0, 0, 0, 0.078431375)
+
+[node name="BattleScene" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="BattleMenu" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.051000003
+anchor_top = 0.098000005
+anchor_right = 0.051000003
+anchor_bottom = 0.098000005
+offset_left = 0.0799942
+offset_top = 0.15999603
+offset_right = 367.08
+offset_bottom = 617.16
+
+[node name="Panel" type="Panel" parent="BattleMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PlayerParty" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Panel" type="Panel" parent="PlayerParty"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -258.0
+offset_top = -228.0
+offset_right = 258.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_nip0a")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PlayerParty"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -302.0
+offset_top = -216.0
+offset_right = 294.0
+offset_bottom = -52.0
+
+[node name="FrontRow" type="HBoxContainer" parent="PlayerParty/VBoxContainer"]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+alignment = 1
+
+[node name="CharacterUI" parent="PlayerParty/VBoxContainer/FrontRow" instance=ExtResource("1_acp3n")]
+layout_mode = 2
+
+[node name="CharacterUI2" parent="PlayerParty/VBoxContainer/FrontRow" instance=ExtResource("1_acp3n")]
+layout_mode = 2
+
+[node name="CharacterUI3" parent="PlayerParty/VBoxContainer/FrontRow" instance=ExtResource("1_acp3n")]
+layout_mode = 2
+
+[node name="BackRow" type="HBoxContainer" parent="PlayerParty/VBoxContainer"]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+alignment = 1
+
+[node name="CharacterUI" parent="PlayerParty/VBoxContainer/BackRow" instance=ExtResource("1_acp3n")]
+layout_mode = 2
+
+[node name="CharacterUI2" parent="PlayerParty/VBoxContainer/BackRow" instance=ExtResource("1_acp3n")]
+layout_mode = 2
+
+[node name="EnemyParty" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -790.0
+offset_top = -443.0
+offset_right = 790.0
+offset_bottom = 257.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Container" type="Container" parent="EnemyParty"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.063
+anchor_top = 0.063
+anchor_right = 0.93700004
+anchor_bottom = 0.93700004
+offset_left = -0.22566986
+offset_top = -0.10000229
+offset_right = 0.22558594
+offset_bottom = 0.099975586
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6ynkr")

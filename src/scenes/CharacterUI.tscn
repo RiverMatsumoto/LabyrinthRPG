@@ -1,0 +1,179 @@
+[gd_scene load_steps=7 format=3 uid="uid://chn25mltsiwkj"]
+
+[ext_resource type="StyleBox" uid="uid://v5fn0wnyaupe" path="res://resources/character_ui/CharacterHealthBarGradient.tres" id="2_l6t4r"]
+[ext_resource type="StyleBox" uid="uid://c8s0lbaa8ttdg" path="res://resources/character_ui/CharacterTpBarGradient.tres" id="3_a70xh"]
+
+[sub_resource type="Gradient" id="Gradient_l6t4r"]
+offsets = PackedFloat32Array(0, 0.9892473)
+colors = PackedColorArray(0.08036653, 0.23759261, 0.35130814, 1, 0.09182475, 0.3751759, 0.52669686, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_a70xh"]
+gradient = SubResource("Gradient_l6t4r")
+fill_from = Vector2(0.8319088, 0.85470086)
+fill_to = Vector2(0.16524217, 0.14529915)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l6t4r"]
+texture = SubResource("GradientTexture2D_a70xh")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tpnd3"]
+bg_color = Color(0.16445959, 0.1644598, 0.16445968, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.033212215, 0.1913926, 0.3465767, 1)
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[node name="CharacterUI" type="Control"]
+custom_minimum_size = Vector2(150, 90)
+layout_mode = 3
+anchor_right = 0.104
+anchor_bottom = 0.11100001
+offset_right = -49.680008
+offset_bottom = -29.880013
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 151.0
+offset_bottom = 89.0
+color = Color(0.016059812, 0.12521425, 0.24099478, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0070001
+anchor_bottom = 0.989
+offset_right = -0.05001831
+offset_bottom = -0.010002136
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="Panel" type="Panel" parent="MarginContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_l6t4r")
+
+[node name="Bars" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HPBar" type="ProgressBar" parent="Bars"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.030000001
+anchor_top = 0.85800004
+anchor_right = 0.47000003
+anchor_bottom = 0.9250001
+offset_left = 2.5
+offset_top = -1.2200012
+offset_right = 2.4999924
+offset_bottom = -1.2600021
+theme_override_styles/background = SubResource("StyleBoxFlat_tpnd3")
+theme_override_styles/fill = ExtResource("2_l6t4r")
+value = 100.0
+show_percentage = false
+
+[node name="TpBar" type="ProgressBar" parent="Bars"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.52500004
+anchor_top = 0.85800004
+anchor_right = 0.96500003
+anchor_bottom = 0.9250001
+offset_left = -0.7500076
+offset_top = -1.2200012
+offset_right = -0.75
+offset_bottom = -1.2600021
+theme_override_styles/background = SubResource("StyleBoxFlat_tpnd3")
+theme_override_styles/fill = ExtResource("3_a70xh")
+value = 100.0
+show_percentage = false
+
+[node name="HPLabel" type="RichTextLabel" parent="Bars"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.032
+anchor_top = 0.625
+anchor_right = 0.19000001
+anchor_bottom = 0.81700003
+offset_left = 1.1999998
+offset_top = -0.25
+offset_right = 2.5999966
+offset_bottom = -0.29000092
+theme_override_font_sizes/normal_font_size = 12
+text = "HP"
+
+[node name="HPValue" type="RichTextLabel" parent="Bars"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.22700001
+anchor_top = 0.62200004
+anchor_right = 0.47000003
+anchor_bottom = 0.81700003
+offset_left = -0.05000305
+offset_top = 0.019996643
+offset_right = 1.7499924
+offset_bottom = -0.29000092
+theme_override_font_sizes/normal_font_size = 12
+text = "0"
+horizontal_alignment = 2
+
+[node name="TPLabel" type="RichTextLabel" parent="Bars"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.51500005
+anchor_top = 0.625
+anchor_right = 0.68
+anchor_bottom = 0.81700003
+offset_bottom = -0.040000916
+theme_override_font_sizes/normal_font_size = 12
+text = "TP"
+
+[node name="TPValue" type="RichTextLabel" parent="Bars"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.71300006
+anchor_top = 0.62200004
+anchor_right = 0.97
+anchor_bottom = 0.81700003
+offset_left = 0.049987793
+offset_top = 0.019996643
+offset_right = -1.25
+offset_bottom = -0.29000092
+theme_override_font_sizes/normal_font_size = 12
+text = "0"
+horizontal_alignment = 2
+
+[node name="Name" type="RichTextLabel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.22700001
+anchor_top = 0.05
+anchor_right = 0.95300007
+anchor_bottom = 0.4
+offset_left = -0.05000305
+offset_top = 0.5
+offset_right = 0.049987793
+text = "Name"
+autowrap_mode = 0
+
+[node name="StatusEffect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.047000002
+anchor_top = 0.089
+anchor_right = 0.20700002
+anchor_bottom = 0.3
+offset_left = -0.05000019
+offset_top = -0.010000229
+offset_right = -0.05000305

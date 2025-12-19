@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://dtiy8yayysdb8" path="res://src/scenes/Map.tscn" id="1_l6sfq"]
 [ext_resource type="PackedScene" uid="uid://c7n88tqx78we7" path="res://src/scenes/TextboxManager.tscn" id="2_jrjgo"]
 [ext_resource type="PackedScene" uid="uid://4s1i17gso80f" path="res://src/scenes/PauseMenu.tscn" id="3_8oyut"]
-[ext_resource type="PackedScene" uid="uid://depbhnarlfr3u" path="res://src/scenes/BattleScene.tscn" id="4_ekgif"]
+[ext_resource type="PackedScene" uid="uid://bi3k3nqxeq27o" path="res://src/scenes/BattleScene.tscn" id="4_ekgif"]
 
 [node name="Game" type="Node3D"]
 
@@ -15,4 +15,3 @@ process_mode = 3
 [node name="PauseMenu" parent="." instance=ExtResource("3_8oyut")]
 
 [node name="BattleScene" parent="." instance=ExtResource("4_ekgif")]
-visible = false
