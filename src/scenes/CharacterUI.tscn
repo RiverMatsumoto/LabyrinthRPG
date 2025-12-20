@@ -1,5 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://chn25mltsiwkj"]
+[gd_scene load_steps=8 format=3 uid="uid://chn25mltsiwkj"]
 
+[ext_resource type="Script" uid="uid://bjnjrhiyoc0hc" path="res://src/scene_scripts/UI/CharacterUI.cs" id="1_a70xh"]
 [ext_resource type="StyleBox" uid="uid://v5fn0wnyaupe" path="res://resources/character_ui/CharacterHealthBarGradient.tres" id="2_l6t4r"]
 [ext_resource type="StyleBox" uid="uid://c8s0lbaa8ttdg" path="res://resources/character_ui/CharacterTpBarGradient.tres" id="3_a70xh"]
 
@@ -27,7 +28,7 @@ expand_margin_top = 2.0
 expand_margin_right = 2.0
 expand_margin_bottom = 2.0
 
-[node name="CharacterUI" type="Control"]
+[node name="CharacterUI" type="Control" node_paths=PackedStringArray("NameText", "HpValueText", "TpValueText", "StatusEffectTexture")]
 custom_minimum_size = Vector2(150, 90)
 layout_mode = 3
 anchor_right = 0.104
@@ -36,6 +37,11 @@ offset_right = -49.680008
 offset_bottom = -29.880013
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_a70xh")
+NameText = NodePath("Name")
+HpValueText = NodePath("Bars/HPValue")
+TpValueText = NodePath("Bars/TPValue")
+StatusEffectTexture = NodePath("StatusEffect")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 0

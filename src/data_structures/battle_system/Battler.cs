@@ -1,6 +1,14 @@
-
 public class Battler
 {
-    public int Hp;
-    public int Tp;
+    public BattlerStats Stats;
+
+    public Battler()
+    {
+        Stats = new BattlerStats();
+    }
+
+    public Battler(BattlerStats stats)
+    {
+        Stats = stats;
+    }
 }

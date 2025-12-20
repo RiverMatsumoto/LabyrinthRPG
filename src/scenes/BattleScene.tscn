@@ -1,18 +1,23 @@
-[gd_scene load_steps=4 format=3 uid="uid://bi3k3nqxeq27o"]
+[gd_scene load_steps=5 format=3 uid="uid://bi3k3nqxeq27o"]
 
-[ext_resource type="Script" uid="uid://mlyjv3o5gfg6" path="res://src/scenes/EnemyContainer.cs" id="1_6ynkr"]
+[ext_resource type="Script" uid="uid://mlyjv3o5gfg6" path="res://src/scene_scripts/EnemyContainer.cs" id="1_6ynkr"]
 [ext_resource type="PackedScene" uid="uid://chn25mltsiwkj" path="res://src/scenes/CharacterUI.tscn" id="1_acp3n"]
+[ext_resource type="Script" uid="uid://8gei2waqwany" path="res://src/scene_scripts/BattleScene.cs" id="1_rubm6"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nip0a"]
 bg_color = Color(0, 0, 0, 0.078431375)
 
-[node name="BattleScene" type="Control"]
+[node name="BattleScene" type="Control" node_paths=PackedStringArray("PlayerPartyFrontRowContainer", "PlayerPartyBackRowContainer")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_rubm6")
+PlayerPartyFrontRowContainer = NodePath("PlayerParty/VBoxContainer/FrontRow")
+PlayerPartyBackRowContainer = NodePath("PlayerParty/VBoxContainer/BackRow")
+characterUIPackedScene = ExtResource("1_acp3n")
 
 [node name="BattleMenu" type="Control" parent="."]
 layout_mode = 1
@@ -74,25 +79,10 @@ custom_minimum_size = Vector2(0, 70)
 layout_mode = 2
 alignment = 1
 
-[node name="CharacterUI" parent="PlayerParty/VBoxContainer/FrontRow" instance=ExtResource("1_acp3n")]
-layout_mode = 2
-
-[node name="CharacterUI2" parent="PlayerParty/VBoxContainer/FrontRow" instance=ExtResource("1_acp3n")]
-layout_mode = 2
-
-[node name="CharacterUI3" parent="PlayerParty/VBoxContainer/FrontRow" instance=ExtResource("1_acp3n")]
-layout_mode = 2
-
 [node name="BackRow" type="HBoxContainer" parent="PlayerParty/VBoxContainer"]
 custom_minimum_size = Vector2(0, 70)
 layout_mode = 2
 alignment = 1
-
-[node name="CharacterUI" parent="PlayerParty/VBoxContainer/BackRow" instance=ExtResource("1_acp3n")]
-layout_mode = 2
-
-[node name="CharacterUI2" parent="PlayerParty/VBoxContainer/BackRow" instance=ExtResource("1_acp3n")]
-layout_mode = 2
 
 [node name="EnemyParty" type="Control" parent="."]
 layout_mode = 1

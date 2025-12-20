@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="CharacterBase" load_steps=2 format=3 uid="uid://dnq6kuajounyn"]
+
+[ext_resource type="Script" uid="uid://df3crielt51k1" path="res://src/data_structures/CharacterBase.cs" id="1_o0wyu"]
+
+[resource]
+script = ExtResource("1_o0wyu")
+metadata/_custom_type_script = "uid://df3crielt51k1"
