@@ -1,6 +1,7 @@
 public class Battler
 {
     public BattlerStats Stats;
+    public bool IsAlive => Stats.Hp > 0;
 
     public Battler()
     {

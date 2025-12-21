@@ -7,13 +7,26 @@ public interface IEffect
 
 public interface IEffectBuilder
 {
+    string EffectName { get; }
     IEffect Build(EffectDef def);
+}
+
+public interface IEffectFactory
+{
+    IEffect Create(EffectDef def);
 }
 
 public interface IBattleAction
 {
-    string Id { get; }
-    void Execute(BattleModel model, Battler source, IReadOnlyList<Battler> targets);
+    Battler Source { get; }
+    ActionDef Def { get; }
+    IReadOnlyList<Battler> Targets { get; }
+    void Execute(BattleModel model);
+}
+
+public interface IBattleActionFactory
+{
+    IBattleAction Create(ActionDef def, Battler source, IReadOnlyList<Battler> targets);
 }
 
 public interface IDamageCalculator

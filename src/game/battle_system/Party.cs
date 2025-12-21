@@ -4,28 +4,22 @@ using Godot;
 
 public class Party
 {
-    public List<CharacterBase> Characters => FrontRow.Concat(BackRow).ToList();
-    private List<CharacterBase> FrontRow { get; set; }
-    private List<CharacterBase> BackRow { get; set; }
+    public List<Battler> Battlers => FrontRow.Concat(BackRow).ToList();
+    private List<Battler> FrontRow { get; set; } = [];
+    private List<Battler> BackRow { get; set; } = [];
 
-    public Party()
-    {
-        FrontRow = new List<CharacterBase>();
-        BackRow = new List<CharacterBase>();
-    }
-
-    public void AddToFrontRow(CharacterBase character)
+    public void AddToFrontRow(Battler battler)
     {
         if (FrontRow.Count < 3)
-            FrontRow.Add(character);
+            FrontRow.Add(battler);
         else
             GD.PrintErr("Tried to add Character to front row. Front row is full");
     }
 
-    public void AddToBackRow(CharacterBase character)
+    public void AddToBackRow(Battler battler)
     {
         if (BackRow.Count < 3)
-            BackRow.Add(character);
+            BackRow.Add(battler);
         else
             GD.PrintErr("Tried to add Character to back row. Back row is full");
     }

@@ -1,16 +1,25 @@
 using System.Collections.Generic;
 
 public sealed record ActionDef(
-    string ActionName,
-    Dictionary<string, object> Args
+    string Id,
+    string Name,
+    Targeting TargetRule,
+    IReadOnlyList<EffectDef> Effects
 );
 
-public sealed class ComposedBattleAction(string id, IReadOnlyList<IEffect> effects) : IBattleAction
+public sealed class ComposedBattleAction(
+    ActionDef def,
+    Battler source,
+    IReadOnlyList<Battler> targets,
+    IReadOnlyList<IEffect> effects) : IBattleAction
 {
-    public string Id { get; } = id;
+    public Battler Source => source;
+    public ActionDef Def => def;
+    public IReadOnlyList<Battler> Targets => targets;
+
     private readonly IReadOnlyList<IEffect> _effects = effects;
 
-    public void Execute(BattleModel model, Battler source, IReadOnlyList<Battler> targets)
+    public void Execute(BattleModel model)
     {
         // effects may need more information to apply animations
         foreach (var e in _effects)

@@ -1,16 +1,17 @@
 actions:
-  - id: slash
-    name: "Slash"
+  - id: basic_attack
+    name: "Attack"
     effects:
       - type: damage
-        kind: Cut
-        power: 1.2
+        dmg_type: cut
+        dmg_type_mode: from_weapon
+        power: 1.0
 
   - id: fireball
     name: "Fireball"
     effects:
       - type: damage
-        kind: Fire
+        kind: fire
         power: 1.4
       - type: status
         id: burn
