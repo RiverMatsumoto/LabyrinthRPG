@@ -1,9 +1,16 @@
+using System.Collections.Generic;
+using System.Linq;
+
 public class BattlerStats
 {
     public string Name { get; set; }
     public string Description { get; set; }
     public int Level { get; set; }
     public int Experience { get; set; }
+    public int Atk => AtkBonus.Values.Sum();
+    public int Def => DefBonus.Values.Sum();
+    public Dictionary<string, int> AtkBonus = new();
+    public Dictionary<string, int> DefBonus = new();
     public int Hp { get; set; }
     public int Tp { get; set; }
     public int Str { get; set; }

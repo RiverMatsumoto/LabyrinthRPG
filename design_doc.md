@@ -25,3 +25,6 @@ Brainstorm of ways to improve etrian odyssey core battle system
   * Encourage having multiple parties for different game modes possibly?
     * roguelike style where the floors are random, start from level 1 every time
       * unlock skill trees for each run maybe?
+
+
+ai suggestions:

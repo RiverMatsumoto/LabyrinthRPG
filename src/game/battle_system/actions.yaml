@@ -1,0 +1,24 @@
+actions:
+  - id: slash
+    name: "Slash"
+    effects:
+      - type: damage
+        kind: Cut
+        power: 1.2
+
+  - id: fireball
+    name: "Fireball"
+    effects:
+      - type: damage
+        kind: Fire
+        power: 1.4
+      - type: status
+        id: burn
+        turns: 3
+        chance: 0.35
+
+  - id: heal
+    name: "Heal"
+    effects:
+      - type: heal
+        power: 0.8

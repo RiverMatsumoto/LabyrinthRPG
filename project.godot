@@ -19,8 +19,7 @@ config/icon="res://src/icon.svg"
 
 [autoload]
 
-Settings="*res://resources/Settings.cs"
-Game="*res://src/Game.cs"
+GameServicesBootstrap="*res://src/game/GameServicesBootstrap.cs"
 
 [display]
 

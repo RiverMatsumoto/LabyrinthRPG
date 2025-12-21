@@ -10,11 +10,11 @@
 
 [node name="MapScene" parent="." instance=ExtResource("1_l6sfq")]
 
+[node name="BattleScene" parent="." groups=["BattleScene"] instance=ExtResource("4_ekgif")]
+
 [node name="TextboxManager" parent="." instance=ExtResource("2_jrjgo")]
 process_mode = 3
 
 [node name="PauseMenu" parent="." instance=ExtResource("3_8oyut")]
-
-[node name="BattleScene" parent="." groups=["BattleScene"] instance=ExtResource("4_ekgif")]
 
 [node name="DebugConsole" parent="." instance=ExtResource("5_2er44")]

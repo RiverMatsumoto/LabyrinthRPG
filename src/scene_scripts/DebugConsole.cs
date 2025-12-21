@@ -1,7 +1,6 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 #if DEBUG
 public partial class DebugConsole : CanvasLayer
