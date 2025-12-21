@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://sw6qry1lujeb"]
+
+[ext_resource type="Script" uid="uid://c1jh851evqm1" path="res://src/scene_scripts/UI/EnemyUI.cs" id="1_b7p8g"]
+
+[node name="EnemyUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_b7p8g")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]

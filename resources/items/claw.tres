@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemDef" load_steps=3 format=3 uid="uid://b18u832ymgmva"]
+
+[ext_resource type="Script" uid="uid://dwg3gor8fa6sf" path="res://src/game/inventory/ItemDef.cs" id="1_531v8"]
+
+[sub_resource type="CSharpScript" id="CSharpScript_531v8"]
+
+[resource]
+script = ExtResource("1_531v8")
+Id = "claw"
+DisplayName = "Claw"
+Description = "A sharp pointy claw from a monster"
+Category = 4
+metadata/_custom_type_script = "uid://dwg3gor8fa6sf"

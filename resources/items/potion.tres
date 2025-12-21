@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ItemDef" load_steps=3 format=3 uid="uid://h66cjcg1km01"]
+
+[ext_resource type="Script" uid="uid://dwg3gor8fa6sf" path="res://src/game/inventory/ItemDef.cs" id="1_h3xj8"]
+
+[sub_resource type="CSharpScript" id="CSharpScript_36hb1"]
+
+[resource]
+script = ExtResource("1_h3xj8")
+metadata/_custom_type_script = "uid://dwg3gor8fa6sf"

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="CharacterBase" load_steps=2 format=3 uid="uid://cov5qxvldskda"]
+
+[ext_resource type="Script" path="res://src/game/CharacterBase.cs" id="1_ip63h"]
+
+[resource]
+script = ExtResource("1_ip63h")
+Class = "squid_wizard"
+Description = "It's a squid and... a wizard"
+Level = 1
+Hp = 50
+metadata/_custom_type_script = "uid://df3crielt51k1"
