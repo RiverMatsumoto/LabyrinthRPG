@@ -28,3 +28,27 @@ Brainstorm of ways to improve etrian odyssey core battle system
 
 
 ai suggestions:
+
+
+enemy designs:
+
+enemy types or archetypes affect what the player strategizes
+- Mechanics that force the player to respond, not necessarily difficult to deal with on their own
+  - in combination with other mechanics, can become lethal
+- Pocket dimension where you can stack enemies (maybe 5 groups) and fight them all at once
+
+Outside of scope but cool ideas:
+- Monthly "seeds" where a certain team comp and dungeon
+
+## Roguelike Elements
+* Have fundamental "abilities" for the player to be able to have a chance at most enemies
+
+## Allowing player to test new team comps
+* Fundamentally I want the player to play around with many team comps and synergies
+  * level dependent buffs and abilities
+* punish same strategy over and over again
+
+
+
+Make classes a life system
+  When they die in the dungeon

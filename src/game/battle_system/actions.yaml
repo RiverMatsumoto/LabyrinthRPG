@@ -6,20 +6,12 @@ actions:
         dmg_type: cut
         dmg_type_mode: from_weapon
         power: 1.0
-
-  - id: fireball
-    name: "Fireball"
+  - id: basic_attack
+    name: Attack
+    target_rule: SingleEnemy
     effects:
-      - type: damage
-        kind: fire
-        power: 1.4
-      - type: status
-        id: burn
-        turns: 3
-        chance: 0.35
-
-  - id: heal
-    name: "Heal"
-    effects:
-      - type: heal
-        power: 0.8
+      - effect_name: damage
+        args:
+          dmg_type: cut
+          dmg_type_mode: from_weapon
+          power: 1.0

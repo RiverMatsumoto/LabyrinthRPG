@@ -1,0 +1,10 @@
+actions:
+- id: basic_attack
+  name: Attack
+  target_rule: SingleEnemy
+  effects:
+  - effect_name: damage
+    args:
+      dmg_type: cut
+      dmg_type_mode: from_weapon
+      power: 1.0

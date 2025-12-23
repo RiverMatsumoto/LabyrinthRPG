@@ -8,7 +8,7 @@ public sealed class DamageEffect(IDamageCalculatorRegistry reg, DamageSpec dmgSp
 
     public void Apply(BattleModel model, Battler source, IReadOnlyList<Battler> targets)
     {
-        var calc = _reg.Get(_dmgSpec.type);
+        var calc = _reg.Get(_dmgSpec.DmgType);
         foreach (var t in targets)
         {
             var amount = calc.Compute(source, t, model, _dmgSpec);
@@ -37,8 +37,8 @@ public enum DamageTypeMode
 }
 
 public sealed record DamageSpec(
-    DamageType type = DamageType.True,
-    DamageTypeMode dmgTypeMode = DamageTypeMode.FromWeapon,
-    float Power = 1.0f,
-    bool CanCrit = true
+    DamageType DmgType,
+    DamageTypeMode DmgTypeMode,
+    float Power,
+    bool CanCrit
 );

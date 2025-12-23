@@ -12,6 +12,4 @@ public sealed class BattleActionFactory : IBattleActionFactory
         IReadOnlyList<IEffect> builtEffects = def.Effects.Select(ed => _effects.Create(ed)).ToList();
         return new ComposedBattleAction(def, source, targets, builtEffects);
     }
-
-
 }

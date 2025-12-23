@@ -20,6 +20,8 @@ public static class GameServices
         services.AddSingleton<IDamageCalculator, IceDamageCalculator>();
         services.AddSingleton<IDamageCalculator, LightningDamageCalculator>();
 
+        services.AddSingleton<IActionLibrary, ActionLibrary>();
+
         services.AddSingleton<IDamageCalculatorRegistry, DamageCalculatorRegistry>();
 
         Provider = services.BuildServiceProvider();

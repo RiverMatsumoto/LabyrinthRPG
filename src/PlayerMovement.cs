@@ -3,84 +3,152 @@ using Godot;
 
 public partial class PlayerMovement : Node3D
 {
-    private GridMap gridMap;
-    private float moveTime = 0.15f;
-    private bool isMoving = false;
-    [Export] private double moveCooldown = 0.01;
-    private double cooldownTimer = 0;
-    private Timer cooldownTimerNode;
-    private void StartTurn() => td.Turning = true;
+    [Export] private GridMap gridMap;
+    [Export] private float moveTime = 0.10f;
+    [Export] private Timer cooldownTimerNode;
+    [Export] private Tween.TransitionType easeType;
+
+    private bool isMoving;
     private TurnData td;
 
-    // Called when the node enters the scene tree for the first time.
+    private Vector3I cell; // authoritative grid position
+    private readonly Vector3 cellCenterOffset = new Vector3(0, 0.5f, 0);
+
     public override void _Ready()
     {
         td = new TurnData();
-        gridMap = GetNode<GridMap>("../GridMap");
+
         cooldownTimerNode = GetNode<Timer>("Timer");
         cooldownTimerNode.OneShot = true;
         cooldownTimerNode.Timeout += () => isMoving = false;
+
+        cell = new Vector3I(0, 0, 0);
+        SnapToCell(cell);
     }
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
     {
         ProcessTurn(delta);
-
         if (isMoving || Game.State != GameState.Labyrinth) return;
 
-        Vector3 dir;
-        if (Input.IsActionPressed("MoveForward"))
-            dir = GlobalTransform.Basis.X;
-        else if (Input.IsActionPressed("MoveBackward"))
-            dir = -GlobalTransform.Basis.X;
-        else if (Input.IsActionPressed("MoveRight"))
-            dir = GlobalTransform.Basis.Z;
-        else if (Input.IsActionPressed("MoveLeft"))
-            dir = -GlobalTransform.Basis.Z;
-        else if (Input.IsActionPressed("TurnLeft"))
-        {
-            Turn(-1);
-            return;
-        }
-        else if (Input.IsActionPressed("TurnRight"))
-        {
-            Turn(1);
-            return;
-        }
+        Vector3I step = Vector3I.Zero;
+
+        if (Input.IsActionPressed("MoveForward")) step = ForwardStep();
+        else if (Input.IsActionPressed("MoveBackward")) step = -ForwardStep();
+        else if (Input.IsActionPressed("MoveRight")) step = RightStep();
+        else if (Input.IsActionPressed("MoveLeft")) step = -RightStep();
+        else if (Input.IsActionPressed("TurnLeft")) { Turn(-1); return; }
+        else if (Input.IsActionPressed("TurnRight")) { Turn(1); return; }
         else return;
 
-        // Vector3 localDirection = ToLocal(Position + finalPos);
-        var finalPos = Position + dir;
-        Vector3I globalFinalPos = new Vector3I(
-            Mathf.RoundToInt(finalPos.X),
-            Mathf.RoundToInt(finalPos.Y),
-            Mathf.RoundToInt(finalPos.Z));
-        GD.Print(Position);
-        GD.Print(dir);
-        GD.Print(globalFinalPos);
-        // GD.Print(localDirection);
+        var targetCell = cell + step;
 
-        int cellItem = gridMap.GetCellItem(globalFinalPos);
-        if (cellItem == GridMap.InvalidCellItem) return;
-        string cellName = gridMap.MeshLibrary.GetItemName(cellItem);
-        if (cellName != "Floor") return;
+        if (!IsWalkableFloor(targetCell))
+            return;
 
-        isMoving = true;
-        Tween tween = CreateTween();
-        tween.TweenProperty(this, "position", dir, moveTime)
-            .AsRelative().SetTrans(Tween.TransitionType.Sine).SetEase(Tween.EaseType.Out)
-            .Finished += () => StartCooldown();
+        MoveToCell(targetCell);
     }
 
-    public override void _Input(InputEvent @event)
+    private void MoveToCell(Vector3I targetCell)
     {
-        if (@event.IsActionPressed("DEBUG_3"))
+        isMoving = true;
+
+        Vector3 targetWorld = CellToWorld(targetCell);
+
+        Tween tween = CreateTween();
+        tween.TweenProperty(this, "global_position", targetWorld, moveTime)
+             .SetTrans(easeType)
+             .SetEase(Tween.EaseType.Out);
+
+        tween.Finished += () =>
         {
-            GD.Print($"Right: {ToGlobal(GlobalTransform.Basis.X)}");
-            GD.Print($"Up: {ToGlobal(GlobalTransform.Basis.Y)}");
-            GD.Print($"Forward: {ToGlobal(GlobalTransform.Basis.Z)}");
-        }
+            cell = targetCell;       // commit discrete position
+            SnapToCell(cell);        // kill float drift
+            StartCooldown();
+        };
+    }
+
+    private bool IsWalkableFloor(Vector3I c)
+    {
+        int item = gridMap.GetCellItem(c);
+        if (item == GridMap.InvalidCellItem) return false;
+
+        string name = gridMap.MeshLibrary.GetItemName(item);
+        return name == "Floor";
+    }
+
+    private Vector3 CellToWorld(Vector3I c)
+    {
+        Vector3 local = gridMap.MapToLocal(c) + cellCenterOffset;
+        return gridMap.ToGlobal(local);
+    }
+
+    private void SnapToCell(Vector3I c) => GlobalPosition = CellToWorld(c);
+
+    // Facing as a 0..3 index (0 = +Z or -Z depending on your choice)
+    // This version assumes "forward" is -Z in world when Rotation.Y == 0.
+    private int FacingIndex()
+    {
+        // Convert radians to quarter turns, rounding to nearest.
+        int q = Mathf.RoundToInt((float)(Rotation.Y / (Mathf.Pi / 2)));
+        q = ((q % 4) + 4) % 4;
+        return q;
+    }
+
+    private Vector3I ForwardStep()
+    {
+        return FacingIndex() switch
+        {
+            0 => new Vector3I(1, 0, 0), // ForwardX
+            1 => new Vector3I(0, 0, -1), // RightZ
+            2 => new Vector3I(-1, 0, 0),  // BackwardX
+            _ => new Vector3I(0, 0, 1),  // Left)
+        };
+    }
+
+    private Vector3I RightStep()
+    {
+        return FacingIndex() switch
+        {
+            0 => new Vector3I(0, 0, 1),
+            1 => new Vector3I(1, 0, 0),
+            2 => new Vector3I(0, 0, -1),
+            _ => new Vector3I(-1, 0, 0),
+        };
+    }
+
+    private Vector3I StepFromFacing(bool forward)
+    {
+        int f = FacingIndex();
+
+        // forward vectors for indices 0,1,2,3
+        Vector3I[] forwardSteps =
+        {
+            new Vector3I(1, 0, 0), // Forward
+            new Vector3I(0, 0, -1), // Right
+            new Vector3I(-1, 0, 0),  // Backward
+            new Vector3I(0, 0, 1),  // Left
+        };
+
+        var s = forwardSteps[f];
+        return forward ? s : -s;
+    }
+
+    private Vector3I StepStrafe(bool right)
+    {
+        // Right is forward rotated +90 degrees
+        int f = FacingIndex();
+        int r = (f + 3) % 4;
+        Vector3I[] rightSteps =
+        {
+            new Vector3I(0, 0, 1),
+            new Vector3I(1, 0, 0),
+            new Vector3I(0, 0, -1),
+            new Vector3I(-1, 0, 0),
+        };
+
+        var s = rightSteps[f];
+        return right ? s : -s;
     }
 
     public void Turn(float direction)
@@ -103,13 +171,16 @@ public partial class PlayerMovement : Node3D
         if (!td.Turning) return;
 
         td.TimeTurning += delta;
-        float y = (float)Mathf.LerpAngle(td.StartRot, td.EndRot, EaseOutSine(td.TimeTurning / moveTime));
+        float t = (float)(td.TimeTurning / moveTime);
+        float y = (float)Mathf.LerpAngle((float)td.StartRot, (float)td.EndRot, (float)EaseOutSine(t));
+
         Rotation = new Vector3(Rotation.X, y, Rotation.Z);
+
         if (td.TimeTurning > moveTime)
         {
             td.Turning = false;
-            StartCooldown();
             Rotation = new Vector3(Rotation.X, (float)td.EndRot, Rotation.Z);
+            StartCooldown();
         }
     }
 
@@ -127,5 +198,5 @@ public partial class PlayerMovement : Node3D
         public double TimeTurning;
     }
 
-    private double EaseOutSine(double x) => Math.Sin(x * (Math.PI / 2));
+    private double EaseOutSine(double x) => Math.Sin(Math.Clamp(x, 0.0, 1.0) * (Math.PI / 2));
 }

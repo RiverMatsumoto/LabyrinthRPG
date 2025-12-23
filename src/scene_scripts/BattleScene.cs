@@ -1,6 +1,5 @@
 using Godot;
 
-[Tool]
 public partial class BattleScene : Control
 {
     public BattleModel Model { get; set; }

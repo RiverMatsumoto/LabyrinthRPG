@@ -5,6 +5,7 @@
 [node name="PlayerMovement" type="Node3D"]
 process_mode = 1
 script = ExtResource("1_448oe")
+moveCooldown = 0.0
 
 [node name="CSGSphere3D" type="CSGSphere3D" parent="."]
 

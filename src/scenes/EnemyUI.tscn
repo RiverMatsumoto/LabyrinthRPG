@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://sw6qry1lujeb"]
+[gd_scene load_steps=3 format=3 uid="uid://sw6qry1lujeb"]
 
 [ext_resource type="Script" uid="uid://c1jh851evqm1" path="res://src/scene_scripts/UI/EnemyUI.cs" id="1_b7p8g"]
+[ext_resource type="Texture2D" uid="uid://dljyrbaon31u0" path="res://resources/sprites/enemies/squid_wizard.png" id="2_oaf4h"]
 
 [node name="EnemyUI" type="Control"]
 layout_mode = 3
@@ -12,3 +13,4 @@ grow_vertical = 2
 script = ExtResource("1_b7p8g")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_oaf4h")
