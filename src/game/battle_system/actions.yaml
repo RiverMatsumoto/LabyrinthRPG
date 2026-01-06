@@ -1,17 +1,18 @@
 actions:
   - id: basic_attack
-    name: "Attack"
-    effects:
-      - type: damage
-        dmg_type: cut
-        dmg_type_mode: from_weapon
-        power: 1.0
-  - id: basic_attack
     name: Attack
     target_rule: SingleEnemy
     effects:
       - effect_name: damage
         args:
-          dmg_type: cut
-          dmg_type_mode: from_weapon
+          damage_type: cut
+          damage_type_mode: from_weapon
           power: 1.0
+  - id: fire
+    name: Fire
+    target_rule: SingleEnemy
+    effects:
+      - effect_name: damage
+        args:
+          damage_type: fire
+          damage_type_mode:

@@ -5,6 +5,8 @@ actions:
   effects:
   - effect_name: damage
     args:
-      dmg_type: cut
-      dmg_type_mode: from_weapon
-      power: 1.0
+      effect_name: damage
+      args:
+        dmg_type: cut
+        dmg_type_mode: from_weapon
+        power: 1.0

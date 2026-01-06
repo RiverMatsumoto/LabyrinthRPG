@@ -46,7 +46,7 @@ public sealed class ActionLibrary : IActionLibrary
             {
                 var effectMap = (Dictionary<object, object>)effectObj;
 
-                var effectName = (string)effectMap["type"];
+                var effectName = (string)effectMap["effect_name"];
                 var args = new Dictionary<string, object>();
 
                 foreach (var kv in effectMap)
