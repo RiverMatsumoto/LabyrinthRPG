@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bi3k3nqxeq27o" path="res://src/scenes/BattleScene.tscn" id="4_ekgif"]
 [ext_resource type="PackedScene" uid="uid://bh10oqeenca6t" path="res://src/scenes/DebugConsole.tscn" id="5_2er44"]
 [ext_resource type="Script" uid="uid://bc0hn5vs0w6js" path="res://src/scene_scripts/SystemsMediator.cs" id="6_hl6w7"]
-[ext_resource type="Script" uid="uid://bwn22eiofydfe" path="res://src/test/TestBattleAction.cs" id="8_k0rgm"]
+[ext_resource type="Script" uid="uid://cafimsor0kwkl" path="res://src/test/TestBattleSystemNode.cs" id="8_k0rgm"]
 
 [node name="Game" type="Node3D"]
 

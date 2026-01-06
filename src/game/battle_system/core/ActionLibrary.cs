@@ -4,7 +4,13 @@ using System.Collections.Generic;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 using System.Linq;
-using Godot;
+
+public sealed record ActionDef(
+    string Id,
+    string Name,
+    Targeting TargetRule,
+    IEnumerable<EffectDef> Effects
+);
 
 public interface IActionLibrary
 {
@@ -38,6 +44,7 @@ public sealed class ActionLibrary : IActionLibrary
 
             var id = (string)actionMap["id"];
             var name = (string)actionMap["name"];
+            var targetRule = Enum.Parse<Targeting>((string)actionMap["target_rule"], true);
 
             var effectsYaml = (List<object>)actionMap["effects"];
             var effects = new List<EffectDef>();
@@ -45,38 +52,43 @@ public sealed class ActionLibrary : IActionLibrary
             foreach (var effectObj in effectsYaml)
             {
                 var effectMap = (Dictionary<object, object>)effectObj;
-
-                var effectName = (string)effectMap["effect_name"];
-                var args = new Dictionary<string, object>();
-
-                foreach (var kv in effectMap)
-                {
-                    var key = (string)kv.Key;
-                    if (key == "type")
-                        continue;
-
-                    // normalize numeric scalars
-                    args[key] = kv.Value switch
-                    {
-                        int i => i,
-                        long l => l,
-                        double d => (float)d,
-                        _ => kv.Value
-                    };
-                }
-
-                effects.Add(new EffectDef(effectName, args));
+                effects.Add(ParseEffect(effectMap));
             }
 
             result[id] = new ActionDef(
                 Id: id,
                 Name: name,
-                TargetRule: Targeting.SingleEnemy, // example
+                TargetRule: targetRule, // example
                 Effects: effects
             );
         }
 
         return result;
+    }
+
+    private static EffectDef ParseEffect(Dictionary<object, object> m)
+    {
+        var type = (string)m["type"];
+
+        return type switch
+        {
+            "damage" => new DamageEffect(
+                                Enum.Parse<DamageType>((string)m["damage_type"], true),
+                                Enum.Parse<DamageTypeMode>((string)m["damage_type_mode"], true),
+                                Convert.ToSingle(m["power"]),
+                                Convert.ToBoolean(m["can_crit"])
+                            ),
+            "apply_status" => new ApplyStatusEffect(
+                                (string)m["status_id"],
+                                Convert.ToInt32(m["stacks"])
+                            ),
+            "play_anim" => new PlayAnimEffect((string)m["anim_id"]),
+            "play_anim_wait" => new PlayAnimWaitEffect(
+                                (string)m["anim_id"]
+                            ),
+            "wait" => new WaitEffect(Convert.ToInt32(m["ms"])),
+            _ => throw new InvalidOperationException($"Unknown effect type: {type}"),
+        };
     }
 
     public ActionDef Get(string id) => _defs.TryGetValue(id, out var def) ? def : throw new InvalidOperationException($"Unknown action id: {id}");
