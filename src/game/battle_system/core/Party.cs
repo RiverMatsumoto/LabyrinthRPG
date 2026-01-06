@@ -4,9 +4,9 @@ using Godot;
 
 public class Party
 {
-    public List<Battler> Battlers => FrontRow.Concat(BackRow).ToList();
-    private List<Battler> FrontRow { get; set; } = [];
-    private List<Battler> BackRow { get; set; } = [];
+    public IList<Battler> Battlers => FrontRow.Concat(BackRow).ToList();
+    private IList<Battler> FrontRow { get; set; } = [];
+    private IList<Battler> BackRow { get; set; } = [];
 
     public void AddToFrontRow(Battler battler)
     {

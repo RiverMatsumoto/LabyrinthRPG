@@ -1,18 +1,14 @@
 actions:
-  - id: basic_attack
+  - id: BasicAttack
     name: Attack
     target_rule: SingleEnemy
     effects:
-      - effect_name: damage
-        args:
-          damage_type: cut
-          damage_type_mode: from_weapon
-          power: 1.0
-  - id: fire
-    name: Fire
-    target_rule: SingleEnemy
-    effects:
-      - effect_name: damage
-        args:
-          damage_type: fire
-          damage_type_mode:
+      - type: play_anim
+        anim_id: FromWeapon
+      - type: wait
+        ms: 1000
+      - type: damage
+        damage_type: Cut
+        damage_type_mode: FromWeapon
+        power: 1.0
+        can_crit: true

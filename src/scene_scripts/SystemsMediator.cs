@@ -11,6 +11,7 @@ public partial class SystemsMediator : Node
 
     public override void _Ready()
     {
+
         // Map -> Battle
         // mapScene.EncounterTriggered += data =>
         // {
@@ -28,12 +29,12 @@ public partial class SystemsMediator : Node
         // {
         //     textboxManager.Open(dialogue);
         // };
+
     }
     public override void _EnterTree()
     {
         GameServices.Build();
     }
-
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
