@@ -2,3 +2,5 @@
 .godot/
 .idea/
 .git/
+.zed/
+omnisharp.json

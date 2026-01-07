@@ -2,12 +2,12 @@
 
 [ext_resource type="PackedScene" uid="uid://dtiy8yayysdb8" path="res://src/scenes/Map.tscn" id="1_l6sfq"]
 [ext_resource type="PackedScene" uid="uid://c7n88tqx78we7" path="res://src/scenes/TextboxManager.tscn" id="2_jrjgo"]
-[ext_resource type="Script" uid="uid://bwxi1ldge7qla" path="res://src/scene_scripts/Map.cs" id="2_qdiym"]
+[ext_resource type="Script" uid="uid://bwxi1ldge7qla" path="res://src/game/scene_scripts/Map.cs" id="2_qdiym"]
 [ext_resource type="PackedScene" uid="uid://4s1i17gso80f" path="res://src/scenes/PauseMenu.tscn" id="3_8oyut"]
 [ext_resource type="PackedScene" uid="uid://bi3k3nqxeq27o" path="res://src/scenes/BattleScene.tscn" id="4_ekgif"]
 [ext_resource type="PackedScene" uid="uid://bh10oqeenca6t" path="res://src/scenes/DebugConsole.tscn" id="5_2er44"]
-[ext_resource type="Script" uid="uid://bc0hn5vs0w6js" path="res://src/scene_scripts/SystemsMediator.cs" id="6_hl6w7"]
-[ext_resource type="Script" uid="uid://cafimsor0kwkl" path="res://src/test/TestBattleSystemNode.cs" id="8_k0rgm"]
+[ext_resource type="Script" uid="uid://bc0hn5vs0w6js" path="res://src/game/scene_scripts/SystemsMediator.cs" id="6_hl6w7"]
+[ext_resource type="Script" uid="uid://cafimsor0kwkl" path="res://src/testing/TestBattleSystemNode.cs" id="8_k0rgm"]
 
 [node name="Game" type="Node3D"]
 

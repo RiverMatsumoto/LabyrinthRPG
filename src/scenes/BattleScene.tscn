@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://bi3k3nqxeq27o"]
 
-[ext_resource type="Script" uid="uid://mlyjv3o5gfg6" path="res://src/scene_scripts/EnemyContainer.cs" id="1_6ynkr"]
+[ext_resource type="Script" uid="uid://mlyjv3o5gfg6" path="res://src/game/scene_scripts/EnemyContainer.cs" id="1_6ynkr"]
 [ext_resource type="PackedScene" uid="uid://chn25mltsiwkj" path="res://src/scenes/CharacterUI.tscn" id="1_acp3n"]
-[ext_resource type="Script" uid="uid://8gei2waqwany" path="res://src/scene_scripts/BattleScene.cs" id="1_rubm6"]
+[ext_resource type="Script" uid="uid://8gei2waqwany" path="res://src/game/scene_scripts/BattleScene.cs" id="1_rubm6"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nip0a"]
 bg_color = Color(0, 0, 0, 0.078431375)

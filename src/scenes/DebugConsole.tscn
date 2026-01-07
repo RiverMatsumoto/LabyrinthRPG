@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bh10oqeenca6t"]
 
-[ext_resource type="Script" uid="uid://cl73hhvwuyyps" path="res://src/scene_scripts/DebugConsole.cs" id="1_4itqt"]
+[ext_resource type="Script" uid="uid://cl73hhvwuyyps" path="res://src/game/scene_scripts/DebugConsole.cs" id="1_4itqt"]
 
 [node name="DebugConsole" type="CanvasLayer" node_paths=PackedStringArray("Root", "Output", "Input")]
 script = ExtResource("1_4itqt")

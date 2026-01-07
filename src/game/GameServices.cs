@@ -12,6 +12,9 @@ public static class GameServices
         services.AddSingleton<ISaveStore, FileSaveStore>();
         services.AddSingleton<Settings>();
 
+        // battle system
+        services.AddSingleton<IActionLibrary, ActionLibrary>();
+
         // damage calculators
         services.AddSingleton<IDamageCalculator, CutDamageCalculator>();
         services.AddSingleton<IDamageCalculator, BashDamageCalculator>();

@@ -12,13 +12,13 @@ public partial class BattleScene : Control
     {
         InitializeBattle();
 
-        Model.playerPartyFrontRow.Add(new Battler());
-        Model.playerPartyFrontRow.Add(new Battler());
-        Model.playerPartyBackRow.Add(new Battler());
-        Model.playerPartyBackRow.Add(new Battler());
-        Model.enemyParty.Add(new Battler());
-        Model.enemyParty.Add(new Battler());
-        Model.enemyParty.Add(new Battler());
+        Model.playerParty.AddToFrontRow(new Battler());
+        Model.playerParty.AddToFrontRow(new Battler());
+        Model.playerParty.AddToFrontRow(new Battler());
+        Model.playerParty.AddToFrontRow(new Battler());
+        Model.enemyParty.AddToFrontRow(new Battler());
+        Model.enemyParty.AddToFrontRow(new Battler());
+        Model.enemyParty.AddToFrontRow(new Battler());
 
         InitializeUI();
     }
@@ -30,9 +30,9 @@ public partial class BattleScene : Control
 
     public void InitializeUI()
     {
-        foreach (var member in Model.playerPartyFrontRow)
+        foreach (var member in Model.playerParty)
             AddPartyMemberFrontRow(member);
-        foreach (var member in Model.playerPartyBackRow)
+        foreach (var member in Model.playerParty)
             AddPartyMemberBackRow(member);
     }
 

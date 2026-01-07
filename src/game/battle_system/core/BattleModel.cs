@@ -1,14 +1,11 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 public class BattleModel
 {
-    public List<Battler> playerPartyFrontRow = new();
-    public List<Battler> playerPartyBackRow = new();
-    public List<Battler> playerPartyFull => (List<Battler>)playerPartyFrontRow.Concat(playerPartyBackRow);
-    public List<Battler> enemyParty = new();
+    public Party playerParty = new();
+    public Party enemyParty = new();
 
     public BattleModel() { }
 

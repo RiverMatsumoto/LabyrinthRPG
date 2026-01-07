@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://chn25mltsiwkj"]
 
-[ext_resource type="Script" uid="uid://bjnjrhiyoc0hc" path="res://src/scene_scripts/UI/CharacterUI.cs" id="1_a70xh"]
+[ext_resource type="Script" uid="uid://bjnjrhiyoc0hc" path="res://src/game/scene_scripts/UI/CharacterUI.cs" id="1_a70xh"]
 [ext_resource type="StyleBox" uid="uid://v5fn0wnyaupe" path="res://resources/character_ui/CharacterHealthBarGradient.tres" id="2_l6t4r"]
 [ext_resource type="StyleBox" uid="uid://c8s0lbaa8ttdg" path="res://resources/character_ui/CharacterTpBarGradient.tres" id="3_a70xh"]
 
