@@ -25,30 +25,35 @@ public sealed record DamageSpec(
     bool CanCrit
 );
 
+public class PlaybackOptions
+{
+    bool SkipWaits { get; set; } = false;
+    float Speed { get; set; } = 1.0f; // 1 = normal, 2 = 2x, etc.
+}
 
-public sealed record PlayAnimEffect(
-    string AnimId
-) : EffectDef
+
+public abstract record EffectDef
+{
+    public abstract Task ExecuteAsync(BattleRunCtx ctx, CancellationToken ct);
+}
+
+public sealed record WaitEffect(int Ms) : EffectDef
+{
+    public override Task ExecuteAsync(BattleRunCtx ctx, CancellationToken ct)
+        => ctx.Runtime.WaitMs(Ms, ct);
+}
+
+public sealed record PlayAnimEffect(string AnimId) : EffectDef
 {
     public override Task ExecuteAsync(BattleRunCtx ctx, CancellationToken ct)
     {
-        ctx.Animator.Play(AnimId);
+        ctx.Runtime.PlayAnim(AnimId, wait: true, ct);
         return Task.CompletedTask;
     }
 }
 
-
-public sealed record PlayAnimWaitEffect(
-    string AnimId
-) : EffectDef
+public sealed record PlayAnimWaitEffect(string AnimId) : EffectDef
 {
-    public override Task ExecuteAsync(BattleRunCtx ctx, CancellationToken ct) => ctx.Animator.PlayAsync(AnimId, ct);
-}
-
-
-public sealed record WaitEffect(
-    int Ms
-) : EffectDef
-{
-    public override Task ExecuteAsync(BattleRunCtx ctx, CancellationToken ct) => Task.Delay(Ms, ct);
+    public override Task ExecuteAsync(BattleRunCtx ctx, CancellationToken ct)
+        => ctx.Runtime.PlayAnim(AnimId, wait: true, ct);
 }

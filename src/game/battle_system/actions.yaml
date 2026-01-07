@@ -12,3 +12,16 @@ actions:
         damage_type_mode: FromWeapon
         power: 1.0
         can_crit: true
+  - id: FireAttack
+    name: FireAttack
+    target_rule: SingleEnemy
+    effects:
+      - type: play_anim
+        anim_id: Fire
+      - type: wait
+        ms: 1000
+      - type: damage
+        damage_type: Fire
+        damage_type_mode: Fixed
+        power: 1.5
+        can_crit: false

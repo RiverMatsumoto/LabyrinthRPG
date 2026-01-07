@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 #if DEBUG
 public partial class DebugConsole : CanvasLayer
@@ -83,6 +84,11 @@ public partial class DebugConsole : CanvasLayer
             _battleScene?.ClearAllPartyMembers();
             Print("Cleared party");
         };
+
+        _commands["/DebugBattle"] = () =>
+        {
+            _battleScene.RunActionsAsync();
+        };
     }
 
     private void OnSubmit(string text)
@@ -105,7 +111,6 @@ public partial class DebugConsole : CanvasLayer
 
     private void Print(string msg)
     {
-        GD.Print("Test");
         Output.AppendText(msg + "\n");
         Output.ScrollToLine(Output.GetLineCount());
     }

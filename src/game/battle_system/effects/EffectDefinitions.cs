@@ -1,11 +1,5 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Godot;
-
-public abstract record EffectDef
-{
-    public abstract Task ExecuteAsync(BattleRunCtx ctx, CancellationToken ct);
-}
 
 public sealed record DamageEffect(
     DamageType DamageType,
@@ -25,14 +19,12 @@ public sealed record DamageEffect(
 
             var amount = calc.Compute(ctx.Source, t, ctx.Model, spec);
 
-            // Apply model changes here (HP, events, etc.)
+            // Model changes (engine-agnostic)
             // t.Hp -= amount;
             // ctx.Model.Events.DamageDealt(ctx.Source, t, amount);
-            //
-            GD.Print($"Apply damage: {amount}");
 
-            // currently only supports 1 damage pop up at a time
-            await ctx.DamagePopup.ShowAsync(amount, ct);
+            ctx.Runtime.Log($"Apply damage: {amount}");
+            await ctx.Runtime.ShowDamage(amount, ct);
         }
     }
 }
@@ -44,11 +36,16 @@ public sealed record ApplyStatusEffect(
 {
     public override Task ExecuteAsync(BattleRunCtx ctx, CancellationToken ct)
     {
+        ct.ThrowIfCancellationRequested();
+
         foreach (var t in ctx.Targets)
         {
+            // Model changes (engine-agnostic)
             // t.Statuses.Add(StatusId, turns: Turns);
-            GD.Print($"Apply status effect: {StatusId}");
+
+            ctx.Runtime.Log($"Apply status effect: {StatusId} ({Turns} turns)");
         }
+
         return Task.CompletedTask;
     }
 }

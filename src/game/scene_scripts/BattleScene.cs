@@ -1,38 +1,58 @@
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Godot;
 
 public partial class BattleScene : Control
 {
-    public BattleModel Model { get; set; }
 
     [Export] HBoxContainer PlayerPartyFrontRowContainer;
     [Export] HBoxContainer PlayerPartyBackRowContainer;
     [Export] PackedScene characterUIPackedScene;
+    [Export] DamagePopup damagePopup;
+    public BattleRunCtx ctx;
 
     public override void _Ready()
     {
         InitializeBattle();
 
-        Model.playerParty.AddToFrontRow(new Battler());
-        Model.playerParty.AddToFrontRow(new Battler());
-        Model.playerParty.AddToFrontRow(new Battler());
-        Model.playerParty.AddToFrontRow(new Battler());
-        Model.enemyParty.AddToFrontRow(new Battler());
-        Model.enemyParty.AddToFrontRow(new Battler());
-        Model.enemyParty.AddToFrontRow(new Battler());
+        ctx.Model.playerParty.AddToFrontRow(new Battler());
+        ctx.Model.playerParty.AddToFrontRow(new Battler());
+        ctx.Model.playerParty.AddToBackRow(new Battler());
+        ctx.Model.enemyParty.AddToFrontRow(new Battler());
+        ctx.Model.enemyParty.AddToFrontRow(new Battler());
 
         InitializeUI();
     }
 
     public void InitializeBattle()
     {
-        Model = new BattleModel();
+        GD.Print("=== Battle System Test Start ===");
+        // Fake battle context
+        var source = new Battler();
+        var target = new Battler();
+
+        var playback = new PlaybackOptions();
+
+        ctx = new BattleRunCtx(
+            model: new BattleModel(),
+            source: source,
+            targets: new[] { target },
+            damageRegistry: new TestDamageRegistry(),
+            runtime: new GodotEffectRuntime(
+                host: this,
+                anim: GetNode<AnimationPlayer>("AnimationPlayer"),
+                popup: GetNode<DamagePopup>("DamagePopup"),
+                playback: playback
+            )
+        );
     }
 
     public void InitializeUI()
     {
-        foreach (var member in Model.playerParty)
+        foreach (var member in ctx.Model.playerParty)
             AddPartyMemberFrontRow(member);
-        foreach (var member in Model.playerParty)
+        foreach (var member in ctx.Model.playerParty)
             AddPartyMemberBackRow(member);
     }
 
@@ -64,5 +84,25 @@ public partial class BattleScene : Control
     private void LoadBattleState()
     {
 
+    }
+
+    public async Task RunActionsAsync()
+    {
+        GD.Print("=== Running Battle Actions ===");
+        // Load actions
+        var library = new ActionLibrary();
+
+        // Execute
+        var actions = new List<ActionDef>();
+        actions.Add(library.Get("BasicAttack"));
+        var actionCt = new CancellationTokenSource();
+        foreach (var a in actions)
+        {
+            // debug print
+            GD.Print($"[Debug] basic attack effects: {a.Effects.ToString()}");
+            await ActionExecutor.ExecuteAsync(a, ctx, actionCt.Token);
+        }
+
+        GD.Print("=== Battle System Test End ===");
     }
 }
