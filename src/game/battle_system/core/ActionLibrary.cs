@@ -9,7 +9,7 @@ public sealed record ActionDef(
     string Id,
     string Name,
     Targeting TargetRule,
-    IEnumerable<EffectDef> Effects
+    IList<IEffect> Effects
 );
 
 public interface IActionLibrary
@@ -47,7 +47,7 @@ public sealed class ActionLibrary : IActionLibrary
             var targetRule = Enum.Parse<Targeting>((string)actionMap["target_rule"], true);
 
             var effectsYaml = (List<object>)actionMap["effects"];
-            var effects = new List<EffectDef>();
+            var effects = new List<IEffect>();
 
             foreach (var effectObj in effectsYaml)
             {
@@ -66,7 +66,7 @@ public sealed class ActionLibrary : IActionLibrary
         return result;
     }
 
-    private static EffectDef ParseEffect(Dictionary<object, object> m)
+    private static IEffect ParseEffect(Dictionary<object, object> m)
     {
         var type = (string)m["type"];
 
@@ -83,10 +83,8 @@ public sealed class ActionLibrary : IActionLibrary
                                 Convert.ToInt32(m["stacks"])
                             ),
             "play_anim" => new PlayAnimEffect((string)m["anim_id"]),
-            "play_anim_wait" => new PlayAnimWaitEffect(
-                                (string)m["anim_id"]
-                            ),
-            "wait" => new WaitEffect(Convert.ToInt32(m["ms"])),
+            "play_anim_wait" => new PlayAnimWaitEffect((string)m["anim_id"]),
+            "wait" => new WaitSecondsEffect(Convert.ToSingle(m["seconds"])),
             _ => throw new InvalidOperationException($"Unknown effect type: {type}"),
         };
     }

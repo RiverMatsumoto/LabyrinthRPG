@@ -1,9 +1,5 @@
 using System.Collections.Generic;
 
-public interface IEffect
-{
-    void Apply(BattleModel model, Battler source, IReadOnlyList<Battler> targets);
-}
 
 public interface IEffectBuilder
 {

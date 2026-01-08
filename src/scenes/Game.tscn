@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://c8y7frddh7oiq"]
+[gd_scene load_steps=8 format=3 uid="uid://c8y7frddh7oiq"]
 
 [ext_resource type="PackedScene" uid="uid://dtiy8yayysdb8" path="res://src/scenes/Map.tscn" id="1_l6sfq"]
 [ext_resource type="PackedScene" uid="uid://c7n88tqx78we7" path="res://src/scenes/TextboxManager.tscn" id="2_jrjgo"]
@@ -7,16 +7,6 @@
 [ext_resource type="PackedScene" uid="uid://bi3k3nqxeq27o" path="res://src/scenes/BattleScene.tscn" id="4_ekgif"]
 [ext_resource type="PackedScene" uid="uid://bh10oqeenca6t" path="res://src/scenes/DebugConsole.tscn" id="5_2er44"]
 [ext_resource type="Script" uid="uid://bc0hn5vs0w6js" path="res://src/game/scene_scripts/SystemsMediator.cs" id="6_hl6w7"]
-[ext_resource type="Script" uid="uid://cafimsor0kwkl" path="res://src/testing/TestBattleSystemNode.cs" id="8_k0rgm"]
-[ext_resource type="PackedScene" uid="uid://c8g1prqa02etp" path="res://src/scenes/DamagePopup.tscn" id="9_svsuq"]
-
-[sub_resource type="Animation" id="Animation_svsuq"]
-resource_name = "FromWeapon"
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_mfuje"]
-_data = {
-&"FromWeapon": SubResource("Animation_svsuq")
-}
 
 [node name="Game" type="Node3D"]
 
@@ -30,19 +20,7 @@ process_mode = 3
 
 [node name="PauseMenu" parent="." instance=ExtResource("3_8oyut")]
 
-[node name="DebugConsole" parent="." node_paths=PackedStringArray("testBattleSystem") instance=ExtResource("5_2er44")]
-testBattleSystem = NodePath("../TestBattleSystem")
+[node name="DebugConsole" parent="." instance=ExtResource("5_2er44")]
 
 [node name="SystemsMediator" type="Node" parent="."]
 script = ExtResource("6_hl6w7")
-
-[node name="TestBattleSystem" type="Node" parent="." node_paths=PackedStringArray("damagePopup")]
-script = ExtResource("8_k0rgm")
-damagePopup = NodePath("DamagePopup")
-
-[node name="DamagePopup" parent="TestBattleSystem" instance=ExtResource("9_svsuq")]
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="TestBattleSystem"]
-libraries = {
-&"": SubResource("AnimationLibrary_mfuje")
-}

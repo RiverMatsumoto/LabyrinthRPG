@@ -36,17 +36,23 @@ public sealed class BattleRunCtx(
 /// <summary>
 /// Represents the runtime environment for executing effects.
 /// </summary>
-public static class ActionExecutor
-{
-    public static async Task ExecuteAsync(
-        ActionDef action,
-        BattleRunCtx ctx,
-        CancellationToken ct = default)
-    {
-        foreach (var eff in action.Effects)
-            await eff.ExecuteAsync(ctx, ct);
-    }
-}
+// public static class ActionExecutor
+// {
+//     public static async Task ExecuteAsync(
+//         ActionDef action,
+//         BattleRunCtx ctx,
+//         CancellationToken ct = default)
+//     {
+//         foreach (var eff in action.Effects)
+//             await eff.ExecuteAsync(ctx, ct);
+//     }
+// }
+
+// public interface IActionExecutor
+// {
+//     void Execute(ActionDef action, BattleRunCtx ctx);
+//     void SkipNow();
+// }
 
 /// <summary>
 /// Represents the runtime environment for executing effects.
@@ -54,8 +60,8 @@ public static class ActionExecutor
 public interface IEffectRuntime
 {
     PlaybackOptions Playback { get; }
-    Task WaitMs(int ms, CancellationToken ct);
-    Task PlayAnim(string id, bool wait, CancellationToken ct);
-    Task ShowDamage(int amount, CancellationToken ct);
+    IEffectWait WaitSeconds(float seconds);
+    IEffectWait PlayAnim(string id, bool wait);
+    IEffectWait ShowDamage(int amount);
     void Log(string msg);
 }

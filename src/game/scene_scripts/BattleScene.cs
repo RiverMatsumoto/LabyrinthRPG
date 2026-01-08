@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,11 +10,19 @@ public partial class BattleScene : Control
     [Export] HBoxContainer PlayerPartyFrontRowContainer;
     [Export] HBoxContainer PlayerPartyBackRowContainer;
     [Export] PackedScene characterUIPackedScene;
+    [Export] AnimationPlayer animationPlayer;
     [Export] DamagePopup damagePopup;
+    [Export] GodotActionExecutor actionExecutor;
+
+    private Queue<ActionDef> _actionQueue;
+    private IActionLibrary _actionLibrary;
+
+    // Context for the current battle.
     public BattleRunCtx ctx;
 
     public override void _Ready()
     {
+        _actionQueue = new();
         InitializeBattle();
 
         ctx.Model.playerParty.AddToFrontRow(new Battler());
@@ -21,6 +30,9 @@ public partial class BattleScene : Control
         ctx.Model.playerParty.AddToBackRow(new Battler());
         ctx.Model.enemyParty.AddToFrontRow(new Battler());
         ctx.Model.enemyParty.AddToFrontRow(new Battler());
+
+        actionExecutor.Configure(ctx.Runtime.Playback);
+        actionExecutor.ActionFinished += OnActionFinished;
 
         InitializeUI();
     }
@@ -41,8 +53,8 @@ public partial class BattleScene : Control
             damageRegistry: new TestDamageRegistry(),
             runtime: new GodotEffectRuntime(
                 host: this,
-                anim: GetNode<AnimationPlayer>("AnimationPlayer"),
-                popup: GetNode<DamagePopup>("DamagePopup"),
+                anim: animationPlayer,
+                popup: damagePopup,
                 playback: playback
             )
         );
@@ -86,23 +98,35 @@ public partial class BattleScene : Control
 
     }
 
-    public async Task RunActionsAsync()
+    public void ExecuteActions()
     {
         GD.Print("=== Running Battle Actions ===");
         // Load actions
-        var library = new ActionLibrary();
+        _actionLibrary = new ActionLibrary();
 
         // Execute
-        var actions = new List<ActionDef>();
-        actions.Add(library.Get("BasicAttack"));
-        var actionCt = new CancellationTokenSource();
-        foreach (var a in actions)
+        _actionQueue.Enqueue(_actionLibrary.Get("BasicAttack"));
+        _actionQueue.Enqueue(_actionLibrary.Get("FireAttack"));
+
+        // start chain of actions until empty
+        StartNextAction();
+    }
+
+    private void StartNextAction()
+    {
+        if (_actionQueue.Count <= 0)
         {
-            // debug print
-            GD.Print($"[Debug] basic attack effects: {a.Effects.ToString()}");
-            await ActionExecutor.ExecuteAsync(a, ctx, actionCt.Token);
+            GD.Print("All actions complete");
+            return;
         }
 
-        GD.Print("=== Battle System Test End ===");
+        var action = _actionQueue.Dequeue();
+        // GD.Print($"Executing action: {action.Id}");
+        actionExecutor.Execute(action, ctx);
+    }
+
+    private void OnActionFinished()
+    {
+        StartNextAction();
     }
 }

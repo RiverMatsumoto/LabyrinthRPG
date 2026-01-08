@@ -3,10 +3,10 @@ actions:
     name: Attack
     target_rule: SingleEnemy
     effects:
-      - type: play_anim
+      - type: play_anim_wait
         anim_id: FromWeapon
-      - type: wait
-        ms: 1000
+      # - type: wait
+      #   seconds: 5
       - type: damage
         damage_type: Cut
         damage_type_mode: FromWeapon
@@ -16,10 +16,10 @@ actions:
     name: FireAttack
     target_rule: SingleEnemy
     effects:
-      - type: play_anim
+      - type: play_anim_wait
         anim_id: Fire
-      - type: wait
-        ms: 1000
+      # - type: wait
+      # seconds: 5
       - type: damage
         damage_type: Fire
         damage_type_mode: Fixed

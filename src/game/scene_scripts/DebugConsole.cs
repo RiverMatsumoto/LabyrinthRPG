@@ -87,7 +87,8 @@ public partial class DebugConsole : CanvasLayer
 
         _commands["/DebugBattle"] = () =>
         {
-            _battleScene.RunActionsAsync();
+            _battleScene.ExecuteActions();
+            Print("Executing battle actions");
         };
     }
 

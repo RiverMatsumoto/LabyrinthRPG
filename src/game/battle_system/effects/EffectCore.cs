@@ -1,5 +1,18 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+
+public interface IEffect
+{
+    IEffectWait Execute(BattleRunCtx ctx);
+}
+
+// Utility for timing animations and damage popup
+public interface IEffectWait { }
+public sealed record NoWait() : IEffectWait; // sentinel wait object
+public sealed record WaitSeconds(float Seconds) : IEffectWait;
+public sealed record WaitDamagePopup() : IEffectWait;
+public sealed record WaitAnimFinished() : IEffectWait;
 
 public enum DamageType
 {
@@ -27,8 +40,8 @@ public sealed record DamageSpec(
 
 public class PlaybackOptions
 {
-    bool SkipWaits { get; set; } = false;
-    float Speed { get; set; } = 1.0f; // 1 = normal, 2 = 2x, etc.
+    public bool SkipWaits { get; set; } = false;
+    public float Speed { get; set; } = 1.0f; // 1 = normal, 2 = 2x, etc.
 }
 
 
@@ -37,23 +50,34 @@ public abstract record EffectDef
     public abstract Task ExecuteAsync(BattleRunCtx ctx, CancellationToken ct);
 }
 
-public sealed record WaitEffect(int Ms) : EffectDef
+public sealed record WaitSecondsEffect(float Seconds) : IEffect
 {
-    public override Task ExecuteAsync(BattleRunCtx ctx, CancellationToken ct)
-        => ctx.Runtime.WaitMs(Ms, ct);
-}
-
-public sealed record PlayAnimEffect(string AnimId) : EffectDef
-{
-    public override Task ExecuteAsync(BattleRunCtx ctx, CancellationToken ct)
+    public IEffectWait Execute(BattleRunCtx ctx)
     {
-        ctx.Runtime.PlayAnim(AnimId, wait: true, ct);
-        return Task.CompletedTask;
+        return new WaitSeconds(Seconds);
     }
 }
 
-public sealed record PlayAnimWaitEffect(string AnimId) : EffectDef
+public sealed record PlayAnimEffect(string AnimId) : IEffect
 {
-    public override Task ExecuteAsync(BattleRunCtx ctx, CancellationToken ct)
-        => ctx.Runtime.PlayAnim(AnimId, wait: true, ct);
+    public IEffectWait Execute(BattleRunCtx ctx)
+    {
+        return ctx.Runtime.PlayAnim(AnimId, false);
+    }
+}
+
+public sealed record PlayAnimWaitEffect(string AnimId) : IEffect
+{
+    public IEffectWait Execute(BattleRunCtx ctx)
+    {
+        return ctx.Runtime.PlayAnim(AnimId, true);
+    }
+}
+
+public sealed record WaitDamagePopupEffect(int Amount) : IEffect
+{
+    public IEffectWait Execute(BattleRunCtx ctx)
+    {
+        return ctx.Runtime.ShowDamage(Amount);
+    }
 }
