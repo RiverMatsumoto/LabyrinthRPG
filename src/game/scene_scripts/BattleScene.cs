@@ -23,7 +23,13 @@ public partial class BattleScene : Control
     public override void _Ready()
     {
         _actionQueue = new();
-        InitializeBattle();
+        InitializeBattle(new EncounterData());
+        InitializeUI();
+    }
+
+    public void InitializeBattle(EncounterData encounterData)
+    {
+        GD.Print("=== Battle System Test Start ===");
 
         ctx.Model.playerParty.AddToFrontRow(new Battler());
         ctx.Model.playerParty.AddToFrontRow(new Battler());
@@ -31,15 +37,6 @@ public partial class BattleScene : Control
         ctx.Model.enemyParty.AddToFrontRow(new Battler());
         ctx.Model.enemyParty.AddToFrontRow(new Battler());
 
-        actionExecutor.Configure(ctx.Runtime.Playback);
-        actionExecutor.ActionFinished += OnActionFinished;
-
-        InitializeUI();
-    }
-
-    public void InitializeBattle()
-    {
-        GD.Print("=== Battle System Test Start ===");
         // Fake battle context
         var source = new Battler();
         var target = new Battler();
@@ -58,6 +55,7 @@ public partial class BattleScene : Control
                 playback: playback
             )
         );
+        actionExecutor.Configure(ctx, animationPlayer, damagePopup, OnActionFinished);
     }
 
     public void InitializeUI()
@@ -101,9 +99,9 @@ public partial class BattleScene : Control
     {
         GD.Print("=== Running Battle Actions ===");
         // Load actions
-        _actionLibrary = new ActionLibrary();
+        _actionLibrary = new ActionLibrary("data/actions.yaml");
 
-        // Execute
+        // enqueue test actions
         _actionQueue.Enqueue(_actionLibrary.Get("BasicAttack"));
         _actionQueue.Enqueue(_actionLibrary.Get("FireAttack"));
 
@@ -121,7 +119,7 @@ public partial class BattleScene : Control
 
         var action = _actionQueue.Dequeue();
         // GD.Print($"Executing action: {action.Id}");
-        actionExecutor.Execute(action, ctx);
+        actionExecutor.Execute(action);
     }
 
     private void OnActionFinished()

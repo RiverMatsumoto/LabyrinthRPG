@@ -1,36 +1,37 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using Godot;
 
 public interface IActionExecutor
 {
-    void Execute(ActionDef action, BattleRunCtx ctx);
+    void Execute(ActionDef action);
     void SkipNow();
 }
 
 public sealed partial class GodotActionExecutor : Node, IActionExecutor
 {
     [Signal] public delegate void ActionFinishedEventHandler();
-    private BattleRunCtx _ctx = default!;
+    private BattleRunCtx _ctx;
     private ActionDef _currentAction = default!;
     private IEnumerator<IEffect> effectIterator;
 
-    [Export] private AnimationPlayer _anim = default!;
-    [Export] private DamagePopup _popup = default!;
-    private GodotEffectRuntime _runtime = default!;
+    private AnimationPlayer _anim;
+    private DamagePopup _popup;
     private SceneTreeTimer _activeTimer;
     private bool _waitingAnim;
     private bool _waitingPopup;
 
-    public void Configure(PlaybackOptions playback)
+    public void Configure(BattleRunCtx ctx, AnimationPlayer anim, DamagePopup damagePopup, Action actionFinishedCb)
     {
-        _runtime = new GodotEffectRuntime(this, _anim, _popup, playback);
+        _ctx = ctx;
+        _anim = anim;
+        _popup = damagePopup;
+        Connect(nameof(ActionFinished), Callable.From(actionFinishedCb));
     }
 
-    public void Execute(ActionDef action, BattleRunCtx ctx)
+    public void Execute(ActionDef action)
     {
         _currentAction = action;
-        _ctx = new BattleRunCtx(ctx.Model, ctx.Source, ctx.Targets, ctx.DamageRegistry, _runtime);
         effectIterator = _currentAction.Effects.GetEnumerator();
 
         ExecuteNextEffect();

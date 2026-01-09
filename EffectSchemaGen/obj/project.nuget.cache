@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "rCiE9vPoxeI=",
+  "success": true,
+  "projectFilePath": "/home/river/Documents/Godot/LabyrinthRPG/EffectSchemaGen/EffectSchemaGen.csproj",
+  "expectedPackageFiles": [
+    "/home/river/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.22/microsoft.aspnetcore.app.ref.8.0.22.nupkg.sha512",
+    "/home/river/.nuget/packages/microsoft.netcore.app.host.linux-x64/8.0.22/microsoft.netcore.app.host.linux-x64.8.0.22.nupkg.sha512"
+  ],
+  "logs": []
+}

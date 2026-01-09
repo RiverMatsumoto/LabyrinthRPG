@@ -1,0 +1,45 @@
+actions:
+  - id: BasicAttack
+    name: Attack
+    target_rule: SingleEnemy
+    effects:
+      - type: play_anim_wait
+        anim_id: FromWeapon
+      - type: damage
+        damage_type: Cut
+        damage_type_mode: FromWeapon
+        power: 1.0
+        can_crit: true
+  - id: FireAttack
+    name: FireAttack
+    target_rule: SingleEnemy
+    effects:
+      - type: play_anim_wait
+        anim_id: Fire
+      - type: damage
+        damage_type: Fire
+        damage_type_mode: Fixed
+        power: 1.5
+        can_crit: false
+  - id: IceAttack
+    name: IceAttack
+    target_rule: SingleEnemy
+    effects:
+      - type: play_anim_wait
+        anim_id: Ice
+      - type: damage
+        damage_type: Ice
+        damage_type_mode: Fixed
+        power: 1.5
+        can_crit: false
+  - id: LightningAttack
+    name: LightningAttack
+    target_rule: SingleEnemy
+    effects:
+      - type: play_anim_wait
+        anim_id: Lightning
+      - type: damage
+        damage_type: Lightning
+        damage_type_mode: Fixed
+        power: 1.5
+        can_crit: false

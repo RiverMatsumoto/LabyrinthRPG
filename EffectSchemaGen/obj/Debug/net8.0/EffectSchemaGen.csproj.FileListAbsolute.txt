@@ -1,0 +1,15 @@
+/home/river/Documents/Godot/LabyrinthRPG/EffectSchemaGen/bin/Debug/net8.0/EffectSchemaGen
+/home/river/Documents/Godot/LabyrinthRPG/EffectSchemaGen/bin/Debug/net8.0/EffectSchemaGen.deps.json
+/home/river/Documents/Godot/LabyrinthRPG/EffectSchemaGen/bin/Debug/net8.0/EffectSchemaGen.runtimeconfig.json
+/home/river/Documents/Godot/LabyrinthRPG/EffectSchemaGen/bin/Debug/net8.0/EffectSchemaGen.dll
+/home/river/Documents/Godot/LabyrinthRPG/EffectSchemaGen/bin/Debug/net8.0/EffectSchemaGen.pdb
+/home/river/Documents/Godot/LabyrinthRPG/EffectSchemaGen/obj/Debug/net8.0/EffectSchemaGen.GeneratedMSBuildEditorConfig.editorconfig
+/home/river/Documents/Godot/LabyrinthRPG/EffectSchemaGen/obj/Debug/net8.0/EffectSchemaGen.AssemblyInfoInputs.cache
+/home/river/Documents/Godot/LabyrinthRPG/EffectSchemaGen/obj/Debug/net8.0/EffectSchemaGen.AssemblyInfo.cs
+/home/river/Documents/Godot/LabyrinthRPG/EffectSchemaGen/obj/Debug/net8.0/EffectSchemaGen.csproj.CoreCompileInputs.cache
+/home/river/Documents/Godot/LabyrinthRPG/EffectSchemaGen/obj/Debug/net8.0/EffectSchemaGen.sourcelink.json
+/home/river/Documents/Godot/LabyrinthRPG/EffectSchemaGen/obj/Debug/net8.0/EffectSchemaGen.dll
+/home/river/Documents/Godot/LabyrinthRPG/EffectSchemaGen/obj/Debug/net8.0/refint/EffectSchemaGen.dll
+/home/river/Documents/Godot/LabyrinthRPG/EffectSchemaGen/obj/Debug/net8.0/EffectSchemaGen.pdb
+/home/river/Documents/Godot/LabyrinthRPG/EffectSchemaGen/obj/Debug/net8.0/EffectSchemaGen.genruntimeconfig.cache
+/home/river/Documents/Godot/LabyrinthRPG/EffectSchemaGen/obj/Debug/net8.0/ref/EffectSchemaGen.dll

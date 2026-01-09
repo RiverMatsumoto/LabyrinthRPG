@@ -34,4 +34,7 @@
     <Folder Include="data\dialogues\" />
     <Folder Include="src\scenes\" />
   </ItemGroup>
+<ItemGroup>
+  <Compile Remove="EffectSchemaGen/**" />
+</ItemGroup>
 </Project>

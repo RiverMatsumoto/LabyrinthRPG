@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="EncounterData" load_steps=2 format=3 uid="uid://cove1tiqm0p6"]
+
+[ext_resource type="Script" uid="uid://doaps75shm7t" path="res://src/game/encounters/EncounterData.cs" id="1_855tw"]
+
+[resource]
+script = ExtResource("1_855tw")
+Enemies = Array[String](["squid_wizard", "squid_wizard"])
+Floor = 1
+metadata/_custom_type_script = "uid://doaps75shm7t"

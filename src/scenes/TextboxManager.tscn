@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://c7n88tqx78we7"]
 
-[ext_resource type="Script" uid="uid://qe7ah7suqmss" path="res://src/TextboxManager.cs" id="1_xrmsa"]
+[ext_resource type="Script" uid="uid://qe7ah7suqmss" path="res://src/game/dialogue/TextboxManager.cs" id="1_xrmsa"]
 [ext_resource type="PackedScene" uid="uid://crhpr2qsh3xe3" path="res://src/scenes/ChoiceButton.tscn" id="2_5efo7"]
 
 [node name="TextboxManager" type="Control" node_paths=PackedStringArray("textboxContainer", "textbox", "choiceButtonContainerNode")]

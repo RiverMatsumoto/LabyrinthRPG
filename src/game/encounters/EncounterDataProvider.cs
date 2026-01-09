@@ -1,4 +1,4 @@
 public interface IEncounterDataProvder
 {
-    EncounterData GetEncounter(Map map); // provide map context
+    EncounterData GetEncounter(MapScene map); // provide map context
 }

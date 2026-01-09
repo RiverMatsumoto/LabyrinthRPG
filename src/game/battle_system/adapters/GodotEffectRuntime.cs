@@ -1,45 +1,4 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Godot;
-
-// public static class GodotSignals
-// {
-//     public static async Task AwaitSignal(GodotObject emitter, StringName signal, CancellationToken ct)
-//     {
-//         if (!ct.CanBeCanceled)
-//         {
-//             await emitter.ToSignal(emitter, signal);
-//             return;
-//         }
-
-//         var cancelTcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-//         using var reg = ct.Register(static s => ((TaskCompletionSource)s!).TrySetResult(), cancelTcs);
-
-//         var signalTask = emitter.ToSignal(emitter, signal).AsTask(); // converts SignalAwaiter -> Task
-//         await Task.WhenAny(signalTask, cancelTcs.Task);
-
-//         ct.ThrowIfCancellationRequested();
-//         await signalTask; // propagate exceptions if any
-//     }
-
-//     public static async Task AsTask(this SignalAwaiter a) => await a;
-// }
-
-// public static class GodotWait
-// {
-//     public static Task NextFrame(Node node, CancellationToken ct)
-//         => GodotSignals.AwaitSignal(node.GetTree(), SceneTree.SignalName.ProcessFrame, ct);
-
-//     public static async Task DelaySeconds(Node node, double seconds, CancellationToken ct)
-//     {
-//         var timer = node.GetTree().CreateTimer(seconds);
-//         await GodotSignals.AwaitSignal(timer, SceneTreeTimer.SignalName.Timeout, ct);
-//     }
-
-//     public static Task AnimFinished(AnimationPlayer ap, CancellationToken ct)
-//         => GodotSignals.AwaitSignal(ap, AnimationPlayer.SignalName.AnimationFinished, ct);
-// }
 
 public sealed class GodotEffectRuntime(
     Node host,
@@ -64,12 +23,13 @@ public sealed class GodotEffectRuntime(
 
     IEffectWait IEffectRuntime.PlayAnim(string id, bool wait)
     {
-        anim.Play(id, customBlend: -1, customSpeed: playback.Speed);
+        _anim.Play(id, customBlend: -1, customSpeed: _playback.Speed);
         return wait ? new WaitAnimFinished() : new NoWait();
     }
 
     IEffectWait IEffectRuntime.ShowDamage(int amount)
     {
+        _popup.ShowDamage(amount);
         return new WaitDamagePopup();
     }
 }

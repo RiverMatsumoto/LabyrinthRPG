@@ -1,0 +1,107 @@
+{
+  "target_rule": [
+    "None",
+    "Self",
+    "SingleAlly",
+    "SingleEnemy",
+    "RowAllies",
+    "RowEnemies",
+    "AllAllies",
+    "AllEnemies"
+  ],
+  "effects": {
+    "apply_status": {
+      "fields": [
+        {
+          "key": "status",
+          "kind": "enum",
+          "values": [
+            "None",
+            "Confusion",
+            "Stun",
+            "BindHead",
+            "BindArm",
+            "BindLegs",
+            "Poison",
+            "Burn",
+            "Blind",
+            "Paralysis",
+            "Petrify",
+            "InstantDeath",
+            "Curse",
+            "Sleep"
+          ]
+        },
+        {
+          "key": "stacks",
+          "kind": "int"
+        }
+      ]
+    },
+    "damage": {
+      "fields": [
+        {
+          "key": "damage_type",
+          "kind": "enum",
+          "values": [
+            "Cut",
+            "Bash",
+            "Stab",
+            "Fire",
+            "Ice",
+            "Lightning",
+            "True"
+          ]
+        },
+        {
+          "key": "damage_type_mode",
+          "kind": "enum",
+          "values": [
+            "Fixed",
+            "FromWeapon"
+          ]
+        },
+        {
+          "key": "power",
+          "kind": "float"
+        },
+        {
+          "key": "can_crit",
+          "kind": "bool"
+        }
+      ]
+    },
+    "play_anim": {
+      "fields": [
+        {
+          "key": "anim_id",
+          "kind": "string"
+        }
+      ]
+    },
+    "play_anim_wait": {
+      "fields": [
+        {
+          "key": "anim_id",
+          "kind": "string"
+        }
+      ]
+    },
+    "wait_damage_popup": {
+      "fields": [
+        {
+          "key": "amount",
+          "kind": "int"
+        }
+      ]
+    },
+    "wait_seconds": {
+      "fields": [
+        {
+          "key": "seconds",
+          "kind": "float"
+        }
+      ]
+    }
+  }
+}

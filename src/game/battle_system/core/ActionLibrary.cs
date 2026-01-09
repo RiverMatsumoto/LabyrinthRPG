@@ -21,13 +21,13 @@ public interface IActionLibrary
 public sealed class ActionLibrary : IActionLibrary
 {
     private readonly Dictionary<string, ActionDef> _defs;
-    private IDeserializer deserializer = new DeserializerBuilder()
+    private readonly IDeserializer deserializer = new DeserializerBuilder()
         .WithNamingConvention(UnderscoredNamingConvention.Instance)
         .Build();
 
-    public ActionLibrary()
+    public ActionLibrary(string path)
     {
-        var yamlText = File.ReadAllText("src/game/battle_system/actions.yaml");
+        var yamlText = Godot.FileAccess.GetFileAsString(Util.ReadonlyPath(path));
         var root = deserializer.Deserialize<Dictionary<string, object>>(yamlText);
         _defs = ParseActions(root);
     }
@@ -79,7 +79,7 @@ public sealed class ActionLibrary : IActionLibrary
                                 Convert.ToBoolean(m["can_crit"])
                             ),
             "apply_status" => new ApplyStatusEffect(
-                                (string)m["status_id"],
+                                Enum.Parse<Status>((string)m["w"]),
                                 Convert.ToInt32(m["stacks"])
                             ),
             "play_anim" => new PlayAnimEffect((string)m["anim_id"]),

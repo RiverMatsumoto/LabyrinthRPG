@@ -1,5 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
 
 public sealed record DamageEffect(
     DamageType DamageType,
@@ -38,8 +36,8 @@ public sealed record DamageEffect(
 }
 
 public sealed record ApplyStatusEffect(
-    string StatusId,
-    int Turns
+    Status Status,
+    int Stacks
 ) : IEffect
 {
     public IEffectWait Execute(BattleRunCtx ctx)

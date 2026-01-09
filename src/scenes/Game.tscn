@@ -1,8 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://c8y7frddh7oiq"]
+[gd_scene load_steps=7 format=3 uid="uid://c8y7frddh7oiq"]
 
 [ext_resource type="PackedScene" uid="uid://dtiy8yayysdb8" path="res://src/scenes/Map.tscn" id="1_l6sfq"]
 [ext_resource type="PackedScene" uid="uid://c7n88tqx78we7" path="res://src/scenes/TextboxManager.tscn" id="2_jrjgo"]
-[ext_resource type="Script" uid="uid://bwxi1ldge7qla" path="res://src/game/scene_scripts/Map.cs" id="2_qdiym"]
 [ext_resource type="PackedScene" uid="uid://4s1i17gso80f" path="res://src/scenes/PauseMenu.tscn" id="3_8oyut"]
 [ext_resource type="PackedScene" uid="uid://bi3k3nqxeq27o" path="res://src/scenes/BattleScene.tscn" id="4_ekgif"]
 [ext_resource type="PackedScene" uid="uid://bh10oqeenca6t" path="res://src/scenes/DebugConsole.tscn" id="5_2er44"]
@@ -11,7 +10,6 @@
 [node name="Game" type="Node3D"]
 
 [node name="MapScene" parent="." instance=ExtResource("1_l6sfq")]
-script = ExtResource("2_qdiym")
 
 [node name="BattleScene" parent="." groups=["BattleScene"] instance=ExtResource("4_ekgif")]
 
@@ -22,5 +20,10 @@ process_mode = 3
 
 [node name="DebugConsole" parent="." instance=ExtResource("5_2er44")]
 
-[node name="SystemsMediator" type="Node" parent="."]
+[node name="SystemsMediator" type="Node" parent="." node_paths=PackedStringArray("mapScene", "battleScene", "textboxManager", "pauseMenu", "debugConsole")]
 script = ExtResource("6_hl6w7")
+mapScene = NodePath("../MapScene")
+battleScene = NodePath("../BattleScene")
+textboxManager = NodePath("../TextboxManager")
+pauseMenu = NodePath("../PauseMenu")
+debugConsole = NodePath("../DebugConsole")

@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -38,6 +37,24 @@ public sealed record DamageSpec(
     bool CanCrit
 );
 
+public enum Status
+{
+    None,
+    Confusion,
+    Stun,
+    BindHead,
+    BindArm,
+    BindLegs,
+    Poison,
+    Burn,
+    Blind,
+    Paralysis,
+    Petrify,
+    InstantDeath,
+    Curse,
+    Sleep,
+}
+
 public class PlaybackOptions
 {
     public bool SkipWaits { get; set; } = false;
@@ -52,32 +69,20 @@ public abstract record EffectDef
 
 public sealed record WaitSecondsEffect(float Seconds) : IEffect
 {
-    public IEffectWait Execute(BattleRunCtx ctx)
-    {
-        return new WaitSeconds(Seconds);
-    }
+    public IEffectWait Execute(BattleRunCtx ctx) => new WaitSeconds(Seconds);
 }
 
 public sealed record PlayAnimEffect(string AnimId) : IEffect
 {
-    public IEffectWait Execute(BattleRunCtx ctx)
-    {
-        return ctx.Runtime.PlayAnim(AnimId, false);
-    }
+    public IEffectWait Execute(BattleRunCtx ctx) => ctx.Runtime.PlayAnim(AnimId, false);
 }
 
 public sealed record PlayAnimWaitEffect(string AnimId) : IEffect
 {
-    public IEffectWait Execute(BattleRunCtx ctx)
-    {
-        return ctx.Runtime.PlayAnim(AnimId, true);
-    }
+    public IEffectWait Execute(BattleRunCtx ctx) => ctx.Runtime.PlayAnim(AnimId, true);
 }
 
 public sealed record WaitDamagePopupEffect(int Amount) : IEffect
 {
-    public IEffectWait Execute(BattleRunCtx ctx)
-    {
-        return ctx.Runtime.ShowDamage(Amount);
-    }
+    public IEffectWait Execute(BattleRunCtx ctx) => ctx.Runtime.ShowDamage(Amount);
 }

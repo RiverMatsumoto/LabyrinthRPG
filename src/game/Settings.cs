@@ -6,7 +6,7 @@ using System.Text.Json;
 public class Settings(TextSaveStore jsonSaveStore)
 {
     public SettingsData Data { get; set; }
-    private readonly string DataPath = Util.Path("data/settings.json");
+    private readonly string DataPath = Util.UserPath("data/settings.json");
     private readonly TextSaveStore jsonUtil = jsonSaveStore;
 
     public void LoadSettings()

@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://bi3k3nqxeq27o"]
 
-[ext_resource type="Script" uid="uid://mlyjv3o5gfg6" path="res://src/game/scene_scripts/EnemyContainer.cs" id="1_6ynkr"]
+[ext_resource type="Script" uid="uid://deidwijirvqxs" path="res://src/game/scene_scripts/EnemyContainer.cs" id="1_6ynkr"]
 [ext_resource type="PackedScene" uid="uid://chn25mltsiwkj" path="res://src/scenes/CharacterUI.tscn" id="1_acp3n"]
 [ext_resource type="Script" uid="uid://8gei2waqwany" path="res://src/game/scene_scripts/BattleScene.cs" id="1_rubm6"]
 [ext_resource type="PackedScene" uid="uid://c8g1prqa02etp" path="res://src/scenes/DamagePopup.tscn" id="5_843fn"]
@@ -9,11 +9,11 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nip0a"]
 bg_color = Color(0, 0, 0, 0.078431375)
 
-[sub_resource type="Animation" id="Animation_hil36"]
-resource_name = "FromWeapon"
-
 [sub_resource type="Animation" id="Animation_843fn"]
 resource_name = "Fire"
+
+[sub_resource type="Animation" id="Animation_hil36"]
+resource_name = "FromWeapon"
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_843fn"]
 _data = {
@@ -32,39 +32,38 @@ script = ExtResource("1_rubm6")
 PlayerPartyFrontRowContainer = NodePath("PlayerParty/VBoxContainer/FrontRow")
 PlayerPartyBackRowContainer = NodePath("PlayerParty/VBoxContainer/BackRow")
 characterUIPackedScene = ExtResource("1_acp3n")
-animationPlayer = NodePath("ActionExecutor/AnimationPlayer")
+animationPlayer = NodePath("AnimationPlayer")
 damagePopup = NodePath("EffectsUI/DamagePopup")
 actionExecutor = NodePath("ActionExecutor")
 
 [node name="BattleMenu" type="Control" parent="."]
-layout_mode = 1
-anchor_left = 0.051000003
-anchor_top = 0.098000005
-anchor_right = 0.051000003
-anchor_bottom = 0.098000005
-offset_left = 0.0799942
-offset_top = 0.15999603
-offset_right = 367.08
-offset_bottom = 617.16
-
-[node name="Panel" type="Panel" parent="BattleMenu"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="BattleMenu"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.087000005
+anchor_right = 0.277
+anchor_bottom = 0.65400004
+offset_left = 84.0
+offset_top = 0.3599968
+offset_right = -0.55999756
+offset_bottom = 0.1199646
+grow_vertical = 2
 mouse_filter = 2
 
 [node name="PlayerParty" type="Control" parent="."]
 layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
+anchors_preset = 15
+anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
-grow_vertical = 0
+grow_vertical = 2
 
 [node name="Panel" type="Panel" parent="PlayerParty"]
 layout_mode = 1
@@ -84,11 +83,12 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_nip0a")
 [node name="VBoxContainer" type="VBoxContainer" parent="PlayerParty"]
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 0.5
+anchor_top = 1.0
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -302.0
-offset_top = -216.0
-offset_right = 294.0
+offset_left = 355.0
+offset_top = -263.0
+offset_right = -346.0
 offset_bottom = -52.0
 
 [node name="FrontRow" type="HBoxContainer" parent="PlayerParty/VBoxContainer"]
@@ -103,15 +103,13 @@ alignment = 1
 
 [node name="EnemyParty" type="Control" parent="."]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -790.0
-offset_top = -443.0
-offset_right = 790.0
-offset_bottom = 257.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 271.0
+offset_top = 110.0
+offset_right = -197.0
+offset_bottom = -265.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -139,12 +137,10 @@ offset_bottom = 40.0
 [node name="DamagePopup" parent="EffectsUI" instance=ExtResource("5_843fn")]
 layout_mode = 1
 
-[node name="ActionExecutor" type="Node" parent="." node_paths=PackedStringArray("_anim", "_popup")]
-script = ExtResource("5_hil36")
-_anim = NodePath("AnimationPlayer")
-_popup = NodePath("../EffectsUI/DamagePopup")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="ActionExecutor"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 &"": SubResource("AnimationLibrary_843fn")
 }
+
+[node name="ActionExecutor" type="Node" parent="."]
+script = ExtResource("5_hil36")
