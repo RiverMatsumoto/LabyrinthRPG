@@ -1,0 +1,266 @@
+@startuml Overall Architecture
+!theme plain
+skinparam linetype ortho
+skinparam nodesep 80
+skinparam ranksep 80
+
+package "Game Services (DI Container)" {
+    class GameServices <<static>> {
+        + {static} Provider : ServiceProvider
+        + {static} Build() : void
+    }
+}
+
+package "Battle System" {
+    class BattleModel {
+        + playerParty : Party
+        + enemyParty : Party
+        + ResolveTurn() : void
+    }
+
+    class Party {
+        - _members : Battler[]
+        - _frontRowCount : int
+        - _backRowCount : int
+        + MemberCount : int
+        + AddToFrontRow(battler: Battler) : void
+        + AddToBackRow(battler: Battler) : void
+        + GetFrontRowMember(index: int) : Battler
+        + GetBackRowMember(index: int) : Battler
+    }
+
+    class Battler {
+        + Stats : BattlerStats
+        + IsAlive : bool
+    }
+
+    class BattlerStats {
+        + Name : string
+        + Level : int
+        + Hp : int
+        + Tp : int
+        + Str : int
+        + Tec : int
+        + Agi : int
+        + Vit : int
+        + Luc : int
+        + Atk : int
+        + Def : int
+        + AtkBonus : Dictionary<string, int>
+        + DefBonus : Dictionary<string, int>
+    }
+
+    class BattlerBase {
+        + Class : string
+        + Description : string
+        + Level : int
+        + Experience : int
+        + Hp : int
+        + Tp : int
+        + Str : int
+        + Tec : int
+        + Agi : int
+        + Vit : int
+        + Luc : int
+    }
+
+    interface IActionLibrary {
+        + Get(id: string) : ActionDef
+        + GetAll() : IReadOnlyList<ActionDef>
+    }
+
+    class ActionLibrary {
+        - _defs : Dictionary<string, ActionDef>
+        + Get(id: string) : ActionDef
+        + GetAll() : IReadOnlyList<ActionDef>
+    }
+
+    class ActionDef <<record>> {
+        + Id : string
+        + Name : string
+        + TargetRule : Targeting
+        + Effects : IList<IEffect>
+    }
+
+    class BattleRunCtx <<sealed, record>> {
+        + Model : BattleModel
+        + Source : Battler
+        + Targets : IReadOnlyList<Battler>
+        + DamageRegistry : IDamageCalculatorRegistry
+        + Runtime : IEffectRuntime
+    }
+}
+
+package "Effects System" {
+    interface IEffect {
+        + Execute(ctx: BattleRunCtx) : IEffectWait
+    }
+
+    interface IEffectWait
+    class NoWait <<record>>
+    class WaitSeconds <<record>>
+    class WaitDamagePopup <<record>>
+    class WaitAnimFinished <<record>>
+
+    class DamageEffect <<record>> {
+        + DamageType : DamageType
+        + Power : float
+        + CanCrit : bool
+        + Execute(ctx: BattleRunCtx) : IEffectWait
+    }
+
+    class ApplyStatusEffect <<record>> {
+        + StatusId : string
+        + Turns : int
+        + Execute(ctx: BattleRunCtx) : IEffectWait
+    }
+
+    class PlayAnimEffect <<record>>
+    class PlayAnimWaitEffect <<record>>
+    class WaitSecondsEffect <<record>>
+
+    interface IEffectRuntime {
+        + Playback : PlaybackOptions
+        + WaitSeconds(seconds: float) : IEffectWait
+        + PlayAnim(id: string, wait: bool) : IEffectWait
+        + ShowDamage(amount: int) : IEffectWait
+        + Log(msg: string) : void
+    }
+}
+
+package "Inventory System" {
+    class Inventory {
+        - _items : List<ItemDef>
+        + MaxItems : int
+        + Items : IReadOnlyList<ItemDef>
+        + GetCount(item: ItemDef) : int
+        + CanAdd(item: ItemDef) : bool
+        + TryAdd(item: ItemDef, error: out string) : bool
+        + TryRemove(item: ItemDef, error: out string) : bool
+    }
+
+    class ItemDef {
+        + Id : string
+        + DisplayName : string
+        + Icon : Texture2D
+        + Description : string
+        + Category : ItemCategory
+        + Modules : Array<ItemModule>
+        + Has<T>() : bool
+        + Get<T>() : T
+    }
+
+    abstract class ItemModule
+
+    class EquipModule {
+        + Slot : EquipSlot
+        + UniqueEquipped : bool
+    }
+
+    class StatModifiersModule {
+        + Modifiers : Array<StatModifierResource>
+        + Enumerate() : IEnumerable<StatModifier>
+    }
+
+    class WeaponModule {
+        + AttackPower : int
+        + DamageType : string
+    }
+
+    class EquipmentSet {
+        - _equipped : Dictionary<EquipSlot, ItemDef>
+        + TryGet(slot: EquipSlot, item: out ItemDef) : bool
+        + CanEquip(item: ItemDef, error: out string) : bool
+        + TryEquip(item: ItemDef, error: out string) : bool
+        + Unequip(slot: EquipSlot) : bool
+        + GetAllStatModifiers() : IEnumerable<StatModifier>
+    }
+}
+
+package "Dialogue System" {
+    abstract class DialogueNode {
+        + Next : DialogueNode[]
+        + Texts : string[]
+    }
+
+    class StartNode
+    class TextNode
+    class ChoiceNode
+    class EndNode
+}
+
+package "Save System" {
+    class Save {
+        + Fps : int
+        + PlayerHealth : float
+        + PlayerLevel : int
+        + ExperiencePoints : int
+        + PlayerPosition : float[]
+    }
+
+    interface ISaveStore {
+        + Save(save: Save) : void
+        + Load() : Save
+    }
+
+    class FileSaveStore
+    class TextSaveStore
+}
+
+package "Encounter System" {
+    class EncounterSystem {
+        + EncounterTriggered : Action<EncounterData>
+        + EncounterBar : float
+        + OnStep() : void
+        + StartEncounter() : void
+    }
+
+    class EncounterData <<record>> {
+        + Enemies : IReadOnlyList<string>
+        + Floor : int
+    }
+}
+
+' Relationships
+BattleModel *-- "2" Party
+Party o-- "1..6" Battler
+Battler *-- "1" BattlerStats
+
+ActionLibrary ..|> IActionLibrary
+ActionDef o-- "*" IEffect
+
+IEffect <|.. DamageEffect
+IEffect <|.. ApplyStatusEffect
+IEffect <|.. PlayAnimEffect
+IEffect <|.. PlayAnimWaitEffect
+IEffect <|.. WaitSecondsEffect
+
+IEffectWait <|.. NoWait
+IEffectWait <|.. WaitSeconds
+IEffectWait <|.. WaitDamagePopup
+IEffectWait <|.. WaitAnimFinished
+
+Inventory o-- "*" ItemDef
+ItemDef *-- "*" ItemModule
+ItemModule <|-- EquipModule
+ItemModule <|-- StatModifiersModule
+ItemModule <|-- WeaponModule
+
+EquipmentSet o-- "*" ItemDef
+
+DialogueNode <|-- StartNode
+DialogueNode <|-- TextNode
+DialogueNode <|-- ChoiceNode
+DialogueNode <|-- EndNode
+DialogueNode o-- "*" DialogueNode : Next
+
+ISaveStore <|.. FileSaveStore
+ISaveStore <|.. TextSaveStore
+
+EncounterSystem ..> EncounterData
+
+GameServices ..> IActionLibrary
+GameServices ..> ISaveStore
+GameServices ..> IDamageCalculatorRegistry
+
+@enduml

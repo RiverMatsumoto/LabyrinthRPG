@@ -1,0 +1,250 @@
+@startuml Battle System Detailed
+!theme plain
+skinparam linetype ortho
+
+package "Battle Core" {
+    class BattleModel {
+        + playerParty : Party
+        + enemyParty : Party
+        + ResolveTurn() : void
+    }
+
+    class Party {
+        - MAX_CAPACITY : int = 6
+        - MAX_MEMBERS_ROW : int = 3
+        - _members : Battler[]
+        - _frontRowCount : int
+        - _backRowCount : int
+        --
+        + MemberCount : int {get}
+        --
+        + AddToFrontRow(battler: Battler) : void
+        + AddToBackRow(battler: Battler) : void
+        + GetFrontRowMember(index: int) : Battler
+        + GetBackRowMember(index: int) : Battler
+        + GetEnumerator() : IEnumerator<Battler>
+    }
+
+    class Battler {
+        + Stats : BattlerStats
+        + IsAlive : bool {get}
+        --
+        + Battler()
+        + Battler(stats: BattlerStats)
+    }
+
+    class BattlerStats {
+        + Name : string
+        + Description : string
+        + Level : int
+        + Experience : int
+        --
+        + Hp : int
+        + Tp : int
+        + Str : int
+        + Tec : int
+        + Agi : int
+        + Vit : int
+        + Luc : int
+        --
+        + Atk : int {get}
+        + Def : int {get}
+        + AtkBonus : Dictionary<string, int>
+        + DefBonus : Dictionary<string, int>
+    }
+
+    class BattlerBase <<Godot Resource>> {
+        + Class : string
+        + Description : string
+        + Level : int
+        + Experience : int
+        + Hp : int
+        + Tp : int
+        + Str : int
+        + Tec : int
+        + Agi : int
+        + Vit : int
+        + Luc : int
+    }
+}
+
+package "Action System" {
+    interface IActionLibrary {
+        + Get(id: string) : ActionDef
+        + GetAll() : IReadOnlyList<ActionDef>
+    }
+
+    class ActionLibrary {
+        - _defs : Dictionary<string, ActionDef>
+        - deserializer : IDeserializer
+        --
+        + Get(id: string) : ActionDef
+        + GetAll() : IReadOnlyList<ActionDef>
+        - ParseActions(root: Dictionary) : Dictionary
+        - ParseEffect(m: Dictionary) : IEffect
+    }
+
+    class ActionDef <<record>> {
+        + Id : string
+        + Name : string
+        + TargetRule : Targeting
+        + Effects : IList<IEffect>
+    }
+
+    enum Targeting {
+        None
+        Self
+        SingleAlly
+        SingleEnemy
+        RowAllies
+        RowEnemies
+        AllAllies
+        AllEnemies
+    }
+}
+
+package "Effect System" {
+    interface IEffect {
+        + Execute(ctx: BattleRunCtx) : IEffectWait
+    }
+
+    class DamageEffect <<record>> {
+        + DamageType : DamageType
+        + DamageTypeMode : DamageTypeMode
+        + Power : float
+        + CanCrit : bool
+        --
+        + Execute(ctx: BattleRunCtx) : IEffectWait
+    }
+
+    class ApplyStatusEffect <<record>> {
+        + StatusId : string
+        + Turns : int
+        --
+        + Execute(ctx: BattleRunCtx) : IEffectWait
+    }
+
+    class PlayAnimEffect <<record>> {
+        + AnimId : string
+        --
+        + Execute(ctx: BattleRunCtx) : IEffectWait
+    }
+
+    class PlayAnimWaitEffect <<record>> {
+        + AnimId : string
+        --
+        + Execute(ctx: BattleRunCtx) : IEffectWait
+    }
+
+    class WaitSecondsEffect <<record>> {
+        + Seconds : float
+        --
+        + Execute(ctx: BattleRunCtx) : IEffectWait
+    }
+
+    enum DamageType {
+        Cut
+        Bash
+        Stab
+        Fire
+        Ice
+        Lightning
+        True
+    }
+
+    enum DamageTypeMode {
+        Fixed
+        FromWeapon
+    }
+}
+
+package "Runtime Context" {
+    class BattleRunCtx <<sealed, record>> {
+        + Model : BattleModel
+        + Source : Battler
+        + Targets : IReadOnlyList<Battler>
+        + DamageRegistry : IDamageCalculatorRegistry
+        + Runtime : IEffectRuntime
+    }
+
+    interface IEffectRuntime {
+        + Playback : PlaybackOptions
+        + WaitSeconds(seconds: float) : IEffectWait
+        + PlayAnim(id: string, wait: bool) : IEffectWait
+        + ShowDamage(amount: int) : IEffectWait
+        + Log(msg: string) : void
+    }
+
+    class PlaybackOptions {
+        + SkipWaits : bool
+        + Speed : float
+    }
+
+    interface IEffectWait
+    class NoWait <<record>>
+    class WaitSeconds <<record>> {
+        + Seconds : float
+    }
+    class WaitDamagePopup <<record>>
+    class WaitAnimFinished <<record>>
+}
+
+package "Damage System" {
+    interface IDamageCalculator {
+        + Kind : DamageType {get}
+        + Compute(source: Battler, target: Battler, model: BattleModel, spec: DamageSpec) : int
+    }
+
+    interface IDamageCalculatorRegistry {
+        + Get(kind: DamageType) : IDamageCalculator
+    }
+
+    class DamageSpec <<record>> {
+        + DmgType : DamageType
+        + DmgTypeMode : DamageTypeMode
+        + Power : float
+        + CanCrit : bool
+    }
+}
+
+' Relationships
+BattleModel *-- "2" Party : contains
+Party o-- "1..6" Battler : manages
+Battler *-- "1" BattlerStats : has
+
+ActionLibrary ..|> IActionLibrary : implements
+ActionDef *-- "*" IEffect : contains
+ActionDef --> Targeting : uses
+
+IEffect <|.. DamageEffect : implements
+IEffect <|.. ApplyStatusEffect : implements
+IEffect <|.. PlayAnimEffect : implements
+IEffect <|.. PlayAnimWaitEffect : implements
+IEffect <|.. WaitSecondsEffect : implements
+
+DamageEffect --> DamageType : uses
+DamageEffect --> DamageTypeMode : uses
+
+BattleRunCtx --> BattleModel : references
+BattleRunCtx --> Battler : source
+BattleRunCtx --> Battler : targets
+BattleRunCtx --> IDamageCalculatorRegistry : uses
+BattleRunCtx --> IEffectRuntime : uses
+
+IEffectRuntime --> PlaybackOptions : has
+IEffectRuntime ..> IEffectWait : returns
+
+IEffectWait <|.. NoWait : implements
+IEffectWait <|.. WaitSeconds : implements
+IEffectWait <|.. WaitDamagePopup : implements
+IEffectWait <|.. WaitAnimFinished : implements
+
+IEffect ..> BattleRunCtx : uses
+IEffect ..> IEffectWait : returns
+
+IDamageCalculatorRegistry ..> IDamageCalculator : provides
+IDamageCalculator --> DamageType : identifies
+DamageSpec --> DamageType : specifies
+DamageSpec --> DamageTypeMode : specifies
+
+@enduml

@@ -1,0 +1,141 @@
+@startuml Inventory and Equipment System
+!theme plain
+skinparam linetype ortho
+
+package "Inventory Core" {
+    class Inventory {
+        - _items : List<ItemDef>
+        + MaxItems : int
+        --
+        + Items : IReadOnlyList<ItemDef> {get}
+        --
+        + GetCount(item: ItemDef) : int
+        + CanAdd(item: ItemDef) : bool
+        + TryAdd(item: ItemDef, error: out string) : bool
+        + TryRemove(item: ItemDef, error: out string) : bool
+        + EnumerateItems() : IEnumerable<ItemDef>
+    }
+
+    class ItemDef <<Godot Resource>> {
+        + Id : string
+        + DisplayName : string
+        + Icon : Texture2D
+        + Description : string
+        + Category : ItemCategory
+        + Modules : Array<ItemModule>
+        --
+        + Has<T>() : bool
+        + Get<T>() : T
+    }
+
+    enum ItemCategory {
+        Consumable
+        Weapon
+        Armor
+        KeyItem
+        Material
+        Misc
+    }
+
+    enum UseContext {
+        Labyrinth
+        Town
+        Battle
+        Menu
+    }
+}
+
+package "Item Modules" {
+    abstract class ItemModule <<Godot Resource>>
+
+    class EquipModule {
+        + Slot : EquipSlot
+        + UniqueEquipped : bool
+    }
+
+    class StatModifiersModule {
+        + Modifiers : Array<StatModifierResource>
+        --
+        + Enumerate() : IEnumerable<StatModifier>
+    }
+
+    class StatModifierResource <<Godot Resource>> {
+        + Stat : StatId
+        + FlatDelta : int
+    }
+
+    class WeaponModule {
+        + AttackPower : int
+        + DamageType : string
+    }
+
+    enum EquipSlot {
+        Weapon
+        Chest
+        Accessory1
+        Accessory2
+    }
+
+    enum StatId {
+        Hp
+        Tp
+        Str
+        Tec
+        Agi
+        Vit
+        Luc
+    }
+
+    class StatModifier <<record>> {
+        + Stat : StatId
+        + FlatDelta : int
+    }
+}
+
+package "Equipment System" {
+    class EquipmentSet {
+        - _equipped : Dictionary<EquipSlot, ItemDef>
+        --
+        + TryGet(slot: EquipSlot, item: out ItemDef) : bool
+        + CanEquip(item: ItemDef, error: out string) : bool
+        + TryEquip(item: ItemDef, error: out string) : bool
+        + Unequip(slot: EquipSlot) : bool
+        + GetAllStatModifiers() : IEnumerable<StatModifier>
+    }
+}
+
+' Relationships
+Inventory o-- "*" ItemDef : contains
+ItemDef --> ItemCategory : categorized by
+ItemDef *-- "*" ItemModule : composed of
+
+ItemModule <|-- EquipModule : extends
+ItemModule <|-- StatModifiersModule : extends
+ItemModule <|-- WeaponModule : extends
+
+EquipModule --> EquipSlot : targets
+StatModifiersModule *-- "*" StatModifierResource : contains
+StatModifierResource --> StatId : modifies
+StatModifierResource ..> StatModifier : creates
+WeaponModule --> DamageType : defines
+
+EquipmentSet o-- "*" ItemDef : equips
+EquipmentSet --> EquipSlot : manages slots
+EquipmentSet ..> EquipModule : requires
+EquipmentSet ..> StatModifiersModule : reads
+EquipmentSet ..> StatModifier : provides
+
+note right of ItemDef
+  Uses modular composition pattern.
+  Items can have any combination
+  of modules to define their
+  capabilities.
+end note
+
+note bottom of EquipmentSet
+  Aggregates stat modifiers
+  from all equipped items
+  with StatModifiersModule.
+end note
+
+@enduml

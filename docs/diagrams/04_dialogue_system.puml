@@ -1,0 +1,65 @@
+@startuml Dialogue System
+!theme plain
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 80
+
+package "Dialogue System" {
+    abstract class DialogueNode {
+        + Next : DialogueNode[]
+        + Texts : string[]
+        --
+        # DialogueNode()
+        # DialogueNode(texts: string[], next: DialogueNode[])
+    }
+
+    class StartNode {
+        (Entry point for dialogue)
+    }
+
+    class TextNode {
+        (Displays text to player)
+    }
+
+    class ChoiceNode {
+        (Presents choices to player)
+    }
+
+    class EndNode {
+        (Terminates dialogue)
+    }
+}
+
+' Inheritance relationships
+DialogueNode <|-- StartNode
+DialogueNode <|-- TextNode
+DialogueNode <|-- ChoiceNode
+DialogueNode <|-- EndNode
+
+' Self-reference for graph structure
+DialogueNode o-- "*" DialogueNode : Next
+
+note top of DialogueNode
+  Abstract base class for all dialogue nodes.
+  Forms a directed graph structure where
+  each node can point to multiple next nodes.
+end note
+
+note bottom of StartNode
+  Entry point for a dialogue sequence.
+  Typically has one or more Next nodes.
+end note
+
+note bottom of ChoiceNode
+  Presents multiple options to the player.
+  Each choice leads to a different Next node.
+  Number of Next nodes should match
+  number of choices presented.
+end note
+
+note bottom of EndNode
+  Terminal node with no Next nodes.
+  Signals the end of the dialogue.
+end note
+
+@enduml

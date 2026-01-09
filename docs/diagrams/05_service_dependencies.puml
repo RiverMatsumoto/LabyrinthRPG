@@ -1,0 +1,127 @@
+@startuml Service Dependencies
+!theme plain
+skinparam componentStyle rectangle
+
+package "Dependency Injection Container" {
+    [GameServices] <<static>>
+}
+
+package "Save System Services" {
+    interface ISaveStore {
+        + Save(save: Save) : void
+        + Load() : Save
+    }
+
+    class FileSaveStore
+    class TextSaveStore
+
+    class Settings {
+        (Game settings and configuration)
+    }
+
+    class Save {
+        + Fps : int
+        + PlayerHealth : float
+        + PlayerLevel : int
+        + ExperiencePoints : int
+        + PlayerPosition : float[]
+    }
+}
+
+package "Battle System Services" {
+    interface IActionLibrary {
+        + Get(id: string) : ActionDef
+        + GetAll() : IReadOnlyList<ActionDef>
+    }
+
+    class ActionLibrary {
+        - _defs : Dictionary<string, ActionDef>
+    }
+
+    interface IDamageCalculatorRegistry {
+        + Get(kind: DamageType) : IDamageCalculator
+    }
+
+    class DamageCalculatorRegistry
+
+    interface IDamageCalculator {
+        + Kind : DamageType
+        + Compute(...) : int
+    }
+
+    class CutDamageCalculator
+    class BashDamageCalculator
+    class StabDamageCalculator
+    class FireDamageCalculator
+    class IceDamageCalculator
+    class LightningDamageCalculator
+}
+
+package "Item System Services" {
+    interface IItemService {
+        (Service for managing items)
+    }
+
+    class ItemService
+}
+
+package "Encounter System" {
+    class EncounterSystem {
+        + EncounterTriggered : Action<EncounterData>
+        + OnStep() : void
+        + StartEncounter() : void
+    }
+
+    interface IEncounterDataProvider {
+        (Provides encounter data)
+    }
+}
+
+' Service Registration
+[GameServices] ..> ISaveStore : registers
+[GameServices] ..> FileSaveStore : as singleton
+[GameServices] ..> Settings : registers singleton
+[GameServices] ..> IActionLibrary : registers
+[GameServices] ..> ActionLibrary : as singleton
+[GameServices] ..> IDamageCalculatorRegistry : registers
+[GameServices] ..> DamageCalculatorRegistry : as singleton
+
+' Implementation relationships
+ISaveStore <|.. FileSaveStore
+ISaveStore <|.. TextSaveStore
+IActionLibrary <|.. ActionLibrary
+IDamageCalculatorRegistry <|.. DamageCalculatorRegistry
+IItemService <|.. ItemService
+
+' Damage Calculator implementations
+IDamageCalculator <|.. CutDamageCalculator
+IDamageCalculator <|.. BashDamageCalculator
+IDamageCalculator <|.. StabDamageCalculator
+IDamageCalculator <|.. FireDamageCalculator
+IDamageCalculator <|.. IceDamageCalculator
+IDamageCalculator <|.. LightningDamageCalculator
+
+' Registry relationships
+[GameServices] ..> CutDamageCalculator : registers
+[GameServices] ..> BashDamageCalculator : registers
+[GameServices] ..> StabDamageCalculator : registers
+[GameServices] ..> FireDamageCalculator : registers
+[GameServices] ..> IceDamageCalculator : registers
+[GameServices] ..> LightningDamageCalculator : registers
+
+DamageCalculatorRegistry o-- "*" IDamageCalculator : contains
+
+note right of [GameServices]
+  Static service locator that
+  builds and provides access to
+  all game services using
+  Microsoft.Extensions.DependencyInjection
+end note
+
+note bottom of IDamageCalculatorRegistry
+  Registry pattern that provides
+  access to damage calculators
+  by DamageType enum
+end note
+
+@enduml

@@ -95,7 +95,6 @@ public partial class BattleScene : Control
 
     private void LoadBattleState()
     {
-
     }
 
     public void ExecuteActions()

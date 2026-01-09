@@ -1,0 +1,129 @@
+@startuml Complete System Overview
+!theme plain
+skinparam linetype polyline
+skinparam nodesep 60
+skinparam ranksep 60
+
+package "Core Game Layer" {
+    class Game {
+        (Main game coordinator)
+    }
+
+    [GameServices] <<DI Container>>
+}
+
+package "Battle Domain" {
+    component [BattleModel]
+    component [Party]
+    component [Battler]
+    component [ActionLibrary]
+    component [EffectSystem]
+    component [DamageCalculators]
+}
+
+package "Inventory Domain" {
+    component [Inventory]
+    component [ItemDef]
+    component [EquipmentSet]
+    component [ItemModules]
+}
+
+package "Dialogue Domain" {
+    component [DialogueNode]
+    component [DialogueGraph]
+}
+
+package "Save Domain" {
+    component [SaveSystem]
+    component [ISaveStore]
+    component [Save]
+}
+
+package "Encounter Domain" {
+    component [EncounterSystem]
+    component [EncounterData]
+}
+
+package "Scene Layer (Godot)" {
+    component [BattleScene]
+    component [Map]
+    component [PauseMenu]
+    component [ItemMenu]
+    component [SkillMenu]
+    component [StatusMenu]
+    component [SystemsMediator]
+}
+
+package "UI Layer (Godot)" {
+    component [CharacterUI]
+    component [EnemyUI]
+    component [DamagePopup]
+    component [DebugConsole]
+}
+
+package "Adapters (Engine Bridge)" {
+    component [GodotActionExecutor]
+    component [GodotEffectRuntime]
+}
+
+' Core connections
+[Game] --> [GameServices]
+[GameServices] --> [ActionLibrary]
+[GameServices] --> [SaveSystem]
+[GameServices] --> [DamageCalculators]
+
+' Battle system relationships
+[BattleModel] --> [Party]
+[Party] --> [Battler]
+[ActionLibrary] --> [EffectSystem]
+[EffectSystem] --> [DamageCalculators]
+
+' Scene to Domain
+[BattleScene] --> [BattleModel]
+[BattleScene] --> [ActionLibrary]
+[BattleScene] --> [GodotActionExecutor]
+[GodotActionExecutor] --> [GodotEffectRuntime]
+[GodotEffectRuntime] --> [EffectSystem]
+
+[Map] --> [EncounterSystem]
+[ItemMenu] --> [Inventory]
+[StatusMenu] --> [Battler]
+[SystemsMediator] --> [BattleModel]
+[SystemsMediator] --> [SaveSystem]
+
+' UI connections
+[BattleScene] --> [CharacterUI]
+[BattleScene] --> [EnemyUI]
+[BattleScene] --> [DamagePopup]
+
+' Equipment and Inventory
+[Inventory] --> [ItemDef]
+[ItemDef] --> [ItemModules]
+[EquipmentSet] --> [ItemDef]
+[Battler] --> [EquipmentSet]
+
+' Save system
+[SaveSystem] --> [ISaveStore]
+[SaveSystem] --> [Save]
+
+' Encounter system
+[EncounterSystem] ..> [EncounterData] : creates
+
+note right of [GameServices]
+  Central DI container that wires up
+  all services and provides them
+  throughout the application
+end note
+
+note top of [GodotEffectRuntime]
+  Adapter that bridges engine-agnostic
+  battle system to Godot-specific
+  rendering and animation
+end note
+
+note bottom of [SystemsMediator]
+  Mediates communication between
+  different game systems and scenes
+end note
+
+@enduml
