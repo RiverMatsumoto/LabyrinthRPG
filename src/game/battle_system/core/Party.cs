@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Godot;
 
-public class Party : IEnumerable<Battler>
+[GlobalClass]
+public partial class Party : GodotObject, IEnumerable<Battler>
 {
     private const int MAX_CAPACITY = 6;
     private const int MAX_MEMBERS_ROW = 3;
@@ -34,6 +35,16 @@ public class Party : IEnumerable<Battler>
             GD.PrintErr("Tried to add Character to back row. Back row is full");
     }
 
+    public IEnumerable<Battler> GetFrontRowMembers()
+    {
+        for (int i = 0; i < _frontRowCount; i++)
+            yield return _members[i];
+    }
+    public IEnumerable<Battler> GetBackRowMembers()
+    {
+        for (int i = 0; i < _backRowCount; i++)
+            yield return _members[MAX_MEMBERS_ROW + i];
+    }
     public Battler GetFrontRowMember(int index) => index < _frontRowCount ? _members[index] : null;
     public Battler GetBackRowMember(int index) => index < _backRowCount ? _members[MAX_MEMBERS_ROW + index] : null;
 

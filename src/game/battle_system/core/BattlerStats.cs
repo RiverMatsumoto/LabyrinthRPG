@@ -60,4 +60,20 @@ public class BattlerStats
         Luc = luc;
     }
 
+    public BattlerStats(BattlerBase bb)
+    {
+        Name = bb.Name;
+        Description = bb.Description;
+        Level = bb.Level;
+        Experience = bb.Experience;
+        Hp = bb.Hp;
+        Tp = bb.Tp;
+        Str = bb.Str;
+        Tec = bb.Tec;
+        Agi = bb.Agi;
+        Vit = bb.Vit;
+        Luc = bb.Luc;
+    }
+
+
 }

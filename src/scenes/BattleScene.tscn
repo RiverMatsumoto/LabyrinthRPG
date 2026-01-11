@@ -1,13 +1,13 @@
-[gd_scene load_steps=10 format=3 uid="uid://bi3k3nqxeq27o"]
+[gd_scene load_steps=12 format=3 uid="uid://bi3k3nqxeq27o"]
 
-[ext_resource type="Script" uid="uid://deidwijirvqxs" path="res://src/game/scene_scripts/EnemyContainer.cs" id="1_6ynkr"]
 [ext_resource type="PackedScene" uid="uid://chn25mltsiwkj" path="res://src/scenes/CharacterUI.tscn" id="1_acp3n"]
 [ext_resource type="Script" uid="uid://8gei2waqwany" path="res://src/game/scene_scripts/BattleScene.cs" id="1_rubm6"]
+[ext_resource type="Resource" uid="uid://bi6ss2nu0cypx" path="res://resources/game_state.tres" id="2_71a8g"]
+[ext_resource type="Texture2D" uid="uid://bafvo4y4vdnha" path="res://resources/battle_backgrounds/battle_background_1.tres" id="3_843fn"]
+[ext_resource type="Resource" uid="uid://c1dxy4fkldwj6" path="res://resources/enemy_registry.tres" id="3_dm5l0"]
 [ext_resource type="PackedScene" uid="uid://c8g1prqa02etp" path="res://src/scenes/DamagePopup.tscn" id="5_843fn"]
+[ext_resource type="PackedScene" uid="uid://sw6qry1lujeb" path="res://src/scenes/EnemyUI.tscn" id="5_dm5l0"]
 [ext_resource type="Script" uid="uid://b02xdj7syr8wl" path="res://src/game/battle_system/adapters/GodotActionExecutor.cs" id="5_hil36"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nip0a"]
-bg_color = Color(0, 0, 0, 0.078431375)
 
 [sub_resource type="Animation" id="Animation_843fn"]
 resource_name = "Fire"
@@ -21,7 +21,8 @@ _data = {
 &"FromWeapon": SubResource("Animation_hil36")
 }
 
-[node name="BattleScene" type="Control" node_paths=PackedStringArray("PlayerPartyFrontRowContainer", "PlayerPartyBackRowContainer", "animationPlayer", "damagePopup", "actionExecutor")]
+[node name="BattleScene" type="Control" node_paths=PackedStringArray("actionExecutor", "PlayerPartyFrontRowContainer", "PlayerPartyBackRowContainer", "battleMenu", "enemyContainer", "animationPlayer", "damagePopup", "backgroundTexture")]
+z_index = -10
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -29,14 +30,31 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_rubm6")
+gameData = ExtResource("2_71a8g")
+actionExecutor = NodePath("ActionExecutor")
+enemyRegistry = ExtResource("3_dm5l0")
 PlayerPartyFrontRowContainer = NodePath("PlayerParty/VBoxContainer/FrontRow")
 PlayerPartyBackRowContainer = NodePath("PlayerParty/VBoxContainer/BackRow")
 characterUIPackedScene = ExtResource("1_acp3n")
+enemyUIPackedScene = ExtResource("5_dm5l0")
+battleMenu = NodePath("BattleMenu")
+enemyContainer = NodePath("EnemyParty/CanvasLayer/HBoxContainer")
 animationPlayer = NodePath("AnimationPlayer")
 damagePopup = NodePath("EffectsUI/DamagePopup")
-actionExecutor = NodePath("ActionExecutor")
+backgroundTexture = NodePath("Background")
+
+[node name="Background" type="TextureRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_843fn")
 
 [node name="BattleMenu" type="Control" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -65,31 +83,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="Panel" parent="PlayerParty"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -258.0
-offset_top = -228.0
-offset_right = 258.0
-offset_bottom = -22.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_nip0a")
-
 [node name="VBoxContainer" type="VBoxContainer" parent="PlayerParty"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 355.0
-offset_top = -263.0
-offset_right = -346.0
-offset_bottom = -52.0
+offset_left = 353.0
+offset_top = -212.0
+offset_right = -350.0
+offset_bottom = -40.0
 
 [node name="FrontRow" type="HBoxContainer" parent="PlayerParty/VBoxContainer"]
 custom_minimum_size = Vector2(0, 70)
@@ -102,6 +105,7 @@ layout_mode = 2
 alignment = 1
 
 [node name="EnemyParty" type="Control" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -115,19 +119,16 @@ grow_vertical = 2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="EnemyParty"]
 
-[node name="Container" type="Container" parent="EnemyParty/CanvasLayer"]
-anchors_preset = -1
-anchor_left = 0.17400001
-anchor_top = 0.071
-anchor_right = 0.84800005
-anchor_bottom = 0.757
-offset_left = 0.9199829
-offset_top = 0.3199997
-offset_right = -0.16015625
-offset_bottom = 0.4399414
+[node name="HBoxContainer" type="HBoxContainer" parent="EnemyParty/CanvasLayer"]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -73.0
+offset_bottom = 73.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_6ynkr")
+alignment = 1
 
 [node name="EffectsUI" type="Control" parent="."]
 anchors_preset = 0

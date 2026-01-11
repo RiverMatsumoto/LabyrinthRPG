@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://4s1i17gso80f"]
+[gd_scene load_steps=5 format=3 uid="uid://4s1i17gso80f"]
 
 [ext_resource type="Script" uid="uid://bi76p6s6t8jxs" path="res://src/game/scene_scripts/PauseMenu.cs" id="1_lthlp"]
+[ext_resource type="Resource" uid="uid://bi6ss2nu0cypx" path="res://resources/game_state.tres" id="2_mj5i6"]
 
 [sub_resource type="SystemFont" id="SystemFont_hea54"]
 subpixel_positioning = 0
@@ -21,6 +22,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 theme = SubResource("Theme_ktmhr")
 script = ExtResource("1_lthlp")
+gameData = ExtResource("2_mj5i6")
 metadata/_edit_use_anchors_ = true
 
 [node name="Panel" type="Panel" parent="."]

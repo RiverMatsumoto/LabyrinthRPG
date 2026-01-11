@@ -1,13 +1,11 @@
 using Godot;
 
 public sealed class GodotEffectRuntime(
-    Node host,
     AnimationPlayer anim,
     DamagePopup popup,
     PlaybackOptions playback)
     : IEffectRuntime
 {
-    private readonly Node _host = host;
     private readonly AnimationPlayer _anim = anim;
     private readonly DamagePopup _popup = popup;
     private readonly PlaybackOptions _playback = playback;

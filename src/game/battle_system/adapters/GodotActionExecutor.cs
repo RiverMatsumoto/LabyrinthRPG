@@ -21,12 +21,11 @@ public sealed partial class GodotActionExecutor : Node, IActionExecutor
     private bool _waitingAnim;
     private bool _waitingPopup;
 
-    public void Configure(BattleRunCtx ctx, AnimationPlayer anim, DamagePopup damagePopup, Action actionFinishedCb)
+    public void Configure(BattleRunCtx ctx, AnimationPlayer anim, DamagePopup damagePopup)
     {
         _ctx = ctx;
         _anim = anim;
         _popup = damagePopup;
-        Connect(nameof(ActionFinished), Callable.From(actionFinishedCb));
     }
 
     public void Execute(ActionDef action)

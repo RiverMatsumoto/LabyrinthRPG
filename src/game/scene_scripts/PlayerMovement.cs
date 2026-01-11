@@ -7,6 +7,7 @@ public partial class PlayerMovement : Node3D
     [Export] private float moveTime = 0.10f;
     [Export] private Timer cooldownTimerNode;
     [Export] private Tween.TransitionType easeType;
+    [Export] private GameData gameData;
     [Signal] public delegate void OnMoveCompleteEventHandler();
 
     private bool isMoving;
@@ -21,12 +22,7 @@ public partial class PlayerMovement : Node3D
 
         cooldownTimerNode = GetNode<Timer>("Timer");
         cooldownTimerNode.OneShot = true;
-        cooldownTimerNode.Timeout += () =>
-        {
-            isMoving = false;
-            if (!td.Turning)
-                EmitSignal(nameof(OnMoveComplete));
-        };
+        cooldownTimerNode.Timeout += OnCooldownFinished;
 
         cell = new Vector3I(0, 0, 0);
         SnapToCell(cell);
@@ -35,7 +31,7 @@ public partial class PlayerMovement : Node3D
     public override void _Process(double delta)
     {
         ProcessTurn(delta);
-        if (isMoving || Game.State != GameState.Labyrinth) return;
+        if (isMoving || gameData.State != GameState.Labyrinth) return;
 
         Vector3I step = Vector3I.Zero;
 
@@ -71,6 +67,7 @@ public partial class PlayerMovement : Node3D
             cell = targetCell;       // commit discrete position
             SnapToCell(cell);        // kill float drift
             StartCooldown();
+            EmitSignal(SignalName.OnMoveComplete);
         };
     }
 
@@ -194,6 +191,11 @@ public partial class PlayerMovement : Node3D
     {
         isMoving = true;
         cooldownTimerNode.Start();
+    }
+
+    private void OnCooldownFinished()
+    {
+        isMoving = false;
     }
 
     private struct TurnData

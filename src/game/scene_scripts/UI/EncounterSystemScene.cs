@@ -2,44 +2,41 @@ using Godot;
 
 public partial class EncounterSystemScene : CanvasLayer
 {
-    [Export] private PlayerMovement playerMovement;
     [Signal] public delegate void EncounterTriggeredEventHandler(EncounterData encounterData);
+    [Export] private PlayerMovement playerMovement;
+    [Export] private EncounterData encounterData1;
+    [Export] private ProgressBar progressBar;
+    [Export] public float EncounterSpeed = 0.1f;
+
+    private float _encounterBar;
+    private readonly RandomNumberGenerator _rng = new();
 
     public float EncounterBar
     {
-        get => EncounterBar;
+        get => _encounterBar;
         private set
         {
-            if (EncounterBar + value > 1.0f)
-            {
-                EncounterBar = 0f;
-                // TODO implement an encounter provider that tracks current
-                // floor and selects from a pool of encounters
-                EmitSignal(
-                    SignalName.EncounterTriggered,
-                    new EncounterData
-                    {
-                        Enemies = new() { "squid_wizard" },
-                        Floor = 1
-                    }
-                );
+            var v = Mathf.Clamp(value, 0f, 1f);
+            _encounterBar = v;
 
+            if (_encounterBar >= 1f)
+            {
+                _encounterBar = 0f;
+                EmitSignal(SignalName.EncounterTriggered, encounterData1);
             }
-            else
-                EncounterBar = value;
+
+            if (progressBar != null)
+                progressBar.Value = _encounterBar; // if your bar expects 0..1
         }
     }
 
     public override void _Ready()
     {
-        playerMovement.OnMoveComplete += OnStep;
+        _rng.Randomize();
     }
 
-
-    // percentage until encounter
     public void OnStep()
     {
-        var rng = new RandomNumberGenerator();
-        EncounterBar = rng.RandfRange(0, 0.08f);
+        EncounterBar += _rng.RandfRange(0f, EncounterSpeed);
     }
 }

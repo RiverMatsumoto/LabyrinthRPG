@@ -1,11 +1,17 @@
-[gd_resource type="Resource" script_class="CharacterBase" load_steps=2 format=3 uid="uid://cov5qxvldskda"]
+[gd_resource type="Resource" script_class="BattlerBase" load_steps=3 format=3 uid="uid://cov5qxvldskda"]
 
-[ext_resource type="Script" path="res://src/game/CharacterBase.cs" id="1_ip63h"]
+[ext_resource type="Script" uid="uid://d4boeic7qbwav" path="res://src/game/BattlerBase.cs" id="1_ip63h"]
+[ext_resource type="Texture2D" uid="uid://dljyrbaon31u0" path="res://resources/sprites/enemies/squid_wizard.png" id="1_txdxc"]
 
 [resource]
 script = ExtResource("1_ip63h")
-Class = "squid_wizard"
-Description = "It's a squid and... a wizard"
+Name = "Squid Wizard"
+Description = "A squid and... a wizard"
 Level = 1
-Hp = 50
-metadata/_custom_type_script = "uid://df3crielt51k1"
+Hp = 25
+Str = 4
+Tec = 9
+Agi = 5
+Vit = 3
+Luc = 5
+Sprite = ExtResource("1_txdxc")

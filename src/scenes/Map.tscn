@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://dtiy8yayysdb8"]
+[gd_scene load_steps=6 format=3 uid="uid://dtiy8yayysdb8"]
 
 [ext_resource type="MeshLibrary" uid="uid://dbropcxwxnqpd" path="res://resources/tiles3.tres" id="1_2w2s7"]
 [ext_resource type="PackedScene" uid="uid://cu36onp4rktu" path="res://src/scenes/player.tscn" id="1_lplyj"]
 [ext_resource type="Script" uid="uid://bwxi1ldge7qla" path="res://src/game/scene_scripts/MapScene.cs" id="1_utv3k"]
 [ext_resource type="PackedScene" uid="uid://ccidjwnp770qn" path="res://src/scenes/EncounterSystem.tscn" id="3_4b68d"]
+[ext_resource type="Resource" uid="uid://bi6ss2nu0cypx" path="res://resources/game_state.tres" id="4_hel5k"]
 
 [node name="MapScene" type="Node3D" node_paths=PackedStringArray("encounterSystemScene")]
 script = ExtResource("1_utv3k")
@@ -30,6 +31,7 @@ metadata/_editor_floor_ = Vector3(0, 0, 0)
 gridMap = NodePath("../GridMap")
 moveTime = 0.15
 cooldownTimerNode = NodePath("Timer")
+gameData = ExtResource("4_hel5k")
 
 [node name="Timer" type="Timer" parent="PlayerMovement"]
 wait_time = 0.05
@@ -37,3 +39,6 @@ one_shot = true
 
 [node name="EncounterSystem" parent="." node_paths=PackedStringArray("playerMovement") instance=ExtResource("3_4b68d")]
 playerMovement = NodePath("../PlayerMovement")
+EncounterSpeed = 0.5
+
+[connection signal="OnMoveComplete" from="PlayerMovement" to="EncounterSystem" method="OnStep"]

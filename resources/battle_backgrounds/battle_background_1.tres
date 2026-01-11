@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://bafvo4y4vdnha"]
+
+[ext_resource type="Texture2D" uid="uid://bgl10a1jdbd7d" path="res://resources/battle_backgrounds/battle_backgrounds.png" id="1_0uop0"]
+
+[resource]
+atlas = ExtResource("1_0uop0")
+region = Rect2(3.9902425, 3.9921725, 256.01852, 224.02032)

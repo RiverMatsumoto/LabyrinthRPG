@@ -1,9 +1,12 @@
-[gd_scene load_steps=2 format=3 uid="uid://ccidjwnp770qn"]
+[gd_scene load_steps=3 format=3 uid="uid://ccidjwnp770qn"]
 
 [ext_resource type="Script" uid="uid://isgknixd3xiy" path="res://src/game/scene_scripts/UI/EncounterSystemScene.cs" id="1_3o50s"]
+[ext_resource type="Resource" uid="uid://cove1tiqm0p6" path="res://resources/encounters/encounter1.tres" id="2_il5mt"]
 
-[node name="EncounterSystem" type="CanvasLayer"]
+[node name="EncounterSystem" type="CanvasLayer" node_paths=PackedStringArray("progressBar")]
 script = ExtResource("1_3o50s")
+encounterData1 = ExtResource("2_il5mt")
+progressBar = NodePath("ProgressBar")
 
 [node name="ProgressBar" type="ProgressBar" parent="."]
 anchors_preset = 3
@@ -15,3 +18,4 @@ offset_left = -228.0
 offset_top = -49.0
 grow_horizontal = 0
 grow_vertical = 0
+max_value = 1.0

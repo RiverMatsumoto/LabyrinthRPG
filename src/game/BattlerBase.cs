@@ -3,6 +3,7 @@ using Godot;
 [GlobalClass]
 public partial class BattlerBase : Resource
 {
+    [Export] public string Name { get; set; }
     [Export] public string Class { get; set; }
     [Export] public string Description { get; set; }
     [Export] public int Level { get; set; }
@@ -14,6 +15,7 @@ public partial class BattlerBase : Resource
     [Export] public int Agi { get; set; }
     [Export] public int Vit { get; set; }
     [Export] public int Luc { get; set; }
+    [Export] public Texture2D Sprite { get; set; }
 
 
     public BattlerBase()

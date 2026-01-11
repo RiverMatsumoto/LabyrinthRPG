@@ -1,12 +1,14 @@
 using Godot;
-using System;
 
-public partial class EnemyUI : Control
+public partial class EnemyUI : VBoxContainer
 {
-    [Export] public Sprite2D sprite;
-    public Battler battler;
+	[Export] private TextureProgressBar healthBar;
+	[Export] private TextureRect sprite;
+	public Battler Battler;
 
-    public override void _Ready()
-    {
-    }
+	public void PopulateData(Battler enemy)
+	{
+		Battler = enemy;
+		sprite.Texture = enemy.Sprite;
+	}
 }
