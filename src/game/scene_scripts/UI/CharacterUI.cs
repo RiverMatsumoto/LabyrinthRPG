@@ -1,6 +1,6 @@
 using Godot;
 
-public partial class CharacterUI : Node
+public partial class CharacterUI : Control
 {
     [Export] RichTextLabel NameText;
     [Export] RichTextLabel HpValueText;

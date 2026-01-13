@@ -1,0 +1,28 @@
+[gd_scene load_steps=2 format=3 uid="uid://bonw1arp83h85"]
+
+[ext_resource type="SpriteFrames" uid="uid://b400mld5uo3a8" path="res://resources/animations/cut.aseprite" id="1_bovl2"]
+
+[node name="ActionAnim" type="AnimatedSprite2D"]
+texture_filter = 1
+sprite_frames = ExtResource("1_bovl2")
+frame = 7
+frame_progress = 1.0
+metadata/_aseprite_wizard_interface_config_ = {
+"animation_section": false,
+"layer_section": false,
+"output_section": false,
+"pending_changes": {
+"embed_tex": true,
+"layers": [],
+"o_ex_p": "",
+"o_folder": "",
+"o_name": "",
+"only_visible": false,
+"scale": "1.0",
+"should_round_fps": true,
+"slice": "",
+"source": "",
+"source_uid": -1
+},
+"slice_section": false
+}

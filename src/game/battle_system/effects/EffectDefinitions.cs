@@ -1,38 +1,31 @@
+using Godot;
 
 public sealed record DamageEffect(
-    DamageType DamageType,
-    DamageTypeMode DamageTypeMode,
-    float Power,
-    bool CanCrit
+    DamageSpec DamageSpec
 ) : IEffect
 {
     public IEffectWait Execute(BattleRunCtx ctx)
     {
-        Godot.GD.Print("Executing DamageEffect");
-        ctx.Runtime.Log($"Apply damage: {Power}");
-        Godot.GD.Print("DamageEffect executed");
+        var spec = DamageSpec;
+        foreach (var target in ctx.Targets)
+        {
+            var calc = ctx.DamageRegistry.Get(spec.DamageType);
+            int damage = calc.Compute(
+                ctx,
+                ctx.Source,
+                target,
+                ctx.Model, new DamageSpec(
+                spec.DamageType,
+                spec.DamageTypeMode,
+                spec.Power,
+                spec.CritMultiplier,
+                spec.CanCrit));
+            GD.Print($"Apply damage effect: {damage}");
+            target.Stats.Hp -= damage;
+        }
         return new NoWait();
     }
 
-    // public override async Task ExecuteAsync(BattleRunCtx ctx, CancellationToken ct)
-    // {
-    //     var spec = new DamageSpec(DamageType, DamageTypeMode, Power, CanCrit);
-    //     var calc = ctx.DamageRegistry.Get(spec.DmgType);
-
-    //     foreach (var t in ctx.Targets)
-    //     {
-    //         ct.ThrowIfCancellationRequested();
-
-    //         var amount = calc.Compute(ctx.Source, t, ctx.Model, spec);
-
-    //         // Model changes (engine-agnostic)
-    //         // t.Hp -= amount;
-    //         // ctx.Model.Events.DamageDealt(ctx.Source, t, amount);
-
-    //         ctx.Runtime.Log($"Apply damage: {amount}");
-    //         await ctx.Runtime.ShowDamage(amount, ct);
-    //     }
-    // }
 }
 
 public sealed record ApplyStatusEffect(

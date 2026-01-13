@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Godot;
 
 
 public interface IEffectBuilder
@@ -15,7 +16,7 @@ public interface IEffectFactory
 public interface IDamageCalculator
 {
     DamageType Kind { get; }
-    int Compute(Battler source, Battler target, BattleModel model, DamageSpec spec);
+    int Compute(BattleRunCtx ctx, Battler source, Battler target, BattleModel model, DamageSpec spec);
 }
 
 public interface IDamageCalculatorRegistry

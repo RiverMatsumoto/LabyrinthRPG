@@ -9,5 +9,11 @@ public partial class DamagePopup : Control
     public void ShowDamage(int amount)
     {
         GD.Print($"DAMAGE POP UP {amount}");
+        EmitSignal(nameof(Finished));
+    }
+
+    public void Cancel()
+    {
+        // EmitSignal(nameof(Finished));
     }
 }

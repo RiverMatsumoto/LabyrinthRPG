@@ -17,6 +17,7 @@ public class BattlerStats
     public int Tec { get; set; }
     public int Agi { get; set; }
     public int Vit { get; set; }
+    public int Wis { get; set; }
     public int Luc { get; set; }
 
     public BattlerStats()
@@ -31,6 +32,7 @@ public class BattlerStats
         Tec = 10;
         Agi = 10;
         Vit = 10;
+        Wis = 10;
         Luc = 10;
     }
 
@@ -45,6 +47,7 @@ public class BattlerStats
         int tec,
         int agi,
         int vit,
+        int wis,
         int luc)
     {
         Name = name;
@@ -57,6 +60,7 @@ public class BattlerStats
         Tec = tec;
         Agi = agi;
         Vit = vit;
+        Wis = wis;
         Luc = luc;
     }
 
@@ -72,6 +76,7 @@ public class BattlerStats
         Tec = bb.Tec;
         Agi = bb.Agi;
         Vit = bb.Vit;
+        Wis = bb.Wis;
         Luc = bb.Luc;
     }
 

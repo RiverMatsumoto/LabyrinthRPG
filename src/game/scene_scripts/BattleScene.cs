@@ -16,7 +16,6 @@ public partial class BattleScene : Control
     [Export] private Control battleMenu;
     [Export] private HBoxContainer enemyContainer;
 
-    [Export] private AnimationPlayer animationPlayer;
     [Export] private DamagePopup damagePopup;
     [Export] private TextureRect backgroundTexture;
     // UI END
@@ -24,6 +23,7 @@ public partial class BattleScene : Control
     private GameState gameState;
     private Queue<ActionDef> _actionQueue;
     private IActionLibrary _actionLibrary;
+    private IDamageCalculatorRegistry damageCalculatorRegistry;
 
     // Context for the current battle.
     public BattleRunCtx ctx;
@@ -33,6 +33,8 @@ public partial class BattleScene : Control
         // gameState =
         _actionQueue = new();
         backgroundTexture.Visible = false;
+        _actionLibrary = new ActionLibrary("data/actions.yaml");
+        damageCalculatorRegistry = new DamageCalculatorRegistry();
         // InitializeBattle(new EncounterData());
         // InitializeUI();
     }
@@ -49,63 +51,72 @@ public partial class BattleScene : Control
         var enemy2 = new Battler(enemyRegistry.GetEnemy("squid_wizard"));
         battleModel.enemyParty.AddToFrontRow(enemy1);
         battleModel.enemyParty.AddToFrontRow(enemy2);
+        Dictionary<Battler, Control> battlerUINodes = new();
+        foreach (var member in battleModel.playerParty.GetFrontRowMembers())
+        {
+            var memberNode = AddPartyMemberFrontRow(member);
+            battlerUINodes.Add(member, memberNode);
+        }
+        foreach (var member in battleModel.playerParty.GetBackRowMembers())
+        {
+            var memberNode = AddPartyMemberBackRow(member);
+            battlerUINodes.Add(member, memberNode);
+        }
+        foreach (var enemy in battleModel.enemyParty)
+        {
+            var enemyNode = AddEnemyToBattle(enemy);
+            battlerUINodes.Add(enemy, enemyNode);
+        }
 
         // Fake battle context
-        var source = new Battler();
-        var target = new Battler();
+        var source = battleModel.playerParty.GetFrontRowMember(0);
+        var target = enemy1;
 
         var playback = new PlaybackOptions();
 
         ctx = new BattleRunCtx(
             model: battleModel,
             source: source,
-            targets: new[] { target },
-            damageRegistry: new TestDamageRegistry(),
-            runtime: new GodotEffectRuntime(
-                anim: animationPlayer,
-                popup: damagePopup,
-                playback: playback
-            )
+            targets: new List<Battler> { target },
+            targetNodes: battlerUINodes,
+            damageRegistry: damageCalculatorRegistry,
+            rng: new RandomNumberGenerator()
         );
-        actionExecutor.Configure(ctx, animationPlayer, damagePopup);
+        actionExecutor.Configure(ctx);
         actionExecutor.ActionFinished += OnActionFinished;
 
         InitializeUI();
-
     }
 
     public void InitializeUI()
     {
         backgroundTexture.Visible = true;
         battleMenu.Visible = true;
-        foreach (var member in ctx.Model.playerParty.GetFrontRowMembers())
-            AddPartyMemberFrontRow(member);
-        foreach (var member in ctx.Model.playerParty.GetBackRowMembers())
-            AddPartyMemberBackRow(member);
-        foreach (var enemy in ctx.Model.enemyParty)
-            AddEnemyToBattle(enemy);
 
     }
 
-    public void AddPartyMemberFrontRow(Battler member)
+    public Control AddPartyMemberFrontRow(Battler member)
     {
         CharacterUI charUI = characterUIPackedScene.Instantiate<CharacterUI>();
         charUI.PopulateData(member);
         PlayerPartyFrontRowContainer.AddChild(charUI);
+        return charUI;
     }
 
-    public void AddPartyMemberBackRow(Battler member)
+    public Control AddPartyMemberBackRow(Battler member)
     {
         CharacterUI charUI = characterUIPackedScene.Instantiate<CharacterUI>();
         charUI.PopulateData(member);
         PlayerPartyBackRowContainer.AddChild(charUI);
+        return charUI;
     }
 
-    public void AddEnemyToBattle(Battler enemy)
+    public Control AddEnemyToBattle(Battler enemy)
     {
         EnemyUI enemyUI = enemyUIPackedScene.Instantiate<EnemyUI>();
         enemyUI.PopulateData(enemy);
         enemyContainer.AddChild(enemyUI);
+        return enemyUI;
     }
 
     public void ClearAllPartyMembers()
@@ -124,7 +135,6 @@ public partial class BattleScene : Control
     {
         GD.Print("=== Running Battle Actions ===");
         // Load actions
-        _actionLibrary = new ActionLibrary("data/actions.yaml");
 
         // enqueue test actions
         _actionQueue.Enqueue(_actionLibrary.Get("BasicAttack"));
@@ -158,7 +168,7 @@ public partial class BattleScene : Control
         // Hide BattleUI
         // Hide background
         // emit battle finished
-
+        actionExecutor.ActionFinished -= OnActionFinished;
     }
 
     public void GoToMap()

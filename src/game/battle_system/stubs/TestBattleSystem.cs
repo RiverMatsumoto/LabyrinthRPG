@@ -32,7 +32,7 @@ public sealed class TestDamageCalculator : IDamageCalculator
 {
     public DamageType Kind => DamageType.True;
 
-    public int Compute(Battler source, Battler target, BattleModel model, DamageSpec spec)
+    public int Compute(BattleRunCtx ctx, Battler source, Battler target, BattleModel model, DamageSpec spec)
         => 42;
 }
 

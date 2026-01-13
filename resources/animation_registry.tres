@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="AnimationRegistry" load_steps=4 format=3 uid="uid://brxya4owc6vbc"]
+
+[ext_resource type="Script" uid="uid://oq77ljbwte8k" path="res://src/game/battle_system/core/AnimationRegistry.cs" id="1_14hx1"]
+[ext_resource type="SpriteFrames" uid="uid://b400mld5uo3a8" path="res://resources/animations/cut.aseprite" id="1_jwvwm"]
+[ext_resource type="SpriteFrames" uid="uid://bhrjkl0ywa3r4" path="res://resources/animations/fire.aseprite" id="2_1rgjn"]
+
+[resource]
+script = ExtResource("1_14hx1")
+Animations = Dictionary[String, SpriteFrames]({
+"cut": ExtResource("1_jwvwm"),
+"fire": ExtResource("2_1rgjn")
+})
+metadata/_custom_type_script = "uid://oq77ljbwte8k"

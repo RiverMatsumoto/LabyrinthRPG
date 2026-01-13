@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Godot;
 
 public class BattleModel
 {
@@ -21,16 +22,17 @@ public class BattleModel
 public sealed class BattleRunCtx(
         BattleModel model,
         Battler source,
-        IReadOnlyList<Battler> targets,
+        List<Battler> targets,
+        Dictionary<Battler, Control> targetNodes,
         IDamageCalculatorRegistry damageRegistry,
-        IEffectRuntime runtime
-    )
+        RandomNumberGenerator rng)
 {
     public BattleModel Model { get; } = model;
     public Battler Source { get; } = source;
-    public IReadOnlyList<Battler> Targets { get; } = targets;
+    public List<Battler> Targets { get; } = targets;
+    public Dictionary<Battler, Control> TargetNodes { get; } = targetNodes;
     public IDamageCalculatorRegistry DamageRegistry { get; } = damageRegistry;
-    public IEffectRuntime Runtime { get; } = runtime;
+    public RandomNumberGenerator Rng { get; } = rng;
 }
 
 /// <summary>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 
 public interface IActionExecutor
@@ -11,21 +12,26 @@ public interface IActionExecutor
 public sealed partial class GodotActionExecutor : Node, IActionExecutor
 {
     [Signal] public delegate void ActionFinishedEventHandler();
+    [Export] private ActionAnimator actionAnimator;
+    [Export] private DamagePopup _popup;
+    private SceneTreeTimer _activeTimer;
     private BattleRunCtx _ctx;
     private ActionDef _currentAction = default!;
     private IEnumerator<IEffect> effectIterator;
+    private PlaybackOptions playbackOptions;
+    private Action _cancelWait;
 
-    private AnimationPlayer _anim;
-    private DamagePopup _popup;
-    private SceneTreeTimer _activeTimer;
     private bool _waitingAnim;
     private bool _waitingPopup;
 
-    public void Configure(BattleRunCtx ctx, AnimationPlayer anim, DamagePopup damagePopup)
+    public override void _Ready()
+    {
+        playbackOptions = new PlaybackOptions();
+    }
+
+    public void Configure(BattleRunCtx ctx)
     {
         _ctx = ctx;
-        _anim = anim;
-        _popup = damagePopup;
     }
 
     public void Execute(ActionDef action)
@@ -44,17 +50,17 @@ public sealed partial class GodotActionExecutor : Node, IActionExecutor
             _activeTimer = null;
         }
 
-        if (_waitingAnim)
-        {
-            _anim.AnimationFinished -= OnAnimFinished;
-            _waitingAnim = false;
-        }
+        // if (_waitingAnim)
+        // {
+        //     _anim.AnimationFinished -= OnAnimFinished;
+        //     _waitingAnim = false;
+        // }
 
-        if (_waitingPopup)
-        {
-            _popup.Finished -= OnPopupFinished;
-            _waitingPopup = false;
-        }
+        // if (_waitingPopup)
+        // {
+        //     _popup.Finished -= OnPopupFinished;
+        //     _waitingPopup = false;
+        // }
 
         ExecuteNextEffect();
     }
@@ -65,10 +71,7 @@ public sealed partial class GodotActionExecutor : Node, IActionExecutor
         {
             var eff = effectIterator.Current; // easiest is: make ActionDef.Effects a List<IEffect>
             var wait = eff.Execute(_ctx);
-            // _ctx.Runtime.Log($"Executing Effect: {eff}");
-
-            if (wait == null)
-                continue;
+            GD.Print($"Executing Effect: {eff}");
 
             switch (wait)
             {
@@ -76,18 +79,48 @@ public sealed partial class GodotActionExecutor : Node, IActionExecutor
                     continue;
 
                 case WaitSeconds w:
-                    _activeTimer = GetTree().CreateTimer(w.Seconds * _ctx.Runtime.Playback.Speed);
-                    _activeTimer.Timeout += ExecuteNextEffect;
+                    var timer = GetTree().CreateTimer(w.Seconds * playbackOptions.Speed);
+                    timer.Timeout += ExecuteNextEffect;
                     return;
 
-                case WaitAnimFinished:
+                case PlayAnim anim:
                     _waitingAnim = true;
-                    _anim.AnimationFinished += OnAnimFinished;
+                    Vector2 position = _ctx.TargetNodes[_ctx.Targets.First()]
+                        .GetNode<TextureRect>("TextureRect")
+                        .GetGlobalRect()
+                        .GetCenter();
+                    AnimatedSprite2D spriteNode = actionAnimator.PlayOnce(anim.AnimId, position, playbackOptions.Speed);
+                    spriteNode.AnimationFinished += () =>
+                    {
+                        _cancelWait = null;
+                        _waitingAnim = false;
+                        actionAnimator.CleanupAnimation(spriteNode);
+                        ExecuteNextEffect();
+                    };
+
+                    _cancelWait = () =>
+                    {
+                        actionAnimator.CleanupAnimation(spriteNode);
+                        _cancelWait = null;
+                    };
                     return;
 
-                case WaitDamagePopup:
+                case PlayDamagePopup:
                     _waitingPopup = true;
-                    _popup.Finished += OnPopupFinished; // implement this on DamagePopup
+                    void DamagePopupFinished()
+                    {
+                        _popup.Finished -= DamagePopupFinished;
+                        _waitingPopup = false;
+                        ExecuteNextEffect();
+                    }
+                    _popup.Finished += DamagePopupFinished; // implement this on DamagePopup
+
+                    _cancelWait = () =>
+                    {
+                        _popup.Cancel();
+                        DamagePopupFinished();
+                        _cancelWait = null;
+                    };
                     return;
 
                 // same as no wait, but something went wrong likely if this runs
@@ -100,19 +133,5 @@ public sealed partial class GodotActionExecutor : Node, IActionExecutor
         // Code path only reached here once all actions have finished (effect iterator reaches end)
         // GD.Print("All effects executed");
         EmitSignal(SignalName.ActionFinished);
-    }
-
-    private void OnAnimFinished(StringName _)
-    {
-        _anim.AnimationFinished -= OnAnimFinished;
-        _waitingAnim = false;
-        ExecuteNextEffect();
-    }
-
-    private void OnPopupFinished()
-    {
-        _popup.Finished -= OnPopupFinished;
-        _waitingPopup = false;
-        ExecuteNextEffect();
     }
 }

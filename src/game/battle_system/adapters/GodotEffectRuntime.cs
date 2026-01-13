@@ -1,33 +1,34 @@
-using Godot;
+// using Godot;
 
-public sealed class GodotEffectRuntime(
-    AnimationPlayer anim,
-    DamagePopup popup,
-    PlaybackOptions playback)
-    : IEffectRuntime
-{
-    private readonly AnimationPlayer _anim = anim;
-    private readonly DamagePopup _popup = popup;
-    private readonly PlaybackOptions _playback = playback;
+// public sealed class GodotEffectRuntime(
+//     ActionAnimator anim,
+//     DamagePopup popup,
+//     PlaybackOptions playback)
+//     : IEffectRuntime
+// {
+//     private readonly ActionAnimator _anim = anim;
+//     private readonly DamagePopup _popup = popup;
+//     private readonly PlaybackOptions _playback = playback;
 
-    public PlaybackOptions Playback => _playback;
+//     public PlaybackOptions Playback => _playback;
 
-    public void Log(string msg) => GD.Print(msg);
+//     public void Log(string msg) => GD.Print(msg);
 
-    IEffectWait IEffectRuntime.WaitSeconds(float seconds)
-    {
-        return new WaitSeconds(seconds);
-    }
+//     IEffectWait IEffectRuntime.WaitSeconds(float seconds)
+//     {
+//         return new WaitTimer(seconds);
+//     }
 
-    IEffectWait IEffectRuntime.PlayAnim(string id, bool wait)
-    {
-        _anim.Play(id, customBlend: -1, customSpeed: _playback.Speed);
-        return wait ? new WaitAnimFinished() : new NoWait();
-    }
+//     IEffectWait IEffectRuntime.PlayAnim(string id, bool wait)
+//     {
+//         _anim.PlayOnce(id, id, Vector2.Zero, 1.0f);
+//         AnimatedSprite2D sprite = _anim.GetNode<AnimatedSprite2D>("Sprite");
+//         return wait ? new WaitAnimFinished(sprite) : new NoWait();
+//     }
 
-    IEffectWait IEffectRuntime.ShowDamage(int amount)
-    {
-        _popup.ShowDamage(amount);
-        return new WaitDamagePopup();
-    }
-}
+//     IEffectWait IEffectRuntime.ShowDamage(int amount)
+//     {
+//         _popup.ShowDamage(amount);
+//         return new WaitDamagePopup();
+//     }
+// }

@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Godot;
 
 public interface IEffect
 {
@@ -9,9 +10,11 @@ public interface IEffect
 // Utility for timing animations and damage popup
 public interface IEffectWait { }
 public sealed record NoWait() : IEffectWait; // sentinel wait object
-public sealed record WaitSeconds(float Seconds) : IEffectWait;
-public sealed record WaitDamagePopup() : IEffectWait;
-public sealed record WaitAnimFinished() : IEffectWait;
+public sealed record WaitSeconds(
+    float Seconds
+) : IEffectWait;
+public sealed record PlayDamagePopup(int Amount, bool Wait) : IEffectWait;
+public sealed record PlayAnim(string AnimId, bool Wait) : IEffectWait;
 
 public enum DamageType
 {
@@ -31,9 +34,10 @@ public enum DamageTypeMode
 }
 
 public sealed record DamageSpec(
-    DamageType DmgType,
-    DamageTypeMode DmgTypeMode,
+    DamageType DamageType,
+    DamageTypeMode DamageTypeMode,
     float Power,
+    float CritMultiplier,
     bool CanCrit
 );
 
@@ -74,15 +78,15 @@ public sealed record WaitSecondsEffect(float Seconds) : IEffect
 
 public sealed record PlayAnimEffect(string AnimId) : IEffect
 {
-    public IEffectWait Execute(BattleRunCtx ctx) => ctx.Runtime.PlayAnim(AnimId, false);
+    public IEffectWait Execute(BattleRunCtx ctx) => new PlayAnim(AnimId, Wait: false);
 }
 
 public sealed record PlayAnimWaitEffect(string AnimId) : IEffect
 {
-    public IEffectWait Execute(BattleRunCtx ctx) => ctx.Runtime.PlayAnim(AnimId, true);
+    public IEffectWait Execute(BattleRunCtx ctx) => new PlayAnim(AnimId, Wait: true);
 }
 
 public sealed record WaitDamagePopupEffect(int Amount) : IEffect
 {
-    public IEffectWait Execute(BattleRunCtx ctx) => ctx.Runtime.ShowDamage(Amount);
+    public IEffectWait Execute(BattleRunCtx ctx) => new PlayDamagePopup(Amount, Wait: true);
 }

@@ -14,6 +14,7 @@ public partial class BattlerBase : Resource
     [Export] public int Tec { get; set; }
     [Export] public int Agi { get; set; }
     [Export] public int Vit { get; set; }
+    [Export] public int Wis { get; set; }
     [Export] public int Luc { get; set; }
     [Export] public Texture2D Sprite { get; set; }
 
@@ -30,6 +31,7 @@ public partial class BattlerBase : Resource
         Tec = 1;
         Agi = 1;
         Vit = 1;
+        Wis = 1;
         Luc = 1;
     }
 }

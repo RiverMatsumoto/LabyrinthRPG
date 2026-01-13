@@ -73,10 +73,13 @@ public sealed class ActionLibrary : IActionLibrary
         return type switch
         {
             "damage" => new DamageEffect(
-                                Enum.Parse<DamageType>((string)m["damage_type"], true),
-                                Enum.Parse<DamageTypeMode>((string)m["damage_type_mode"], true),
-                                Convert.ToSingle(m["power"]),
-                                Convert.ToBoolean(m["can_crit"])
+                                new DamageSpec(
+                                    Enum.Parse<DamageType>((string)m["damage_type"], true),
+                                    Enum.Parse<DamageTypeMode>((string)m["damage_type_mode"], true),
+                                    Convert.ToSingle(m["power"]),
+                                    Convert.ToSingle(m["crit_multiplier"]),
+                                    Convert.ToBoolean(m["can_crit"])
+                                )
                             ),
             "apply_status" => new ApplyStatusEffect(
                                 Enum.Parse<Status>((string)m["w"]),
