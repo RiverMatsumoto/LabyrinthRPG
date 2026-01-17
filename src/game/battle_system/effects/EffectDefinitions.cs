@@ -7,10 +7,11 @@ public sealed record DamageEffect(
     public IEffectWait Execute(BattleRunCtx ctx)
     {
         var spec = DamageSpec;
+        int damage = 0;
         foreach (var target in ctx.Targets)
         {
             var calc = ctx.DamageRegistry.Get(spec.DamageType);
-            int damage = calc.Compute(
+            damage = calc.Compute(
                 ctx,
                 ctx.Source,
                 target,
@@ -21,9 +22,9 @@ public sealed record DamageEffect(
                 spec.CritMultiplier,
                 spec.CanCrit));
             GD.Print($"Apply damage effect: {damage}");
-            target.Stats.Hp -= damage;
+            target.Stats.Hp.Value -= damage;
         }
-        return new NoWait();
+        return new PlayDamagePopup(damage, true);
     }
 
 }

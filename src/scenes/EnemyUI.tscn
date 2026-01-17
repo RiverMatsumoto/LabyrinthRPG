@@ -13,8 +13,8 @@ width = 108
 height = 18
 
 [sub_resource type="Gradient" id="Gradient_oaf4h"]
-offsets = PackedFloat32Array(0, 0.75035846, 1)
-colors = PackedColorArray(0.7713785, 0.22163147, 0.13192123, 1, 0.86298674, 0.49553847, 0.20189801, 1, 0.9822112, 0.7142486, 0, 1)
+offsets = PackedFloat32Array(0, 0.5210517, 1)
+colors = PackedColorArray(0.7184681, 0.07879693, 0.14437577, 1, 0.86298674, 0.49553847, 0.20189801, 1, 0.9822112, 0.7142486, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_jlnv4"]
 gradient = SubResource("Gradient_oaf4h")
@@ -40,7 +40,9 @@ sprite = NodePath("TextureRect")
 [node name="TextureProgressBar" type="TextureProgressBar" parent="."]
 layout_mode = 2
 size_flags_horizontal = 4
-value = 100.0
+max_value = 1.0
+step = 0.01
+value = 1.0
 texture_under = SubResource("GradientTexture2D_oaf4h")
 texture_progress = SubResource("GradientTexture2D_jlnv4")
 texture_progress_offset = Vector2(4, 4)

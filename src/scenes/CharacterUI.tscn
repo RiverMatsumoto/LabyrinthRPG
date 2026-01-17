@@ -28,7 +28,7 @@ expand_margin_top = 2.0
 expand_margin_right = 2.0
 expand_margin_bottom = 2.0
 
-[node name="CharacterUI" type="Control" node_paths=PackedStringArray("NameText", "HpValueText", "TpValueText", "StatusEffectTexture")]
+[node name="CharacterUI" type="Control" node_paths=PackedStringArray("NameText", "HpValueText", "TpValueText", "HpProgressBar", "TpProgressBar", "StatusEffectTexture")]
 custom_minimum_size = Vector2(150, 90)
 layout_mode = 3
 anchor_right = 0.104
@@ -43,6 +43,8 @@ script = ExtResource("1_a70xh")
 NameText = NodePath("Name")
 HpValueText = NodePath("Bars/HPValue")
 TpValueText = NodePath("Bars/TPValue")
+HpProgressBar = NodePath("Bars/HPBar")
+TpProgressBar = NodePath("Bars/TpBar")
 StatusEffectTexture = NodePath("StatusEffect")
 
 [node name="ColorRect" type="ColorRect" parent="."]
@@ -88,7 +90,8 @@ offset_right = 2.4999924
 offset_bottom = -1.2600021
 theme_override_styles/background = SubResource("StyleBoxFlat_tpnd3")
 theme_override_styles/fill = ExtResource("2_l6t4r")
-value = 100.0
+max_value = 1.0
+value = 1.0
 show_percentage = false
 
 [node name="TpBar" type="ProgressBar" parent="Bars"]
@@ -104,7 +107,8 @@ offset_right = -0.75
 offset_bottom = -1.2600021
 theme_override_styles/background = SubResource("StyleBoxFlat_tpnd3")
 theme_override_styles/fill = ExtResource("3_a70xh")
-value = 100.0
+max_value = 1.0
+value = 1.0
 show_percentage = false
 
 [node name="HPLabel" type="RichTextLabel" parent="Bars"]

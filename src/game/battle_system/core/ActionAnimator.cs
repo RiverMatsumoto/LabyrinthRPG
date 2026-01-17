@@ -7,6 +7,7 @@ public partial class ActionAnimator : Node
     [Export] private AnimationRegistry Registry;
     [Export] private Node UiRoot; // CanvasLayer or Control to attach sprites to
     [Export] private PackedScene animationScene;
+    [Export] private PackedScene damagePopupScene;
     public HashSet<AnimatedSprite2D> animationsRunning;
 
     public override void _Ready()
@@ -37,6 +38,16 @@ public partial class ActionAnimator : Node
         animationsRunning.Add(sprite);
         sprite.Play("default");
         return sprite;
+    }
+
+    public DamagePopup PlayDamagePopup(int amount, Vector2 screenPos, float speed)
+    {
+        DamagePopup popup = damagePopupScene.Instantiate<DamagePopup>();
+        popup.GlobalPosition = screenPos;
+        UiRoot.AddChild(popup);
+        popup.ShowDamage(amount, speed);
+        GD.Print($"Damage popup created at {screenPos}");
+        return popup;
     }
 
     public void CleanupAnimation(AnimatedSprite2D anim)

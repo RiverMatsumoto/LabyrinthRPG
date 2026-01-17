@@ -8,7 +8,9 @@ public partial class BattlerBase : Resource
     [Export] public string Description { get; set; }
     [Export] public int Level { get; set; }
     [Export] public int Experience { get; set; }
+    [Export] public int MaxHp { get; set; }
     [Export] public int Hp { get; set; }
+    [Export] public int MaxTp { get; set; }
     [Export] public int Tp { get; set; }
     [Export] public int Str { get; set; }
     [Export] public int Tec { get; set; }

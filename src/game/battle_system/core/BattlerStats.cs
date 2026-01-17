@@ -11,7 +11,10 @@ public class BattlerStats
     public int Def => DefBonus.Values.Sum();
     public Dictionary<string, int> AtkBonus = new();
     public Dictionary<string, int> DefBonus = new();
-    public int Hp { get; set; }
+    // public int Hp { get; set; }
+    public ReactiveProperty<int> MaxHp;
+    public ReactiveProperty<int> Hp;
+    public int MaxTp { get; set; }
     public int Tp { get; set; }
     public int Str { get; set; }
     public int Tec { get; set; }
@@ -26,7 +29,9 @@ public class BattlerStats
         Description = "No description";
         Level = 1;
         Experience = 0;
-        Hp = 100;
+        MaxHp = new ReactiveProperty<int>(100);
+        Hp = new ReactiveProperty<int>(100);
+        MaxTp = 50;
         Tp = 50;
         Str = 10;
         Tec = 10;
@@ -41,7 +46,9 @@ public class BattlerStats
         string description,
         int level,
         int experience,
+        int maxHp,
         int hp,
+        int maxTp,
         int tp,
         int str,
         int tec,
@@ -54,7 +61,9 @@ public class BattlerStats
         Description = description;
         Level = level;
         Experience = experience;
-        Hp = hp;
+        Hp = new ReactiveProperty<int>(hp);
+        MaxHp = new ReactiveProperty<int>(hp);
+        MaxTp = maxTp;
         Tp = tp;
         Str = str;
         Tec = tec;
@@ -70,7 +79,9 @@ public class BattlerStats
         Description = bb.Description;
         Level = bb.Level;
         Experience = bb.Experience;
-        Hp = bb.Hp;
+        Hp = new ReactiveProperty<int>(bb.Hp);
+        MaxHp = new ReactiveProperty<int>(bb.Hp);
+        MaxTp = bb.MaxTp;
         Tp = bb.Tp;
         Str = bb.Str;
         Tec = bb.Tec;

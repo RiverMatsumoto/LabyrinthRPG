@@ -16,11 +16,9 @@ public partial class BattleScene : Control
     [Export] private Control battleMenu;
     [Export] private HBoxContainer enemyContainer;
 
-    [Export] private DamagePopup damagePopup;
     [Export] private TextureRect backgroundTexture;
     // UI END
 
-    private GameState gameState;
     private Queue<ActionDef> _actionQueue;
     private IActionLibrary _actionLibrary;
     private IDamageCalculatorRegistry damageCalculatorRegistry;
@@ -32,12 +30,13 @@ public partial class BattleScene : Control
     {
         // gameState =
         _actionQueue = new();
-        backgroundTexture.Visible = false;
+        backgroundTexture.Hide();
         _actionLibrary = new ActionLibrary("data/actions.yaml");
         damageCalculatorRegistry = new DamageCalculatorRegistry();
         // InitializeBattle(new EncounterData());
         // InitializeUI();
     }
+
 
     public void InitializeBattle(EncounterData encounterData)
     {
@@ -90,8 +89,8 @@ public partial class BattleScene : Control
 
     public void InitializeUI()
     {
-        backgroundTexture.Visible = true;
-        battleMenu.Visible = true;
+        backgroundTexture.Show();
+        battleMenu.Show();
 
     }
 
@@ -127,17 +126,13 @@ public partial class BattleScene : Control
             member.QueueFree();
     }
 
-    public override void _Process(double delta)
-    {
-    }
-
     public void ExecuteActions()
     {
         GD.Print("=== Running Battle Actions ===");
         // Load actions
 
         // enqueue test actions
-        _actionQueue.Enqueue(_actionLibrary.Get("BasicAttack"));
+        // _actionQueue.Enqueue(_actionLibrary.Get("BasicAttack"));
         _actionQueue.Enqueue(_actionLibrary.Get("FireAttack"));
 
         // start chain of actions until empty
@@ -169,6 +164,11 @@ public partial class BattleScene : Control
         // Hide background
         // emit battle finished
         actionExecutor.ActionFinished -= OnActionFinished;
+    }
+
+    public void ChangeState(BattleState state)
+    {
+
     }
 
     public void GoToMap()

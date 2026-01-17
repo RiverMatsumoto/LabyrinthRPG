@@ -82,7 +82,7 @@ public sealed class ActionLibrary : IActionLibrary
                                 )
                             ),
             "apply_status" => new ApplyStatusEffect(
-                                Enum.Parse<Status>((string)m["w"]),
+                                Enum.Parse<Status>((string)m["status_effect"]),
                                 Convert.ToInt32(m["stacks"])
                             ),
             "play_anim" => new PlayAnimEffect((string)m["anim_id"]),

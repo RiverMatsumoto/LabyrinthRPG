@@ -83,7 +83,7 @@ public partial class HealEffect : ItemEffect
     {
         if (req.Target is null) return EffectResult.Fail("No target.");
         // apply healing directly to the Battler's stats
-        req.Target.Stats.Hp += Amount;
+        req.Target.Stats.Hp.Value += Amount;
         return EffectResult.Ok();
     }
 }

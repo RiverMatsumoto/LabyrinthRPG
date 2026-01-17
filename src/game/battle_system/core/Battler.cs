@@ -1,10 +1,11 @@
 using Godot;
 
-public class Battler
+[GlobalClass]
+public partial class Battler : GodotObject
 {
     public BattlerStats Stats;
     public Texture2D Sprite;
-    public bool IsAlive => Stats.Hp > 0;
+    public bool IsAlive => Stats.Hp.Value > 0;
 
     public Battler()
     {

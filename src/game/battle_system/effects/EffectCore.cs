@@ -13,8 +13,14 @@ public sealed record NoWait() : IEffectWait; // sentinel wait object
 public sealed record WaitSeconds(
     float Seconds
 ) : IEffectWait;
-public sealed record PlayDamagePopup(int Amount, bool Wait) : IEffectWait;
-public sealed record PlayAnim(string AnimId, bool Wait) : IEffectWait;
+public sealed record PlayDamagePopup(
+    int Amount,
+    bool Wait
+) : IEffectWait;
+public sealed record PlayAnim(
+    string AnimId,
+    bool Wait
+) : IEffectWait;
 
 public enum DamageType
 {

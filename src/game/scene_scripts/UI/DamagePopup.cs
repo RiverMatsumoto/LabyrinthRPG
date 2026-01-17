@@ -1,19 +1,32 @@
 using Godot;
 
-public partial class DamagePopup : Control
+public partial class DamagePopup : RichTextLabel
 {
     [Signal]
-    public delegate void FinishedEventHandler();
+    public delegate void FinishedDamagePopupEventHandler();
 
-
-    public void ShowDamage(int amount)
+    public override void _Process(double delta)
     {
-        GD.Print($"DAMAGE POP UP {amount}");
-        EmitSignal(nameof(Finished));
+        // move up slowly
+        Position += new Vector2(0, (float)(-delta * 100.0));
     }
 
-    public void Cancel()
+    public void ShowDamage(int amount, float speed)
     {
-        // EmitSignal(nameof(Finished));
+        // set timer for 1 second, move upwards slowly until timeout
+        SceneTreeTimer timer = GetTree().CreateTimer(0.5 / speed);
+        timer.Timeout += EndDamagePopup;
+
+        BbcodeEnabled = true;
+        HorizontalAlignment = HorizontalAlignment.Center;
+        Text = $"[b]{amount}[/b]";
+        GD.Print($"DAMAGE POP UP {amount}");
+    }
+
+    public void EndDamagePopup()
+    {
+        GD.Print("End damage popup");
+        EmitSignal(nameof(FinishedDamagePopup));
+        QueueFree();
     }
 }

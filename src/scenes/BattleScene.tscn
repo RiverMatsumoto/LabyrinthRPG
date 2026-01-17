@@ -12,7 +12,7 @@
 [ext_resource type="Resource" uid="uid://brxya4owc6vbc" path="res://resources/animation_registry.tres" id="10_a858l"]
 [ext_resource type="Script" uid="uid://cgailjufkalir" path="res://src/game/battle_system/core/ActionAnimator.cs" id="11_c6528"]
 
-[node name="BattleScene" type="Control" node_paths=PackedStringArray("actionExecutor", "PlayerPartyFrontRowContainer", "PlayerPartyBackRowContainer", "battleMenu", "enemyContainer", "damagePopup", "backgroundTexture")]
+[node name="BattleScene" type="Control" node_paths=PackedStringArray("actionExecutor", "PlayerPartyFrontRowContainer", "PlayerPartyBackRowContainer", "battleMenu", "enemyContainer", "backgroundTexture")]
 z_index = -10
 layout_mode = 3
 anchors_preset = 15
@@ -30,11 +30,48 @@ characterUIPackedScene = ExtResource("1_acp3n")
 enemyUIPackedScene = ExtResource("5_dm5l0")
 battleMenu = NodePath("BattleMenu/Panel")
 enemyContainer = NodePath("EnemyParty/HBoxContainer")
-damagePopup = NodePath("EffectsUI/DamagePopup")
 backgroundTexture = NodePath("Background")
+
+[node name="ActionExecutor" type="Node" parent="." node_paths=PackedStringArray("actionAnimator")]
+script = ExtResource("5_hil36")
+actionAnimator = NodePath("../EffectsUI/SubViewportContainer/SubViewport")
+
+[node name="EffectsUI" type="CanvasLayer" parent="."]
+layer = 5
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="EffectsUI"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="SubViewport" type="SubViewport" parent="EffectsUI/SubViewportContainer" node_paths=PackedStringArray("UiRoot")]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1280, 720)
+size_2d_override = Vector2i(1280, 720)
+size_2d_override_stretch = true
+render_target_update_mode = 4
+script = ExtResource("11_c6528")
+Registry = ExtResource("10_a858l")
+UiRoot = NodePath("Control")
+animationScene = ExtResource("9_c6528")
+damagePopupScene = ExtResource("5_843fn")
+
+[node name="Control" type="Control" parent="EffectsUI/SubViewportContainer/SubViewport"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="Background" type="TextureRect" parent="."]
 visible = false
+z_index = -10
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -45,6 +82,7 @@ mouse_filter = 2
 texture = ExtResource("3_843fn")
 
 [node name="BattleMenu" type="CanvasLayer" parent="."]
+layer = 10
 
 [node name="Panel" type="Panel" parent="BattleMenu"]
 visible = false
@@ -68,6 +106,7 @@ offset_bottom = 47.0
 text = "Execute Actions"
 
 [node name="PlayerParty" type="CanvasLayer" parent="."]
+layer = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PlayerParty"]
 anchors_preset = 12
@@ -103,37 +142,5 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
 alignment = 1
-
-[node name="EffectsUI" type="CanvasLayer" parent="."]
-
-[node name="DamagePopup" parent="EffectsUI" instance=ExtResource("5_843fn")]
-offset_left = -5.0
-offset_right = -1132.0
-offset_bottom = -589.0
-
-[node name="SubViewportContainer" type="SubViewportContainer" parent="EffectsUI"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="SubViewport" type="SubViewport" parent="EffectsUI/SubViewportContainer" node_paths=PackedStringArray("UiRoot")]
-transparent_bg = true
-handle_input_locally = false
-size = Vector2i(1280, 720)
-size_2d_override = Vector2i(1280, 720)
-size_2d_override_stretch = true
-render_target_update_mode = 4
-script = ExtResource("11_c6528")
-Registry = ExtResource("10_a858l")
-UiRoot = NodePath(".")
-animationScene = ExtResource("9_c6528")
-
-[node name="ActionExecutor" type="Node" parent="." node_paths=PackedStringArray("actionAnimator", "_popup")]
-script = ExtResource("5_hil36")
-actionAnimator = NodePath("../EffectsUI/SubViewportContainer/SubViewport")
-_popup = NodePath("../EffectsUI/DamagePopup")
 
 [connection signal="pressed" from="BattleMenu/Panel/Button" to="." method="ExecuteActions"]

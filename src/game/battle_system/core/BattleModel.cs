@@ -3,17 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Godot;
 
-public class BattleModel
+public sealed class BattleModel
 {
     public Party playerParty = new();
     public Party enemyParty = new();
-
-    public BattleModel()
-    {
-
-    }
-
-    public void ResolveTurn() { }
 }
 
 /// <summary>
@@ -35,35 +28,41 @@ public sealed class BattleRunCtx(
     public RandomNumberGenerator Rng { get; } = rng;
 }
 
-/// <summary>
-/// Represents the runtime environment for executing effects.
-/// </summary>
-// public static class ActionExecutor
-// {
-//     public static async Task ExecuteAsync(
-//         ActionDef action,
-//         BattleRunCtx ctx,
-//         CancellationToken ct = default)
-//     {
-//         foreach (var eff in action.Effects)
-//             await eff.ExecuteAsync(ctx, ct);
-//     }
-// }
+public record BattleAction(
+    ActionDef ActionDef,
+    Battler Source,
+    List<Battler> Targets,
+    int Priority = 0,
+    BattleActionType Type = BattleActionType.TurnBased
+);
 
-// public interface IActionExecutor
-// {
-//     void Execute(ActionDef action, BattleRunCtx ctx);
-//     void SkipNow();
-// }
-
-/// <summary>
-/// Represents the runtime environment for executing effects.
-/// </summary>
-public interface IEffectRuntime
+// use reaction later for reaction based skills
+// use environment later for status effects or multipliers
+public enum BattleActionType
 {
-    PlaybackOptions Playback { get; }
-    IEffectWait WaitSeconds(float seconds);
-    IEffectWait PlayAnim(string id, bool wait);
-    IEffectWait ShowDamage(int amount);
-    void Log(string msg);
+    TurnBased,    // Player selects
+    Reaction,     // Counter-attacks, etc.
+    Environmental // Status effects, traps, etc.
 }
+
+public class TurnPlan
+{
+    public List<BattleAction> PlannedActions { get; } = new();
+    public int CurrentActorIndex { get; set; } = 0;
+    public bool IsComplete => CurrentActorIndex >= PlannedActions.Count;
+
+    public void AddAction(BattleAction action) => PlannedActions.Add(action);
+    public BattleAction GetNextAction() => PlannedActions[CurrentActorIndex++];
+}
+
+// /// <summary>
+// /// Represents the runtime environment for executing effects.
+// /// </summary>
+// public interface IEffectRuntime
+// {
+//     PlaybackOptions Playback { get; }
+//     IEffectWait WaitSeconds(float seconds);
+//     IEffectWait PlayAnim(string id, bool wait);
+//     IEffectWait ShowDamage(int amount);
+//     void Log(string msg);
+// }

@@ -2,6 +2,8 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
+    <!-- Catch compiler-mismatch issues with the Introspection generator -->
+    <WarningsAsErrors>CS9057</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
     <DefaultItemExcludes Condition="'$(Configuration)' == 'ExportRelease'">
@@ -37,4 +39,5 @@
 <ItemGroup>
   <Compile Remove="EffectSchemaGen/**" />
 </ItemGroup>
+
 </Project>
