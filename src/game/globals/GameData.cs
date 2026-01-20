@@ -4,6 +4,7 @@ using Godot;
 public partial class GameData : Resource
 {
     [Export] public GameState State { get; set; }
+    public PlaybackOptions PlaybackOptions { get; set; }
     public Party CurrentParty { get; set; }
 }
 

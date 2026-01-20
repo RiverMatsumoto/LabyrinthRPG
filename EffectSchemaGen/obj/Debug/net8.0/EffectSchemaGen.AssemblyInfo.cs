@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EffectSchemaGen")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9e9f852ddd4a1506c193d7ca75ce47ce53369a4d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8914057007a3ae036217dcc41ac828458cd2cd4e")]
 [assembly: System.Reflection.AssemblyProductAttribute("EffectSchemaGen")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EffectSchemaGen")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

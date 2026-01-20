@@ -15,7 +15,7 @@ public partial class SystemsMediator : Node
         // Map -> Battle
         mapScene.encounterSystemScene.EncounterTriggered += data =>
         {
-            battleScene.InitializeBattle(data);
+            battleScene.StartBattle(data);
         };
 
         // Battle -> Map (example)
@@ -33,7 +33,6 @@ public partial class SystemsMediator : Node
     }
     public override void _EnterTree()
     {
-        GameServices.Build();
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.

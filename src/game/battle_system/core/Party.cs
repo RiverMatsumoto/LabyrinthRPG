@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Godot;
 
-[GlobalClass]
-public partial class Party : GodotObject, IEnumerable<Battler>
+public class Party : IEnumerable<Battler>
 {
     private const int MAX_CAPACITY = 6;
     private const int MAX_MEMBERS_ROW = 3;
@@ -13,6 +12,10 @@ public partial class Party : GodotObject, IEnumerable<Battler>
 
     public int MemberCount => _frontRowCount + _backRowCount;
 
+    /// <summary>
+    /// Adds a battler to the front row of the party.
+    /// </summary>
+    /// <param name="battler">The battler to add.</param>
     public void AddToFrontRow(Battler battler)
     {
         if (_frontRowCount < MAX_MEMBERS_ROW)
@@ -24,6 +27,10 @@ public partial class Party : GodotObject, IEnumerable<Battler>
             GD.PrintErr("Tried to add Character to front row. Front row is full");
     }
 
+    /// <summary>
+    /// Adds a battler to the back row of the party.
+    /// </summary>
+    /// <param name="battler">The battler to add.</param>
     public void AddToBackRow(Battler battler)
     {
         if (_backRowCount < MAX_MEMBERS_ROW)
@@ -47,6 +54,7 @@ public partial class Party : GodotObject, IEnumerable<Battler>
     }
     public Battler GetFrontRowMember(int index) => index < _frontRowCount ? _members[index] : null;
     public Battler GetBackRowMember(int index) => index < _backRowCount ? _members[MAX_MEMBERS_ROW + index] : null;
+    public Battler GetMember(int index) => index < _frontRowCount ? _members[index] : _members[MAX_MEMBERS_ROW + index];
 
     public IEnumerator<Battler> GetEnumerator()
     {

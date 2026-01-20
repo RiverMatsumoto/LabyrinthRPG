@@ -13,12 +13,12 @@ public sealed partial class GodotActionExecutor : Node, IActionExecutor
 {
     [Signal] public delegate void ActionFinishedEventHandler();
     [Export] private ActionAnimator actionAnimator;
+    [Export] private GameData gameData;
     private DamagePopup _currentPopup;
     private SceneTreeTimer _activeTimer;
     private BattleRunCtx _ctx;
     private ActionDef _currentAction = default!;
     private IEnumerator<IEffect> effectIterator;
-    private PlaybackOptions playbackOptions;
 
     private enum ExecutionState { Idle, WaitingTimer, WaitingAnim, WaitingPopup }
     private ExecutionState _currentState = ExecutionState.Idle;
@@ -26,7 +26,6 @@ public sealed partial class GodotActionExecutor : Node, IActionExecutor
 
     public override void _Ready()
     {
-        playbackOptions = new PlaybackOptions();
     }
 
     public void Configure(BattleRunCtx ctx)
@@ -89,7 +88,7 @@ public sealed partial class GodotActionExecutor : Node, IActionExecutor
 
                 case WaitSeconds w:
                     _currentState = ExecutionState.WaitingTimer;
-                    _activeTimer = GetTree().CreateTimer(w.Seconds * playbackOptions.Speed);
+                    _activeTimer = GetTree().CreateTimer(w.Seconds * gameData.PlaybackOptions.Speed);
                     _activeTimer.Timeout += OnTimerFinished;
                     return;
 
@@ -99,7 +98,7 @@ public sealed partial class GodotActionExecutor : Node, IActionExecutor
                         .GetNode<TextureRect>("TextureRect")
                         .GetGlobalRect()
                         .GetCenter();
-                    _currentSprite = actionAnimator.PlayOnce(anim.AnimId, position, playbackOptions.Speed);
+                    _currentSprite = actionAnimator.PlayOnce(anim.AnimId, position, gameData.PlaybackOptions.Speed);
                     _currentSprite.AnimationFinished += OnAnimationFinished;
                     return;
 
@@ -111,7 +110,7 @@ public sealed partial class GodotActionExecutor : Node, IActionExecutor
                     _currentPopup = actionAnimator.PlayDamagePopup(
                         popup.Amount,
                         damagePosition,
-                        playbackOptions.Speed);
+                        gameData.PlaybackOptions.Speed);
                     if (popup.Wait)
                     {
                         _currentState = ExecutionState.WaitingPopup;

@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://cu36onp4rktu" path="res://src/scenes/player.tscn" id="1_lplyj"]
 [ext_resource type="Script" uid="uid://bwxi1ldge7qla" path="res://src/game/scene_scripts/MapScene.cs" id="1_utv3k"]
 [ext_resource type="PackedScene" uid="uid://ccidjwnp770qn" path="res://src/scenes/EncounterSystem.tscn" id="3_4b68d"]
-[ext_resource type="Resource" uid="uid://bi6ss2nu0cypx" path="res://resources/game_state.tres" id="4_hel5k"]
+[ext_resource type="Resource" uid="uid://bi6ss2nu0cypx" path="res://resources/game_data.tres" id="4_hel5k"]
 
 [node name="MapScene" type="Node3D" node_paths=PackedStringArray("encounterSystemScene")]
 script = ExtResource("1_utv3k")

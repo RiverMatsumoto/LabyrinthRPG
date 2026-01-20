@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Godot;
 
 public sealed class BattleModel
@@ -13,19 +11,21 @@ public sealed class BattleModel
 /// Represents the runtime environment for executing effects.
 /// </summary>
 public sealed class BattleRunCtx(
-        BattleModel model,
-        Battler source,
-        List<Battler> targets,
-        Dictionary<Battler, Control> targetNodes,
-        IDamageCalculatorRegistry damageRegistry,
-        RandomNumberGenerator rng)
+    BattleModel model,
+    Battler source,
+    List<Battler> targets,
+    TurnPlan turnPlan,
+    Dictionary<Battler, Control> targetNodes,
+    DamageCalculatorRegistry damageRegistry,
+    RandomNumberGenerator rng)
 {
-    public BattleModel Model { get; } = model;
-    public Battler Source { get; } = source;
-    public List<Battler> Targets { get; } = targets;
-    public Dictionary<Battler, Control> TargetNodes { get; } = targetNodes;
-    public IDamageCalculatorRegistry DamageRegistry { get; } = damageRegistry;
-    public RandomNumberGenerator Rng { get; } = rng;
+    public BattleModel Model { get; set; } = model;
+    public Battler Source { get; set; } = source;
+    public List<Battler> Targets { get; set; } = targets;
+    public TurnPlan TurnPlan { get; set; } = turnPlan;
+    public Dictionary<Battler, Control> TargetNodes { get; set; } = targetNodes;
+    public DamageCalculatorRegistry DamageRegistry { get; } = damageRegistry;
+    public RandomNumberGenerator Rng { get; set; } = rng;
 }
 
 public record BattleAction(

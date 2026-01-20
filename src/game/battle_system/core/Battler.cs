@@ -1,7 +1,7 @@
 using Godot;
 
 [GlobalClass]
-public partial class Battler : GodotObject
+public partial class Battler : RefCounted
 {
     public BattlerStats Stats;
     public Texture2D Sprite;

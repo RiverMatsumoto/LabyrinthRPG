@@ -1,9 +1,9 @@
 using System;
-using System.IO;
 using System.Collections.Generic;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 using System.Linq;
+using Godot;
 
 public sealed record ActionDef(
     string Id,
@@ -12,22 +12,21 @@ public sealed record ActionDef(
     IList<IEffect> Effects
 );
 
-public interface IActionLibrary
+[GlobalClass]
+public sealed partial class ActionRegistry : Resource
 {
-    ActionDef Get(string id);
-    IReadOnlyList<ActionDef> GetAll();
-}
-
-public sealed class ActionLibrary : IActionLibrary
-{
-    private readonly Dictionary<string, ActionDef> _defs;
+    [Export(PropertyHint.File, "*.yaml")]
+    private string _actionsPath;
+    private Dictionary<string, ActionDef> _defs;
     private readonly IDeserializer deserializer = new DeserializerBuilder()
         .WithNamingConvention(UnderscoredNamingConvention.Instance)
         .Build();
 
-    public ActionLibrary(string path)
+    public void Load()
     {
-        var yamlText = Godot.FileAccess.GetFileAsString(Util.ReadonlyPath(path));
+        if (_defs != null) return;
+
+        var yamlText = FileAccess.GetFileAsString(_actionsPath);
         var root = deserializer.Deserialize<Dictionary<string, object>>(yamlText);
         _defs = ParseActions(root);
     }
@@ -92,7 +91,15 @@ public sealed class ActionLibrary : IActionLibrary
         };
     }
 
-    public ActionDef Get(string id) => _defs.TryGetValue(id, out var def) ? def : throw new InvalidOperationException($"Unknown action id: {id}");
+    public ActionDef Get(string id)
+    {
+        if (_defs == null) Load();
+        return _defs.TryGetValue(id, out var def) ? def : throw new InvalidOperationException($"Unknown action id: {id}");
+    }
 
-    public IReadOnlyList<ActionDef> GetAll() => _defs.Values.ToList();
+    public IReadOnlyList<ActionDef> GetAll()
+    {
+        if (_defs == null) Load();
+        return _defs.Values.ToList();
+    }
 }

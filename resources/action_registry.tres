@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="ActionRegistry" load_steps=2 format=3 uid="uid://tjvmilw04e32"]
+
+[ext_resource type="Script" uid="uid://dsgc1508qyk5a" path="res://src/game/battle_system/core/ActionRegistry.cs" id="1_pkt0h"]
+
+[resource]
+script = ExtResource("1_pkt0h")
+_actionsPath = "res://data/actions.yaml"
+metadata/_custom_type_script = "uid://dsgc1508qyk5a"

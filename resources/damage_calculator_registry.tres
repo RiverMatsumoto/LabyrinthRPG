@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="DamageCalculatorRegistry" load_steps=2 format=3 uid="uid://otq2qvbdljlq"]
+
+[ext_resource type="Script" uid="uid://pfd0n6yy2g3g" path="res://src/game/battle_system/formulas/DamageCalculatorRegistry.cs" id="1_oiwji"]
+
+[resource]
+script = ExtResource("1_oiwji")
+metadata/_custom_type_script = "uid://pfd0n6yy2g3g"

@@ -1,18 +1,21 @@
-[gd_scene load_steps=12 format=3 uid="uid://bi3k3nqxeq27o"]
+[gd_scene load_steps=15 format=3 uid="uid://bi3k3nqxeq27o"]
 
 [ext_resource type="PackedScene" uid="uid://chn25mltsiwkj" path="res://src/scenes/CharacterUI.tscn" id="1_acp3n"]
 [ext_resource type="Script" uid="uid://8gei2waqwany" path="res://src/game/scene_scripts/BattleScene.cs" id="1_rubm6"]
-[ext_resource type="Resource" uid="uid://bi6ss2nu0cypx" path="res://resources/game_state.tres" id="2_71a8g"]
+[ext_resource type="Resource" uid="uid://bi6ss2nu0cypx" path="res://resources/game_data.tres" id="2_71a8g"]
 [ext_resource type="Texture2D" uid="uid://bafvo4y4vdnha" path="res://resources/battle_backgrounds/battle_background_1.tres" id="3_843fn"]
 [ext_resource type="Resource" uid="uid://c1dxy4fkldwj6" path="res://resources/enemy_registry.tres" id="3_dm5l0"]
 [ext_resource type="PackedScene" uid="uid://c8g1prqa02etp" path="res://src/scenes/DamagePopup.tscn" id="5_843fn"]
 [ext_resource type="PackedScene" uid="uid://sw6qry1lujeb" path="res://src/scenes/EnemyUI.tscn" id="5_dm5l0"]
 [ext_resource type="Script" uid="uid://b02xdj7syr8wl" path="res://src/game/battle_system/adapters/GodotActionExecutor.cs" id="5_hil36"]
+[ext_resource type="Resource" uid="uid://otq2qvbdljlq" path="res://resources/damage_calculator_registry.tres" id="6_uypl0"]
 [ext_resource type="PackedScene" uid="uid://bonw1arp83h85" path="res://src/scenes/ActionAnim.tscn" id="9_c6528"]
 [ext_resource type="Resource" uid="uid://brxya4owc6vbc" path="res://resources/animation_registry.tres" id="10_a858l"]
+[ext_resource type="SpriteFrames" uid="uid://cvrfn34bwxbmd" path="res://resources/animations/target-caret.aseprite" id="10_oe4v7"]
 [ext_resource type="Script" uid="uid://cgailjufkalir" path="res://src/game/battle_system/core/ActionAnimator.cs" id="11_c6528"]
+[ext_resource type="Script" uid="uid://b7bk8l4b0xv6e" path="res://src/game/scene_scripts/UI/TargetSelectionUI.cs" id="12_tl7b7"]
 
-[node name="BattleScene" type="Control" node_paths=PackedStringArray("actionExecutor", "PlayerPartyFrontRowContainer", "PlayerPartyBackRowContainer", "battleMenu", "enemyContainer", "backgroundTexture")]
+[node name="BattleScene" type="Control" node_paths=PackedStringArray("actionExecutor", "PlayerPartyFrontRowContainer", "PlayerPartyBackRowContainer", "battleMenu", "enemyContainer", "targetSelectionUI", "backgroundTexture")]
 z_index = -10
 layout_mode = 3
 anchors_preset = 15
@@ -22,7 +25,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_rubm6")
 gameData = ExtResource("2_71a8g")
-actionExecutor = NodePath("ActionExecutor")
+actionExecutor = NodePath("Scripts/ActionExecutor")
 enemyRegistry = ExtResource("3_dm5l0")
 PlayerPartyFrontRowContainer = NodePath("PlayerParty/VBoxContainer/FrontRow")
 PlayerPartyBackRowContainer = NodePath("PlayerParty/VBoxContainer/BackRow")
@@ -30,11 +33,9 @@ characterUIPackedScene = ExtResource("1_acp3n")
 enemyUIPackedScene = ExtResource("5_dm5l0")
 battleMenu = NodePath("BattleMenu/Panel")
 enemyContainer = NodePath("EnemyParty/HBoxContainer")
+targetSelectionUI = NodePath("Scripts/TargetSelection")
 backgroundTexture = NodePath("Background")
-
-[node name="ActionExecutor" type="Node" parent="." node_paths=PackedStringArray("actionAnimator")]
-script = ExtResource("5_hil36")
-actionAnimator = NodePath("../EffectsUI/SubViewportContainer/SubViewport")
+damageCalculatorRegistry = ExtResource("6_uypl0")
 
 [node name="EffectsUI" type="CanvasLayer" parent="."]
 layer = 5
@@ -56,11 +57,11 @@ size_2d_override_stretch = true
 render_target_update_mode = 4
 script = ExtResource("11_c6528")
 Registry = ExtResource("10_a858l")
-UiRoot = NodePath("Control")
+UiRoot = NodePath("Sprite2DRoot")
 animationScene = ExtResource("9_c6528")
 damagePopupScene = ExtResource("5_843fn")
 
-[node name="Control" type="Control" parent="EffectsUI/SubViewportContainer/SubViewport"]
+[node name="Sprite2DRoot" type="Control" parent="EffectsUI/SubViewportContainer/SubViewport"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -68,6 +69,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="EffectsUI/SubViewportContainer/SubViewport/Sprite2DRoot"]
+visible = false
+position = Vector2(655, 245)
+sprite_frames = ExtResource("10_oe4v7")
 
 [node name="Background" type="TextureRect" parent="."]
 visible = false
@@ -142,5 +148,16 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
 alignment = 1
+
+[node name="Scripts" type="Node" parent="."]
+
+[node name="TargetSelection" type="Node" parent="Scripts" node_paths=PackedStringArray("targetCaret")]
+script = ExtResource("12_tl7b7")
+targetCaret = NodePath("../../EffectsUI/SubViewportContainer/SubViewport/Sprite2DRoot/AnimatedSprite2D")
+
+[node name="ActionExecutor" type="Node" parent="Scripts" node_paths=PackedStringArray("actionAnimator")]
+script = ExtResource("5_hil36")
+actionAnimator = NodePath("../../EffectsUI/SubViewportContainer/SubViewport")
+gameData = ExtResource("2_71a8g")
 
 [connection signal="pressed" from="BattleMenu/Panel/Button" to="." method="ExecuteActions"]
