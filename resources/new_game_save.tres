@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="GameSave" load_steps=2 format=3 uid="uid://d4dqsji2wbw1u"]
+
+[ext_resource type="Script" uid="uid://qd2lpl03jlwm" path="res://src/game/save/GameSave.cs" id="1_7o7dp"]
+
+[resource]
+script = ExtResource("1_7o7dp")
+metadata/_custom_type_script = "uid://qd2lpl03jlwm"

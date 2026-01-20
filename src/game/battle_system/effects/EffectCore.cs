@@ -65,10 +65,11 @@ public enum Status
     Sleep,
 }
 
-public class PlaybackOptions
+[GlobalClass]
+public partial class BattlePlaybackOptions : RefCounted
 {
-    public bool SkipWaits { get; set; } = false;
-    public float Speed { get; set; } = 1.0f; // 1 = normal, 2 = 2x, etc.
+    [Export] public bool SkipWaits { get; set; } = false;
+    [Export] public float Speed { get; set; } = 1.0f; // 1 = normal, 2 = 2x, etc.
 }
 
 

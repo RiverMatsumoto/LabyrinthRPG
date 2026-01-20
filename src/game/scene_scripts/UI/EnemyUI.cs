@@ -2,9 +2,18 @@ using Godot;
 
 public partial class EnemyUI : VBoxContainer
 {
+    [Signal] public delegate void BattlerClickedEventHandler(Battler battler);
+
     [Export] private TextureProgressBar healthBar;
     [Export] private TextureRect sprite;
     public Battler Battler;
+
+    public override void _Ready()
+    {
+        // Enable mouse input for click detection
+        MouseFilter = MouseFilterEnum.Stop;
+        GuiInput += OnGuiInput;
+    }
 
     public void PopulateData(Battler enemy)
     {
@@ -28,11 +37,26 @@ public partial class EnemyUI : VBoxContainer
         healthBar.Value = (double)Battler.Stats.Hp.Value / Battler.Stats.MaxHp.Value;
     }
 
+    private void OnGuiInput(InputEvent @event)
+    {
+        if (@event is InputEventMouseButton mouseButton)
+        {
+            if (mouseButton.Pressed && mouseButton.ButtonIndex == MouseButton.Left)
+            {
+                EmitSignal(SignalName.BattlerClicked, Battler);
+            }
+        }
+    }
+
+    public Battler GetBattler() => Battler;
 
     // destructor
     public override void _ExitTree()
     {
-        Battler.Stats.Hp.OnChanged -= UpdateHealth;
+        GuiInput -= OnGuiInput;
+        if (Battler?.Stats?.Hp != null)
+        {
+            Battler.Stats.Hp.OnChanged -= UpdateHealth;
+        }
     }
-
 }

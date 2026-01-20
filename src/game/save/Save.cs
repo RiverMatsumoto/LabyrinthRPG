@@ -4,7 +4,6 @@ using System;
 public class Save
 {
     // Temporary save data for debugging
-    public int Fps { get; set; } = 60;
     public float PlayerHealth { get; set; } = 100f;
     public int PlayerLevel { get; set; } = 1;
     public int ExperiencePoints { get; set; } = 0;

@@ -5,81 +5,111 @@ using Godot;
 
 public interface IActionExecutor
 {
-    void Execute(ActionDef action);
+    bool IsRunning { get; }
+    void Configure(BattleRunCtx ctx);
+
+    // Execute exactly one planned action (one actor + targets + ActionDef)
+    void ExecutePlanned(BattleAction planned);
+
     void SkipNow();
 }
 
 public sealed partial class GodotActionExecutor : Node, IActionExecutor
 {
     [Signal] public delegate void ActionFinishedEventHandler();
-    [Export] private ActionAnimator actionAnimator;
-    [Export] private GameData gameData;
+
+    [Export] private ActionAnimator actionAnimator = default!;
+
+    public bool IsRunning => _isRunning;
+
+    private BattleRunCtx _ctx = default!;
+    private bool _isRunning;
+
+    private BattleAction _planned = default!;
+    private ActionDef _currentAction = default!;
+    private IEnumerator<IEffect> _effectIterator;
+
     private DamagePopup _currentPopup;
     private SceneTreeTimer _activeTimer;
-    private BattleRunCtx _ctx;
-    private ActionDef _currentAction = default!;
-    private IEnumerator<IEffect> effectIterator;
-
-    private enum ExecutionState { Idle, WaitingTimer, WaitingAnim, WaitingPopup }
-    private ExecutionState _currentState = ExecutionState.Idle;
     private AnimatedSprite2D _currentSprite;
 
-    public override void _Ready()
-    {
-    }
+    private enum ExecutionState { Idle, WaitingTimer, WaitingAnim, WaitingPopup }
+    private ExecutionState _state = ExecutionState.Idle;
 
-    public void Configure(BattleRunCtx ctx)
-    {
-        _ctx = ctx;
-    }
+    public void Configure(BattleRunCtx ctx) => _ctx = ctx;
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        // SkipNow() on ui_accept
         if (Input.IsActionJustPressed("ui_accept"))
-        {
             SkipNow();
-        }
     }
 
-    public void Execute(ActionDef action)
+    public void ExecutePlanned(BattleAction planned)
     {
-        _currentAction = action;
-        effectIterator = _currentAction.Effects.GetEnumerator();
+        if (_ctx == null)
+            throw new InvalidOperationException("GodotActionExecutor: Configure(ctx) must be called before ExecutePlanned().");
+
+        if (_isRunning)
+            throw new InvalidOperationException("GodotActionExecutor: already running an action.");
+
+        _isRunning = true;
+
+        _planned = planned;
+        _ctx.Source = planned.Source;
+        _ctx.Targets = planned.Targets;
+
+        _currentAction = planned.ActionDef;
+        _effectIterator = _currentAction.Effects.GetEnumerator();
 
         ExecuteNextEffect();
     }
 
     public void SkipNow()
     {
-        switch (_currentState)
+        switch (_state)
         {
             case ExecutionState.WaitingTimer:
-                if (_activeTimer != null) _activeTimer.Timeout -= ExecuteNextEffect;
+                if (_activeTimer != null) _activeTimer.Timeout -= OnTimerFinished;
+                _activeTimer = null;
                 break;
+
             case ExecutionState.WaitingAnim:
                 if (_currentSprite != null) _currentSprite.AnimationFinished -= OnAnimationFinished;
-                actionAnimator.CleanupAnimation(_currentSprite);
+                if (_currentSprite != null) actionAnimator.CleanupAnimation(_currentSprite);
+                _currentSprite = null;
                 break;
+
             case ExecutionState.WaitingPopup:
-                _currentPopup.EndDamagePopup();
-                _currentPopup.Finished -= OnDamagePopupFinished;
+                if (_currentPopup != null)
+                {
+                    _currentPopup.FinishedDamagePopup -= OnDamagePopupFinished;
+                    _currentPopup.EndDamagePopup();
+                }
+                _currentPopup = null;
                 break;
         }
 
-        _currentState = ExecutionState.Idle;
+        _state = ExecutionState.Idle;
         ExecuteNextEffect();
     }
 
     private void ExecuteNextEffect()
     {
-        _currentState = ExecutionState.Idle;
+        _state = ExecutionState.Idle;
 
-        while (effectIterator.MoveNext())
+        if (_effectIterator == null)
         {
-            var eff = effectIterator.Current; // easiest is: make ActionDef.Effects a List<IEffect>
+            FinishAction();
+            return;
+        }
+
+        while (_effectIterator.MoveNext())
+        {
+            var eff = _effectIterator.Current;
             var wait = eff.Execute(_ctx);
             GD.Print($"Executing Effect: {eff}");
+
+            var playback = GameGlobals.Instance.GameSettings.PlaybackOptions;
 
             switch (wait)
             {
@@ -87,72 +117,89 @@ public sealed partial class GodotActionExecutor : Node, IActionExecutor
                     continue;
 
                 case WaitSeconds w:
-                    _currentState = ExecutionState.WaitingTimer;
-                    _activeTimer = GetTree().CreateTimer(w.Seconds * gameData.PlaybackOptions.Speed);
+                    _state = ExecutionState.WaitingTimer;
+                    _activeTimer = GetTree().CreateTimer(ScaleSeconds(w.Seconds, playback.Speed));
                     _activeTimer.Timeout += OnTimerFinished;
                     return;
 
                 case PlayAnim anim:
-                    _currentState = ExecutionState.WaitingAnim;
-                    Vector2 position = _ctx.TargetNodes[_ctx.Targets.First()]
+                    _state = ExecutionState.WaitingAnim;
+
+                    var target = _ctx.Targets.First();
+                    var pos = _ctx.TargetNodes[target]
                         .GetNode<TextureRect>("TextureRect")
                         .GetGlobalRect()
                         .GetCenter();
-                    _currentSprite = actionAnimator.PlayOnce(anim.AnimId, position, gameData.PlaybackOptions.Speed);
+                    _currentSprite = actionAnimator.PlayOnce(anim.AnimId, pos, playback.Speed);
                     _currentSprite.AnimationFinished += OnAnimationFinished;
                     return;
 
                 case PlayDamagePopup popup:
-                    Vector2 damagePosition = _ctx.TargetNodes[_ctx.Targets.First()]
+                    var t = _ctx.Targets.First();
+                    var dmgPos = _ctx.TargetNodes[t]
                         .GetNode<TextureRect>("TextureRect")
                         .GetGlobalRect()
                         .GetCenter();
-                    _currentPopup = actionAnimator.PlayDamagePopup(
-                        popup.Amount,
-                        damagePosition,
-                        gameData.PlaybackOptions.Speed);
+
+                    _currentPopup = actionAnimator.PlayDamagePopup(popup.Amount, dmgPos, playback.Speed);
+
                     if (popup.Wait)
                     {
-                        _currentState = ExecutionState.WaitingPopup;
+                        _state = ExecutionState.WaitingPopup;
                         _currentPopup.FinishedDamagePopup += OnDamagePopupFinished;
                         return;
                     }
-                    else
-                    {
-                        _currentState = ExecutionState.Idle;
-                        continue;
-                    }
 
-                // same as no wait, but something went wrong likely if this runs
+                    // no-wait popup: keep going
+                    continue;
+
                 default:
                     GD.PushError($"Unknown wait type: {wait.GetType().Name}");
                     continue;
             }
         }
 
-        // Code path only reached here once all actions have finished (effect iterator reaches end)
-        // GD.Print("All effects executed");
+        FinishAction();
+    }
+
+    private void FinishAction()
+    {
+        _state = ExecutionState.Idle;
+        _isRunning = false;
+
+        _effectIterator?.Dispose();
+        _effectIterator = null;
+
         EmitSignal(SignalName.ActionFinished);
+    }
+
+    private static double ScaleSeconds(double seconds, float speed)
+    {
+        // If speed > 1 means “faster”, divide time.
+        // If your semantics are opposite, flip this back.
+        if (speed <= 0.0001f) return seconds;
+        return seconds / speed;
     }
 
     private void OnTimerFinished()
     {
-        _activeTimer.Timeout -= OnTimerFinished;
+        if (_activeTimer != null) _activeTimer.Timeout -= OnTimerFinished;
         _activeTimer = null;
         ExecuteNextEffect();
     }
 
     private void OnAnimationFinished()
     {
-        _currentSprite.AnimationFinished -= OnAnimationFinished;
-        actionAnimator.CleanupAnimation(_currentSprite);
+        if (_currentSprite != null) _currentSprite.AnimationFinished -= OnAnimationFinished;
+        if (_currentSprite != null) actionAnimator.CleanupAnimation(_currentSprite);
         _currentSprite = null;
         ExecuteNextEffect();
     }
 
     private void OnDamagePopupFinished()
     {
-        _currentPopup.FinishedDamagePopup -= OnDamagePopupFinished;
+        if (_currentPopup != null) _currentPopup.FinishedDamagePopup -= OnDamagePopupFinished;
+        _currentPopup = null;
         ExecuteNextEffect();
     }
 }

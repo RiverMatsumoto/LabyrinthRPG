@@ -84,11 +84,11 @@ public partial class DebugConsole : CanvasLayer
             Print("Cleared party");
         };
 
-        _commands["/DebugBattle"] = () =>
-        {
-            _battleScene.ExecuteActions();
-            Print("Executing battle actions");
-        };
+        // _commands["/DebugBattle"] = () =>
+        // {
+        //     _battleScene.ExecuteActions();
+        //     Print("Executing battle actions");
+        // };
     }
 
     private void OnSubmit(string text)

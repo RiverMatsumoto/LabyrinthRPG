@@ -4,7 +4,7 @@ public partial class PauseMenu : Control
 {
     private bool subMenuOpened = false;
     private Node openSubMenu = null;
-    [Export] private GameData gameData;
+    [Export] private GameSave gameData;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()

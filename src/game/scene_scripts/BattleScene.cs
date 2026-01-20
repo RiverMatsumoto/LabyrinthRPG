@@ -6,7 +6,6 @@ public partial class BattleScene : Control
 {
     [Signal] public delegate void BattleFinishedEventHandler();
 
-    [Export] public GameData gameData;
     [Export] public GodotActionExecutor actionExecutor;
     [Export] public EnemyRegistry enemyRegistry;
 
@@ -18,6 +17,7 @@ public partial class BattleScene : Control
     [Export] public Control battleMenu;
     [Export] public HBoxContainer enemyContainer;
     [Export] public TargetSelectionUI targetSelectionUI;
+    [Export] public ActionSelectionMenu actionSelectionMenu;
     [Export] public TextureRect backgroundTexture;
     // UI END
 
@@ -25,7 +25,7 @@ public partial class BattleScene : Control
     [Export] public ActionRegistry _actionRegistry;
     private BattleStateMachine battleStateMachine;
     private Queue<ActionDef> actionQueue;
-    private EncounterData encounterData;
+    public EncounterData encounterData;
 
     // Context for the current battle.
     public BattleRunCtx ctx;
@@ -36,7 +36,7 @@ public partial class BattleScene : Control
         // gameState =
         actionQueue = new();
         backgroundTexture.Hide();
-        battleStateMachine = new BattleStateMachine(this);
+        actionSelectionMenu.Hide();
     }
 
     public void LoadSaveData()
@@ -48,8 +48,59 @@ public partial class BattleScene : Control
     public void StartBattle(EncounterData encounterData)
     {
         this.encounterData = encounterData;
-        ChangeBattleState(typeof(InitializeBattlePhase));
+
+        GD.Print("=== Battle System Test Start ===");
+
+        // havent made a character creator tool yet
+        // this comes wayyy way later after I design characters and enemies
+        // enemies and classes need to be created together
+        var battleModel = new BattleModel();
+        battleModel.playerParty.AddToFrontRow(new Battler());
+        battleModel.playerParty.AddToFrontRow(new Battler());
+        battleModel.playerParty.AddToBackRow(new Battler());
+
+        // load enemies from the encounter data
+        for (int i = 0; i < encounterData.Enemies.Count; i++)
+        {
+            var enemy = new Battler(enemyRegistry.GetEnemy(encounterData.Enemies[i]));
+            battleModel.enemyParty.AddToFrontRow(enemy);
+        }
+
+        Dictionary<Battler, Control> battlerUINodes = new();
+        foreach (Battler member in battleModel.playerParty.GetFrontRowMembers())
+        {
+            var memberNode = AddPartyMemberFrontRow(member);
+            battlerUINodes.Add(member, memberNode);
+        }
+        foreach (Battler member in battleModel.playerParty.GetBackRowMembers())
+        {
+            var memberNode = AddPartyMemberBackRow(member);
+            battlerUINodes.Add(member, memberNode);
+        }
+        foreach (Battler enemy in battleModel.enemyParty)
+        {
+            var enemyNode = AddEnemyToBattle(enemy);
+            battlerUINodes.Add(enemy, enemyNode);
+        }
+
+        var rng = new RandomNumberGenerator();
+
+        ctx = new BattleRunCtx(
+            model: battleModel,
+            turnPlan: new TurnPlan(),
+            targetNodes: battlerUINodes,
+            damageRegistry: damageCalculatorRegistry,
+            rng: rng
+        );
+
+        actionExecutor.Configure(ctx);
+
+        // Initialize battle state machine BEFORE it starts transitioning states
+        // This prevents null reference when InitializeBattlePhase calls ChangeBattleState
+        battleStateMachine = new BattleStateMachine(this);
+        battleStateMachine.Initialize();
     }
+
 
     public void InitializeUI()
     {
@@ -62,6 +113,7 @@ public partial class BattleScene : Control
     {
         CharacterUI charUI = characterUIPackedScene.Instantiate<CharacterUI>();
         charUI.PopulateData(member);
+        charUI.BattlerClicked += OnBattlerUIClicked;
         PlayerPartyFrontRowContainer.AddChild(charUI);
         return charUI;
     }
@@ -70,6 +122,7 @@ public partial class BattleScene : Control
     {
         CharacterUI charUI = characterUIPackedScene.Instantiate<CharacterUI>();
         charUI.PopulateData(member);
+        charUI.BattlerClicked += OnBattlerUIClicked;
         PlayerPartyBackRowContainer.AddChild(charUI);
         return charUI;
     }
@@ -78,47 +131,46 @@ public partial class BattleScene : Control
     {
         EnemyUI enemyUI = enemyUIPackedScene.Instantiate<EnemyUI>();
         enemyUI.PopulateData(enemy);
+        enemyUI.BattlerClicked += OnBattlerUIClicked;
         enemyContainer.AddChild(enemyUI);
         return enemyUI;
+    }
+
+    private void OnBattlerUIClicked(Battler battler)
+    {
+        // Forward click to target selection UI if it's active
+        if (targetSelectionUI != null && targetSelectionUI.IsActive())
+        {
+            targetSelectionUI.HandleTargetClick(battler);
+        }
     }
 
     public void ClearAllPartyMembers()
     {
         foreach (var member in PlayerPartyFrontRowContainer.GetChildren())
-            member.QueueFree();
-        foreach (var member in PlayerPartyBackRowContainer.GetChildren())
-            member.QueueFree();
-    }
-
-    public void ExecuteActions()
-    {
-        GD.Print("=== Running Battle Actions ===");
-        // Load actions
-
-        // enqueue test actions
-        // _actionQueue.Enqueue(_actionLibrary.Get("BasicAttack"));
-        actionQueue.Enqueue(_actionRegistry.Get("FireAttack"));
-
-        // start chain of actions until empty
-        StartNextAction();
-    }
-
-    private void StartNextAction()
-    {
-        if (actionQueue.Count <= 0)
         {
-            GD.Print("All actions complete");
-            return;
+            if (member is CharacterUI charUI)
+            {
+                charUI.BattlerClicked -= OnBattlerUIClicked;
+            }
+            member.QueueFree();
         }
-
-        var action = actionQueue.Dequeue();
-        // GD.Print($"Executing action: {action.Id}");
-        actionExecutor.Execute(action);
-    }
-
-    public void OnActionFinished()
-    {
-        StartNextAction();
+        foreach (var member in PlayerPartyBackRowContainer.GetChildren())
+        {
+            if (member is CharacterUI charUI)
+            {
+                charUI.BattlerClicked -= OnBattlerUIClicked;
+            }
+            member.QueueFree();
+        }
+        foreach (var member in enemyContainer.GetChildren())
+        {
+            if (member is EnemyUI enemyUI)
+            {
+                enemyUI.BattlerClicked -= OnBattlerUIClicked;
+            }
+            member.QueueFree();
+        }
     }
 
     public void CleanupBattle()
@@ -127,7 +179,7 @@ public partial class BattleScene : Control
         // Hide BattleUI
         // Hide background
         // emit battle finished
-        actionExecutor.ActionFinished -= OnActionFinished;
+
     }
 
     public void ChangeBattleState(Type state) => battleStateMachine.ChangeState(state);

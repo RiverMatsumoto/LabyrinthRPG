@@ -8,26 +8,41 @@ public sealed class BattleModel
 }
 
 /// <summary>
-/// Represents the runtime environment for executing effects.
+/// Represents the runtime environment for executing battle actions.
+/// Contains all the context needed during battle execution.
 /// </summary>
-public sealed class BattleRunCtx(
-    BattleModel model,
-    Battler source,
-    List<Battler> targets,
-    TurnPlan turnPlan,
-    Dictionary<Battler, Control> targetNodes,
-    DamageCalculatorRegistry damageRegistry,
-    RandomNumberGenerator rng)
+public sealed class BattleRunCtx
 {
-    public BattleModel Model { get; set; } = model;
-    public Battler Source { get; set; } = source;
-    public List<Battler> Targets { get; set; } = targets;
-    public TurnPlan TurnPlan { get; set; } = turnPlan;
-    public Dictionary<Battler, Control> TargetNodes { get; set; } = targetNodes;
-    public DamageCalculatorRegistry DamageRegistry { get; } = damageRegistry;
-    public RandomNumberGenerator Rng { get; set; } = rng;
+    public BattleModel Model { get; set; }
+    public Battler Source { get; set; }
+    public List<Battler> Targets { get; set; }
+    public TurnPlan TurnPlan { get; set; }
+    public Dictionary<Battler, Control> TargetNodes { get; set; }
+    public DamageCalculatorRegistry DamageRegistry { get; }
+    public RandomNumberGenerator Rng { get; set; }
+
+    public BattleRunCtx(
+        BattleModel model,
+        TurnPlan turnPlan,
+        Dictionary<Battler, Control> targetNodes,
+        DamageCalculatorRegistry damageRegistry,
+        RandomNumberGenerator rng)
+    {
+        Model = model;
+        TurnPlan = turnPlan;
+        TargetNodes = targetNodes;
+        DamageRegistry = damageRegistry;
+        Rng = rng;
+
+        // Source and Targets are set dynamically during action execution
+        Source = null;
+        Targets = new List<Battler>();
+    }
 }
 
+/// <summary>
+/// Represents a single action to be executed during battle.
+/// </summary>
 public record BattleAction(
     ActionDef ActionDef,
     Battler Source,
@@ -36,15 +51,19 @@ public record BattleAction(
     BattleActionType Type = BattleActionType.TurnBased
 );
 
-// use reaction later for reaction based skills
-// use environment later for status effects or multipliers
+/// <summary>
+/// Types of battle actions.
+/// </summary>
 public enum BattleActionType
 {
-    TurnBased,    // Player selects
-    Reaction,     // Counter-attacks, etc.
-    Environmental // Status effects, traps, etc.
+    TurnBased,    // Player-selected actions
+    Reaction,     // Counter-attacks, triggered abilities
+    Environmental // Status effects, traps, field effects
 }
 
+/// <summary>
+/// Manages the queue of planned actions for the current turn.
+/// </summary>
 public class TurnPlan
 {
     public List<BattleAction> PlannedActions { get; } = new();
@@ -53,16 +72,9 @@ public class TurnPlan
 
     public void AddAction(BattleAction action) => PlannedActions.Add(action);
     public BattleAction GetNextAction() => PlannedActions[CurrentActorIndex++];
+    public void ClearActions()
+    {
+        PlannedActions.Clear();
+        CurrentActorIndex = 0;
+    }
 }
-
-// /// <summary>
-// /// Represents the runtime environment for executing effects.
-// /// </summary>
-// public interface IEffectRuntime
-// {
-//     PlaybackOptions Playback { get; }
-//     IEffectWait WaitSeconds(float seconds);
-//     IEffectWait PlayAnim(string id, bool wait);
-//     IEffectWait ShowDamage(int amount);
-//     void Log(string msg);
-// }

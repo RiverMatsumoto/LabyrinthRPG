@@ -7,7 +7,7 @@ public partial class PlayerMovement : Node3D
     [Export] private float moveTime = 0.10f;
     [Export] private Timer cooldownTimerNode;
     [Export] private Tween.TransitionType easeType;
-    [Export] private GameData gameData;
+    [Export] private GameSave gameData;
     [Signal] public delegate void OnMoveCompleteEventHandler();
 
     private bool isMoving;

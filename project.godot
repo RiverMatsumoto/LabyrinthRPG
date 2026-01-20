@@ -23,7 +23,8 @@ animation/loop/enabled=false
 
 [autoload]
 
-DebugConsole="res://src/scenes/DebugConsole.tscn"
+DebugConsole="*res://src/scenes/DebugConsole.tscn"
+Game="*res://src/game/globals/GameGlobals.cs"
 
 [display]
 

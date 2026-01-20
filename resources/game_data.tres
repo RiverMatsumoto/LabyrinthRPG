@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="GameData" load_steps=2 format=3 uid="uid://bi6ss2nu0cypx"]
+[gd_resource type="Resource" script_class="GameSave" load_steps=2 format=3 uid="uid://bi6ss2nu0cypx"]
 
-[ext_resource type="Script" uid="uid://b6ccprptl3iwa" path="res://src/game/globals/GameData.cs" id="1_ljf37"]
+[ext_resource type="Script" uid="uid://qd2lpl03jlwm" path="res://src/game/save/GameSave.cs" id="1_f6hr2"]
 
 [resource]
-script = ExtResource("1_ljf37")
+script = ExtResource("1_f6hr2")
 metadata/_custom_type_script = "uid://b6ccprptl3iwa"

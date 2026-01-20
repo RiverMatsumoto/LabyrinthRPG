@@ -28,8 +28,11 @@ public sealed class BattleStateMachine
         _states.Add(typeof(WinBattlePhase), new WinBattlePhase(_context));
         _states.Add(typeof(LoseBattlePhase), new LoseBattlePhase(_context));
         _states.Add(typeof(FleeBattlePhase), new FleeBattlePhase(_context));
+    }
 
-        ChangeState(typeof(ActionSelectionPhase));
+    public void Initialize()
+    {
+        ChangeState(typeof(InitializeBattlePhase));
     }
 
     public void ChangeState(Type newState)
