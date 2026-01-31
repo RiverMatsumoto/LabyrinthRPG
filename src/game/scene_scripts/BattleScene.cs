@@ -55,9 +55,9 @@ public partial class BattleScene : Control
         // this comes wayyy way later after I design characters and enemies
         // enemies and classes need to be created together
         var battleModel = new BattleModel();
-        battleModel.playerParty.AddToFrontRow(new Battler());
-        battleModel.playerParty.AddToFrontRow(new Battler());
-        battleModel.playerParty.AddToBackRow(new Battler());
+        battleModel.playerParty.AddToFrontRow(new Battler(new BattlerBase()));
+        battleModel.playerParty.AddToFrontRow(new Battler(new BattlerBase()));
+        battleModel.playerParty.AddToBackRow(new Battler(new BattlerBase()));
 
         // load enemies from the encounter data
         for (int i = 0; i < encounterData.Enemies.Count; i++)
@@ -66,7 +66,7 @@ public partial class BattleScene : Control
             battleModel.enemyParty.AddToFrontRow(enemy);
         }
 
-        Dictionary<Battler, Control> battlerUINodes = new();
+        Dictionary<Battler, BattlerUI> battlerUINodes = new();
         foreach (Battler member in battleModel.playerParty.GetFrontRowMembers())
         {
             var memberNode = AddPartyMemberFrontRow(member);
@@ -109,7 +109,7 @@ public partial class BattleScene : Control
 
     }
 
-    public Control AddPartyMemberFrontRow(Battler member)
+    public BattlerUI AddPartyMemberFrontRow(Battler member)
     {
         CharacterUI charUI = characterUIPackedScene.Instantiate<CharacterUI>();
         charUI.PopulateData(member);
@@ -118,7 +118,7 @@ public partial class BattleScene : Control
         return charUI;
     }
 
-    public Control AddPartyMemberBackRow(Battler member)
+    public BattlerUI AddPartyMemberBackRow(Battler member)
     {
         CharacterUI charUI = characterUIPackedScene.Instantiate<CharacterUI>();
         charUI.PopulateData(member);
@@ -127,7 +127,7 @@ public partial class BattleScene : Control
         return charUI;
     }
 
-    public Control AddEnemyToBattle(Battler enemy)
+    public BattlerUI AddEnemyToBattle(Battler enemy)
     {
         EnemyUI enemyUI = enemyUIPackedScene.Instantiate<EnemyUI>();
         enemyUI.PopulateData(enemy);
@@ -136,12 +136,12 @@ public partial class BattleScene : Control
         return enemyUI;
     }
 
-    private void OnBattlerUIClicked(Battler battler)
+    private void OnBattlerUIClicked(BattlerUI battlerUI)
     {
         // Forward click to target selection UI if it's active
         if (targetSelectionUI != null && targetSelectionUI.IsActive())
         {
-            targetSelectionUI.HandleTargetClick(battler);
+            targetSelectionUI.HandleTargetClick(battlerUI.Battler);
         }
     }
 

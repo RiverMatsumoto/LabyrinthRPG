@@ -1,0 +1,99 @@
+[gd_resource type="Resource" script_class="BattlerBaseRegistry" format=3 uid="uid://d1t10vc51pq5i"]
+
+[ext_resource type="Script" uid="uid://cn1s36alpfby7" path="res://src/game/battle_system/core/BattlerBase.cs" id="1_co8yu"]
+[ext_resource type="Script" uid="uid://d2g74i5xrwucj" path="res://src/game/battle_system/core/BattlerBaseRegistry.cs" id="2_ab645"]
+
+[sub_resource type="Resource" id="Resource_pmxyg"]
+script = ExtResource("1_co8yu")
+Name = "Debug1"
+Class = "Class Here"
+Description = "Description Here"
+Level = 1
+MaxHp = 30
+Hp = 30
+MaxTp = 20
+Tp = 20
+Str = 7
+Tec = 3
+Agi = 5
+Vit = 6
+Wis = 3
+Luc = 4
+metadata/_custom_type_script = "uid://cn1s36alpfby7"
+
+[sub_resource type="Resource" id="Resource_haflk"]
+script = ExtResource("1_co8yu")
+Name = "Debug2"
+Class = "Class Here"
+Description = "Description Here"
+Level = 1
+MaxHp = 25
+Hp = 25
+MaxTp = 20
+Tp = 20
+Str = 4
+Tec = 5
+Agi = 6
+Vit = 5
+Wis = 4
+Luc = 7
+metadata/_custom_type_script = "uid://cn1s36alpfby7"
+
+[sub_resource type="Resource" id="Resource_t3tbv"]
+script = ExtResource("1_co8yu")
+Name = "Debug3"
+Class = "Class Here"
+Description = "Description Here"
+MaxHp = 40
+Hp = 40
+MaxTp = 18
+Tp = 18
+Str = 6
+Tec = 4
+Agi = 4
+Vit = 7
+Wis = 5
+Luc = 5
+metadata/_custom_type_script = "uid://cn1s36alpfby7"
+
+[sub_resource type="Resource" id="Resource_2oi0k"]
+script = ExtResource("1_co8yu")
+Name = "Debug4"
+Class = "Class Here"
+Description = "Description Here"
+Level = 1
+MaxHp = 25
+Hp = 25
+MaxTp = 25
+Tp = 25
+Str = 5
+Tec = 5
+Agi = 5
+Vit = 5
+Wis = 5
+Luc = 5
+metadata/_custom_type_script = "uid://cn1s36alpfby7"
+
+[sub_resource type="Resource" id="Resource_u46mr"]
+script = ExtResource("1_co8yu")
+Name = "Debug5"
+Class = "Class Here"
+Description = "Description Here"
+Level = 1
+MaxHp = 31
+Hp = 31
+MaxTp = 22
+Tp = 22
+Str = 4
+Tec = 7
+Agi = 4
+Vit = 3
+Wis = 7
+Luc = 6
+metadata/_custom_type_script = "uid://cn1s36alpfby7"
+
+[resource]
+script = ExtResource("2_ab645")
+BattlerBases = Array[Object]([])
+DebugParty = Array[Object]([SubResource("Resource_pmxyg"), SubResource("Resource_haflk"), SubResource("Resource_t3tbv"), SubResource("Resource_2oi0k"), SubResource("Resource_u46mr")])
+metadata/_custom_type_script = "uid://d2g74i5xrwucj"

@@ -1,22 +1,25 @@
-using Godot;
+using System;
 
-[GlobalClass]
-public partial class GameSave : Resource
+/*
+    will need to deal with versioning at some point for forward compatibility.
+    Less updates generally better and I need to keep track of migrating every save file
+    to the current/latest update maybe in a switch statement
+*/
+
+public class GameContext
 {
-    [Export] public GameState State { get; set; }
-    public BattlePlaybackOptions PlaybackOptions { get; set; }
+    public GameState State { get; set; }
     public Party CurrentParty { get; set; }
 
-    public GameSave()
+    public GameContext()
     {
         // new save, temp values
         State = GameState.Labyrinth;
-        PlaybackOptions = new BattlePlaybackOptions();
         CurrentParty = new Party();
     }
 }
 
-
+[Serializable]
 public enum GameState
 {
     Labyrinth = 0,

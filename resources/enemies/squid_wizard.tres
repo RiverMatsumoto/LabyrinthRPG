@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="BattlerBase" load_steps=3 format=3 uid="uid://cov5qxvldskda"]
+[gd_resource type="Resource" script_class="BattlerBase" format=3 uid="uid://cov5qxvldskda"]
 
-[ext_resource type="Script" uid="uid://d4boeic7qbwav" path="res://src/game/BattlerBase.cs" id="1_ip63h"]
+[ext_resource type="Script" uid="uid://cn1s36alpfby7" path="res://src/game/battle_system/core/BattlerBase.cs" id="1_ip63h"]
 [ext_resource type="Texture2D" uid="uid://dljyrbaon31u0" path="res://resources/sprites/enemies/squid_wizard.png" id="1_txdxc"]
 
 [resource]

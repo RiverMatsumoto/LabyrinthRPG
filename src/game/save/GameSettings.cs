@@ -1,8 +1,7 @@
 using Godot;
 
 // later can write a function that sets smarter defaults
-[GlobalClass]
-public sealed partial class GameSettings : Resource
+public sealed class GameSettings
 {
     public float Fps { get; set; }
     public float Volume { get; set; }
@@ -10,7 +9,6 @@ public sealed partial class GameSettings : Resource
     public int ResolutionWidth { get; set; }
     public int ResolutionHeight { get; set; }
     public string Language { get; set; }
-
     public BattlePlaybackOptions PlaybackOptions { get; set; }
 
     public static GameSettings GetBaseSettings()

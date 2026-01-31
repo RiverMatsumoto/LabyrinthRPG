@@ -68,8 +68,8 @@ public enum Status
 [GlobalClass]
 public partial class BattlePlaybackOptions : RefCounted
 {
-    [Export] public bool SkipWaits { get; set; } = false;
-    [Export] public float Speed { get; set; } = 1.0f; // 1 = normal, 2 = 2x, etc.
+    public bool SkipWaits { get; set; } = false;
+    public float Speed { get; set; } = 1.0f; // 1 = normal, 2 = 2x, etc.
 }
 
 

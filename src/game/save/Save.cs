@@ -1,4 +1,5 @@
 using System;
+using Godot;
 
 [Serializable]
 public class Save
@@ -7,6 +8,6 @@ public class Save
     public float PlayerHealth { get; set; } = 100f;
     public int PlayerLevel { get; set; } = 1;
     public int ExperiencePoints { get; set; } = 0;
-    public float[] PlayerPosition { get; set; } = new float[3] { 0f, 0f, 0f };
+    public Vector3I PlayerPosition { get; set; } = Vector3I.Zero;
 
 }

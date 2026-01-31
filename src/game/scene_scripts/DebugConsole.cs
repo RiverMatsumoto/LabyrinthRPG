@@ -68,13 +68,13 @@ public partial class DebugConsole : CanvasLayer
 
         _commands["/AddDebugFrontRow"] = () =>
         {
-            _battleScene?.AddPartyMemberFrontRow(new Battler());
+            _battleScene?.AddPartyMemberFrontRow(new Battler(new BattlerBase()));
             Print("Added party member to front row");
         };
 
         _commands["/AddDebugBackRow"] = () =>
         {
-            _battleScene?.AddPartyMemberBackRow(new Battler());
+            _battleScene?.AddPartyMemberBackRow(new Battler(new BattlerBase()));
             Print("Added party member to back row");
         };
 

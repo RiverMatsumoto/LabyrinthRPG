@@ -4,11 +4,12 @@ public partial class PauseMenu : Control
 {
     private bool subMenuOpened = false;
     private Node openSubMenu = null;
-    [Export] private GameSave gameData;
+    private GameContext gameContext;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        gameContext = Util.GetGameGlobals(this).GameContext;
         Visible = false;
     }
 
@@ -20,15 +21,15 @@ public partial class PauseMenu : Control
     public override void _UnhandledInput(InputEvent @event)
     {
         if (@event.IsActionPressed("Menu"))
-            if (gameData.State == GameState.Labyrinth || gameData.State == GameState.Town)
+            if (gameContext.State == GameState.Labyrinth || gameContext.State == GameState.Town)
                 OpenMenu();
-            else if (gameData.State == GameState.PauseMenu)
+            else if (gameContext.State == GameState.PauseMenu)
                 CloseMenu();
     }
 
     public void OpenMenu()
     {
-        gameData.State = GameState.PauseMenu;
+        gameContext.State = GameState.PauseMenu;
         Visible = true;
     }
 
@@ -42,7 +43,7 @@ public partial class PauseMenu : Control
             openSubMenu.QueueFree();
         }
         Visible = false;
-        gameData.State = GameState.Labyrinth;
+        gameContext.State = GameState.Labyrinth;
     }
 
     public void OpenSubMenu(string subMenuPath)

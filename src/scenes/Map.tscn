@@ -1,16 +1,15 @@
-[gd_scene load_steps=6 format=3 uid="uid://dtiy8yayysdb8"]
+[gd_scene format=3 uid="uid://dtiy8yayysdb8"]
 
 [ext_resource type="MeshLibrary" uid="uid://dbropcxwxnqpd" path="res://resources/tiles3.tres" id="1_2w2s7"]
 [ext_resource type="PackedScene" uid="uid://cu36onp4rktu" path="res://src/scenes/player.tscn" id="1_lplyj"]
 [ext_resource type="Script" uid="uid://bwxi1ldge7qla" path="res://src/game/scene_scripts/MapScene.cs" id="1_utv3k"]
 [ext_resource type="PackedScene" uid="uid://ccidjwnp770qn" path="res://src/scenes/EncounterSystem.tscn" id="3_4b68d"]
-[ext_resource type="Resource" uid="uid://bi6ss2nu0cypx" path="res://resources/game_data.tres" id="4_hel5k"]
 
-[node name="MapScene" type="Node3D" node_paths=PackedStringArray("encounterSystemScene")]
+[node name="MapScene" type="Node3D" unique_id=213204910 node_paths=PackedStringArray("encounterSystemScene")]
 script = ExtResource("1_utv3k")
 encounterSystemScene = NodePath("EncounterSystem")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1328208875]
 transform = Transform3D(1, 0, 0, 0, 0.631001, 0.775782, 0, -0.775782, 0.631001, 0, 3.75777, 0)
 light_color = Color(0.992157, 1, 0.921569, 1)
 light_energy = 2.0
@@ -18,7 +17,7 @@ shadow_enabled = true
 shadow_opacity = 0.56
 shadow_blur = 0.0
 
-[node name="GridMap" type="GridMap" parent="."]
+[node name="GridMap" type="GridMap" parent="." unique_id=1502614764]
 mesh_library = ExtResource("1_2w2s7")
 cell_size = Vector3(1, 1, 1)
 cell_center_y = false
@@ -27,17 +26,16 @@ data = {
 }
 metadata/_editor_floor_ = Vector3(0, 0, 0)
 
-[node name="PlayerMovement" parent="." node_paths=PackedStringArray("gridMap", "cooldownTimerNode") instance=ExtResource("1_lplyj")]
+[node name="PlayerMovement" parent="." unique_id=1015009850 node_paths=PackedStringArray("gridMap", "cooldownTimerNode") instance=ExtResource("1_lplyj")]
 gridMap = NodePath("../GridMap")
 moveTime = 0.15
 cooldownTimerNode = NodePath("Timer")
-gameData = ExtResource("4_hel5k")
 
-[node name="Timer" type="Timer" parent="PlayerMovement"]
+[node name="Timer" type="Timer" parent="PlayerMovement" unique_id=71949731]
 wait_time = 0.05
 one_shot = true
 
-[node name="EncounterSystem" parent="." node_paths=PackedStringArray("playerMovement") instance=ExtResource("3_4b68d")]
+[node name="EncounterSystem" parent="." unique_id=1004083245 node_paths=PackedStringArray("playerMovement") instance=ExtResource("3_4b68d")]
 playerMovement = NodePath("../PlayerMovement")
 EncounterSpeed = 0.5
 

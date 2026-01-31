@@ -1,16 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Godot;
 
+[Serializable]
 public class Party : IEnumerable<Battler>
 {
     private const int MAX_CAPACITY = 6;
-    private const int MAX_MEMBERS_ROW = 3;
+    public const int MAX_MEMBERS_ROW = 3;
     private Battler[] _members = new Battler[MAX_CAPACITY];
     private int _frontRowCount = 0;
     private int _backRowCount = 0;
 
     public int MemberCount => _frontRowCount + _backRowCount;
+    public int FrontRowCount => _frontRowCount;
+    public int BackRowCount => _backRowCount;
 
     /// <summary>
     /// Adds a battler to the front row of the party.

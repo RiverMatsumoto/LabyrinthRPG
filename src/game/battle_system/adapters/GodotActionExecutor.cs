@@ -109,7 +109,7 @@ public sealed partial class GodotActionExecutor : Node, IActionExecutor
             var wait = eff.Execute(_ctx);
             GD.Print($"Executing Effect: {eff}");
 
-            var playback = GameGlobals.Instance.GameSettings.PlaybackOptions;
+            var playback = Util.GetGameGlobals(this).GameSettings.PlaybackOptions;
 
             switch (wait)
             {
@@ -126,20 +126,14 @@ public sealed partial class GodotActionExecutor : Node, IActionExecutor
                     _state = ExecutionState.WaitingAnim;
 
                     var target = _ctx.Targets.First();
-                    var pos = _ctx.TargetNodes[target]
-                        .GetNode<TextureRect>("TextureRect")
-                        .GetGlobalRect()
-                        .GetCenter();
+                    var pos = _ctx.TargetNodes[target].GetTextureCenter();
                     _currentSprite = actionAnimator.PlayOnce(anim.AnimId, pos, playback.Speed);
                     _currentSprite.AnimationFinished += OnAnimationFinished;
                     return;
 
                 case PlayDamagePopup popup:
                     var t = _ctx.Targets.First();
-                    var dmgPos = _ctx.TargetNodes[t]
-                        .GetNode<TextureRect>("TextureRect")
-                        .GetGlobalRect()
-                        .GetCenter();
+                    var dmgPos = _ctx.TargetNodes[t].GetTextureCenter();
 
                     _currentPopup = actionAnimator.PlayDamagePopup(popup.Amount, dmgPos, playback.Speed);
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://sw6qry1lujeb"]
+[gd_scene format=3 uid="uid://sw6qry1lujeb"]
 
 [ext_resource type="Script" uid="uid://c1jh851evqm1" path="res://src/game/scene_scripts/UI/EnemyUI.cs" id="1_b7p8g"]
 [ext_resource type="Texture2D" uid="uid://dljyrbaon31u0" path="res://resources/sprites/enemies/squid_wizard.png" id="2_oaf4h"]
@@ -21,7 +21,7 @@ gradient = SubResource("Gradient_oaf4h")
 width = 100
 height = 10
 
-[node name="EnemyUI" type="VBoxContainer" node_paths=PackedStringArray("healthBar", "sprite")]
+[node name="EnemyUI" type="VBoxContainer" unique_id=2129585456 node_paths=PackedStringArray("healthBar", "sprite")]
 custom_minimum_size = Vector2(50, 50)
 anchors_preset = 15
 anchor_right = 1.0
@@ -34,10 +34,13 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 2
 script = ExtResource("1_b7p8g")
-healthBar = NodePath("TextureProgressBar")
-sprite = NodePath("TextureRect")
+healthBar = NodePath("VBoxContainer/TextureProgressBar")
+sprite = NodePath("VBoxContainer/TextureRect")
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1543278200]
+layout_mode = 2
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="VBoxContainer" unique_id=1742787234]
 layout_mode = 2
 size_flags_horizontal = 4
 max_value = 1.0
@@ -47,6 +50,6 @@ texture_under = SubResource("GradientTexture2D_oaf4h")
 texture_progress = SubResource("GradientTexture2D_jlnv4")
 texture_progress_offset = Vector2(4, 4)
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer" unique_id=557321269]
 layout_mode = 2
 texture = ExtResource("2_oaf4h")

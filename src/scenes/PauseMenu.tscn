@@ -1,7 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://4s1i17gso80f"]
+[gd_scene format=3 uid="uid://4s1i17gso80f"]
 
 [ext_resource type="Script" uid="uid://bi76p6s6t8jxs" path="res://src/game/scene_scripts/PauseMenu.cs" id="1_lthlp"]
-[ext_resource type="Resource" uid="uid://bi6ss2nu0cypx" path="res://resources/game_data.tres" id="2_mj5i6"]
 
 [sub_resource type="SystemFont" id="SystemFont_hea54"]
 subpixel_positioning = 0
@@ -10,7 +9,7 @@ subpixel_positioning = 0
 default_font = SubResource("SystemFont_hea54")
 default_font_size = 40
 
-[node name="PauseMenu" type="Control"]
+[node name="PauseMenu" type="Control" unique_id=1951644119]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -22,10 +21,9 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 theme = SubResource("Theme_ktmhr")
 script = ExtResource("1_lthlp")
-gameData = ExtResource("2_mj5i6")
 metadata/_edit_use_anchors_ = true
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=1598648885]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -34,7 +32,7 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(-1, 1)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=819935575]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -44,29 +42,29 @@ offset_top = 348.0
 offset_right = -1480.0
 offset_bottom = -338.0
 
-[node name="Item" type="Button" parent="VBoxContainer"]
+[node name="Item" type="Button" parent="VBoxContainer" unique_id=522421366]
 layout_mode = 2
 text = "Item"
 
-[node name="Skill" type="Button" parent="VBoxContainer"]
+[node name="Skill" type="Button" parent="VBoxContainer" unique_id=1836231933]
 layout_mode = 2
 text = "Skill"
 
-[node name="Status" type="Button" parent="VBoxContainer"]
+[node name="Status" type="Button" parent="VBoxContainer" unique_id=1622390450]
 layout_mode = 2
 text = "Status"
 
-[node name="X1" type="Button" parent="VBoxContainer"]
+[node name="X1" type="Button" parent="VBoxContainer" unique_id=1509061221]
 layout_mode = 2
 text = "Item
 "
 
-[node name="X2" type="Button" parent="VBoxContainer"]
+[node name="X2" type="Button" parent="VBoxContainer" unique_id=1873042768]
 layout_mode = 2
 text = "Item
 "
 
-[node name="BackButton" type="Button" parent="."]
+[node name="BackButton" type="Button" parent="." unique_id=437602441]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.055

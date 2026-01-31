@@ -1,7 +1,7 @@
 using Godot;
 
 [GlobalClass]
-public partial class BattlerBase : Resource
+public sealed partial class BattlerBase : Resource
 {
     [Export] public string Name { get; set; }
     [Export] public string Class { get; set; }
@@ -28,7 +28,9 @@ public partial class BattlerBase : Resource
         Level = 1;
         Experience = 0;
         Hp = 20;
+        MaxHp = 20;
         Tp = 20;
+        MaxTp = 20;
         Str = 1;
         Tec = 1;
         Agi = 1;

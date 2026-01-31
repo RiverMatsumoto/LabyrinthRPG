@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cykruicy1pnkt"]
+
+[ext_resource type="Script" uid="uid://dexhuhluwas6j" path="res://src/game/globals/GameGlobals.cs" id="1_40fex"]
+
+[node name="GameGlobals" type="Node" unique_id=771078561 groups=["game_globals"]]
+script = ExtResource("1_40fex")

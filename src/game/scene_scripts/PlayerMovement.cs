@@ -7,9 +7,9 @@ public partial class PlayerMovement : Node3D
     [Export] private float moveTime = 0.10f;
     [Export] private Timer cooldownTimerNode;
     [Export] private Tween.TransitionType easeType;
-    [Export] private GameSave gameData;
     [Signal] public delegate void OnMoveCompleteEventHandler();
 
+    private GameContext gameContext;
     private bool isMoving;
     private TurnData td;
 
@@ -18,6 +18,7 @@ public partial class PlayerMovement : Node3D
 
     public override void _Ready()
     {
+        gameContext = Util.GetGameGlobals(this).GameContext;
         td = new TurnData();
 
         cooldownTimerNode = GetNode<Timer>("Timer");
@@ -31,9 +32,9 @@ public partial class PlayerMovement : Node3D
     public override void _Process(double delta)
     {
         ProcessTurn(delta);
-        if (isMoving || gameData.State != GameState.Labyrinth) return;
+        if (isMoving || gameContext.State != GameState.Labyrinth) return;
 
-        Vector3I step = Vector3I.Zero;
+        Vector3I step;
 
         if (Input.IsActionPressed("MoveForward")) step = ForwardStep();
         else if (Input.IsActionPressed("MoveBackward")) step = -ForwardStep();

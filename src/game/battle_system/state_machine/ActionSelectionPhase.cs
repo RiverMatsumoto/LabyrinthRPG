@@ -29,7 +29,6 @@ public sealed class ActionSelectionPhase : BattleState
 
     public override void Enter()
     {
-        GD.Print("=== Action Selection Phase ===");
 
         // Get all alive player battlers
         _playerBattlers = Bs.ctx.Model.playerParty.Where(b => b.IsAlive).ToList();
@@ -80,7 +79,7 @@ public sealed class ActionSelectionPhase : BattleState
     {
         // resolve actionId
         Bs.actionSelectionMenu.Hide();
-        var action = GameGlobals.Instance.ActionRegistry.Get(actionId);
+        var action = Util.GetGameGlobals(Bs).ActionRegistry.Get(actionId);
 
         _selectedAction = action;
         _currentStep = SelectionStep.SelectingTarget;

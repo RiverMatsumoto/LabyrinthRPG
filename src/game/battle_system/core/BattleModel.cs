@@ -17,14 +17,14 @@ public sealed class BattleRunCtx
     public Battler Source { get; set; }
     public List<Battler> Targets { get; set; }
     public TurnPlan TurnPlan { get; set; }
-    public Dictionary<Battler, Control> TargetNodes { get; set; }
+    public Dictionary<Battler, BattlerUI> TargetNodes { get; set; }
     public DamageCalculatorRegistry DamageRegistry { get; }
     public RandomNumberGenerator Rng { get; set; }
 
     public BattleRunCtx(
         BattleModel model,
         TurnPlan turnPlan,
-        Dictionary<Battler, Control> targetNodes,
+        Dictionary<Battler, BattlerUI> targetNodes,
         DamageCalculatorRegistry damageRegistry,
         RandomNumberGenerator rng)
     {

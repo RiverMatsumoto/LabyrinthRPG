@@ -1,4 +1,4 @@
-[gd_resource type="MeshLibrary" load_steps=11 format=4 uid="uid://dbropcxwxnqpd"]
+[gd_resource type="MeshLibrary" format=4 uid="uid://dbropcxwxnqpd"]
 
 [ext_resource type="Texture2D" uid="uid://cs32m5u0lfwb1" path="res://resources/obj/tiles_0.png" id="1_olcup"]
 

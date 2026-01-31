@@ -1,12 +1,10 @@
 using Godot;
 
-public partial class EnemyUI : VBoxContainer
+public partial class EnemyUI : BattlerUI
 {
-    [Signal] public delegate void BattlerClickedEventHandler(Battler battler);
-
+    [Export] private VBoxContainer vBoxContainer;
     [Export] private TextureProgressBar healthBar;
     [Export] private TextureRect sprite;
-    public Battler Battler;
 
     public override void _Ready()
     {
@@ -15,7 +13,7 @@ public partial class EnemyUI : VBoxContainer
         GuiInput += OnGuiInput;
     }
 
-    public void PopulateData(Battler enemy)
+    public override void PopulateData(Battler enemy)
     {
         Battler = enemy;
         sprite.Texture = enemy.Sprite;
@@ -23,7 +21,7 @@ public partial class EnemyUI : VBoxContainer
         UpdateUI();
     }
 
-    public void UpdateUI()
+    public override void UpdateUI()
     {
         UpdateHealth();
     }
@@ -59,4 +57,6 @@ public partial class EnemyUI : VBoxContainer
             Battler.Stats.Hp.OnChanged -= UpdateHealth;
         }
     }
+
+    public override Vector2 GetTextureCenter() => sprite.GetGlobalRect().GetCenter();
 }

@@ -1,10 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Godot;
 
 public abstract class BattleState
 {
+    /// A reference to the BattleScene. Can be used as a host for scene related behavior
     protected BattleScene Bs { get; }
 
     protected BattleState(BattleScene bs)
