@@ -60,7 +60,7 @@ public partial class TextboxManager : Control
         if (prevVisibleCharacters < textbox.GetTotalCharacterCount() &&
             visibleChars >= textbox.GetTotalCharacterCount())
         {
-            EmitSignal(nameof(DialogueFinished));
+            EmitSignal(SignalName.DialogueFinished);
         }
         prevVisibleCharacters = visibleChars;
     }
@@ -76,7 +76,7 @@ public partial class TextboxManager : Control
                 DisplayNextTextBox();
             else
             {
-                EmitSignal(nameof(DialogueFinished));
+                EmitSignal(SignalName.DialogueFinished);
                 textbox.VisibleCharacters = textbox.GetTotalCharacterCount();
             }
             textboxTimer = 0;
@@ -124,7 +124,7 @@ public partial class TextboxManager : Control
     {
         textbox.Text = "";
         Visible = false;
-        EmitSignal(nameof(DialogueClosed));
+        EmitSignal(SignalName.DialogueClosed);
     }
 
     public void DisplayNode(DialogueNode node)
@@ -222,7 +222,7 @@ public partial class TextboxManager : Control
 
     private void PlayTextbox()
     {
-        EmitSignal(nameof(DialogueStarted));
+        EmitSignal(SignalName.DialogueStarted);
         textboxInterpolation = 0;
         textbox.VisibleCharacters = 0;
     }

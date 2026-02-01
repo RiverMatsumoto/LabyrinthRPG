@@ -26,7 +26,7 @@ public partial class DamagePopup : RichTextLabel
     public void EndDamagePopup()
     {
         GD.Print("End damage popup");
-        EmitSignal(nameof(FinishedDamagePopup));
+        EmitSignal(SignalName.FinishedDamagePopup);
         QueueFree();
     }
 }

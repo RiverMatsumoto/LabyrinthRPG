@@ -262,7 +262,7 @@ public sealed class ActionSelectionPhase : BattleState
     {
         // TODO: Implement proper AI action selection
         // For now, just return a basic attack or random skill
-        return Bs._actionRegistry.Get("BasicAttack");
+        return Bs.actionRegistry.Get("BasicAttack");
     }
 
     /// <summary>

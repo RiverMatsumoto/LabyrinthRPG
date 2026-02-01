@@ -13,11 +13,11 @@ public sealed partial class BattlerBaseRegistry : Resource
         Party party = new();
         foreach (BattlerBase battlerBase in DebugParty)
         {
-            if (party.FrontRowCount < Party.MAX_MEMBERS_ROW)
+            if (party.FrontRowCount < party.MaxMembersRow)
             {
                 party.AddToFrontRow(new Battler(battlerBase));
             }
-            if (party.BackRowCount < Party.MAX_MEMBERS_ROW)
+            else if (party.BackRowCount < party.MaxMembersRow)
             {
                 party.AddToBackRow(new Battler(battlerBase));
             }

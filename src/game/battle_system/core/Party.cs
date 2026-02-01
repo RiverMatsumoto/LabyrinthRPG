@@ -6,9 +6,9 @@ using Godot;
 [Serializable]
 public class Party : IEnumerable<Battler>
 {
-    private const int MAX_CAPACITY = 6;
-    public const int MAX_MEMBERS_ROW = 3;
-    private Battler[] _members = new Battler[MAX_CAPACITY];
+    private readonly int MaxCapacity;
+    public readonly int MaxMembersRow = 3;
+    private readonly Battler[] _members;
     private int _frontRowCount = 0;
     private int _backRowCount = 0;
 
@@ -16,13 +16,28 @@ public class Party : IEnumerable<Battler>
     public int FrontRowCount => _frontRowCount;
     public int BackRowCount => _backRowCount;
 
+    public Party()
+    {
+        MaxMembersRow = 3;
+        MaxCapacity = 2 * MaxMembersRow;
+        _members = new Battler[MaxCapacity];
+    }
+
+    // Used for enemy party ill probably hardcode the size somewhere
+    public Party(int maxMembersRow)
+    {
+        MaxMembersRow = maxMembersRow;
+        MaxCapacity = 2 * MaxMembersRow;
+        _members = new Battler[MaxCapacity];
+    }
+
     /// <summary>
     /// Adds a battler to the front row of the party.
     /// </summary>
     /// <param name="battler">The battler to add.</param>
     public void AddToFrontRow(Battler battler)
     {
-        if (_frontRowCount < MAX_MEMBERS_ROW)
+        if (_frontRowCount < MaxMembersRow)
         {
             _members[_frontRowCount] = battler;
             _frontRowCount++;
@@ -37,9 +52,9 @@ public class Party : IEnumerable<Battler>
     /// <param name="battler">The battler to add.</param>
     public void AddToBackRow(Battler battler)
     {
-        if (_backRowCount < MAX_MEMBERS_ROW)
+        if (_backRowCount < MaxMembersRow)
         {
-            _members[MAX_MEMBERS_ROW + _backRowCount] = battler;
+            _members[MaxMembersRow + _backRowCount] = battler;
             _backRowCount++;
         }
         else
@@ -54,18 +69,18 @@ public class Party : IEnumerable<Battler>
     public IEnumerable<Battler> GetBackRowMembers()
     {
         for (int i = 0; i < _backRowCount; i++)
-            yield return _members[MAX_MEMBERS_ROW + i];
+            yield return _members[MaxMembersRow + i];
     }
     public Battler GetFrontRowMember(int index) => index < _frontRowCount ? _members[index] : null;
-    public Battler GetBackRowMember(int index) => index < _backRowCount ? _members[MAX_MEMBERS_ROW + index] : null;
-    public Battler GetMember(int index) => index < _frontRowCount ? _members[index] : _members[MAX_MEMBERS_ROW + index];
+    public Battler GetBackRowMember(int index) => index < _backRowCount ? _members[MaxMembersRow + index] : null;
+    public Battler GetMember(int index) => index < _frontRowCount ? _members[index] : _members[MaxMembersRow + index];
 
     public IEnumerator<Battler> GetEnumerator()
     {
         for (int i = 0; i < _frontRowCount; i++)
             yield return _members[i];
         for (int i = 0; i < _backRowCount; i++)
-            yield return _members[MAX_MEMBERS_ROW + i];
+            yield return _members[MaxMembersRow + i];
     }
 
     IEnumerator IEnumerable.GetEnumerator()

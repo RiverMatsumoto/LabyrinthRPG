@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://sw6qry1lujeb" path="res://src/scenes/EnemyUI.tscn" id="5_dm5l0"]
 [ext_resource type="Script" uid="uid://b02xdj7syr8wl" path="res://src/game/battle_system/adapters/GodotActionExecutor.cs" id="5_hil36"]
 [ext_resource type="Resource" uid="uid://otq2qvbdljlq" path="res://resources/damage_calculator_registry.tres" id="6_uypl0"]
+[ext_resource type="Resource" uid="uid://d1t10vc51pq5i" path="res://resources/battler_base_registry.tres" id="7_t05xm"]
 [ext_resource type="Resource" uid="uid://tjvmilw04e32" path="res://resources/action_registry.tres" id="7_tkq1c"]
 [ext_resource type="PackedScene" uid="uid://bonw1arp83h85" path="res://src/scenes/ActionAnim.tscn" id="9_c6528"]
 [ext_resource type="Resource" uid="uid://brxya4owc6vbc" path="res://resources/animation_registry.tres" id="10_a858l"]
@@ -37,7 +38,8 @@ targetSelectionUI = NodePath("Scripts/TargetSelection")
 actionSelectionMenu = NodePath("BattleMenu/ActionSelection")
 backgroundTexture = NodePath("Background")
 damageCalculatorRegistry = ExtResource("6_uypl0")
-_actionRegistry = ExtResource("7_tkq1c")
+actionRegistry = ExtResource("7_tkq1c")
+battlerBaseRegistry = ExtResource("7_t05xm")
 
 [node name="EffectsUI" type="CanvasLayer" parent="." unique_id=319205588]
 layer = 5

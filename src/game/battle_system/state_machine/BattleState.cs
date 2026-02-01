@@ -81,7 +81,21 @@ public sealed class TurnResolutionPhase : BattleState
         if (CheckBattleEndConditions())
             return;
 
-        if (_currentTurn.IsComplete)
+        // Find the next valid action from a living source
+        BattleAction battleAction = null;
+        while (!_currentTurn.IsComplete)
+        {
+            var candidateAction = _currentTurn.GetNextAction();
+            if (candidateAction.Source.IsAlive)
+            {
+                battleAction = candidateAction;
+                break;
+            }
+            GD.Print($"Skipping action from dead battler: {candidateAction.Source.Stats.Name}");
+        }
+
+        // If no valid action was found (turn end)
+        if (battleAction == null)
         {
             GD.Print("Turn complete! Starting new turn...");
             // Reset turn plan for next turn
@@ -90,16 +104,6 @@ public sealed class TurnResolutionPhase : BattleState
 
             // Go back to action selection
             TransitionTo(typeof(ActionSelectionPhase));
-            return;
-        }
-
-        var battleAction = _currentTurn.GetNextAction();
-
-        // Skip if source is dead
-        if (!battleAction.Source.IsAlive)
-        {
-            GD.Print($"Skipping action from dead battler: {battleAction.Source.Stats.Name}");
-            ExecuteNextAction();
             return;
         }
 

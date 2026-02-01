@@ -14,6 +14,6 @@ public sealed partial class ActionSelectionMenu : Control
 
     public void SelectAction(string actionId)
     {
-        EmitSignal(nameof(SelectedAction), actionId);
+        EmitSignal(SignalName.SelectedAction, actionId);
     }
 }

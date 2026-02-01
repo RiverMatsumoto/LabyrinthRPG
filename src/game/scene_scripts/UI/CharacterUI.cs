@@ -34,13 +34,13 @@ public partial class CharacterUI : BattlerUI
     public void UpdateHealth()
     {
         HpValueText.Text = Battler.Stats.Hp.Value.ToString();
-        HpProgressBar.Value = Battler.Stats.Hp.Value / Battler.Stats.MaxHp.Value;
+        HpProgressBar.Value = (float)Battler.Stats.Hp.Value / Battler.Stats.MaxHp.Value;
     }
 
     public void UpdateTp()
     {
         TpValueText.Text = Battler.Stats.Tp.ToString();
-        TpProgressBar.Value = Battler.Stats.Tp / Battler.Stats.MaxTp;
+        TpProgressBar.Value = (float)Battler.Stats.Tp / Battler.Stats.MaxTp;
     }
 
     private void OnGuiInput(InputEvent @event)
@@ -59,7 +59,7 @@ public partial class CharacterUI : BattlerUI
     public override void _ExitTree()
     {
         GuiInput -= OnGuiInput;
-        if (Battler?.Stats?.Hp != null)
+        if (Battler.Stats.Hp != null)
         {
             Battler.Stats.Hp.OnChanged -= (new_hp) => UpdateHealth();
         }
