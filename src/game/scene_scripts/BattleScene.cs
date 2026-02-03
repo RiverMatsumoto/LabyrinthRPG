@@ -10,6 +10,10 @@ public partial class BattleScene : Control
     [Export] public EnemyRegistry enemyRegistry;
 
     // UI START
+    [Export] public CanvasLayer PlayerPartyUI;
+    [Export] public CanvasLayer EnemyPartyUI;
+    [Export] public CanvasLayer BattleMenuUI;
+    [Export] public CanvasLayer EffectsUI;
     [Export] public HBoxContainer PlayerPartyFrontRowContainer;
     [Export] public HBoxContainer PlayerPartyBackRowContainer;
     [Export] public PackedScene characterUIPackedScene;
@@ -50,6 +54,8 @@ public partial class BattleScene : Control
     {
         this.encounterData = encounterData;
         GD.Print("=== Battle System Start ===");
+        // unhide battle ui canvas layers on for battle scene, gets
+        ShowAllUI();
 
         var (playerParty, enemyParty) = SetupParties(encounterData);
         var battlerUINodes = SetupBattleUI(playerParty, enemyParty);
@@ -153,6 +159,22 @@ public partial class BattleScene : Control
         }
     }
 
+    public void HideAllUI()
+    {
+        EffectsUI.Hide();
+        PlayerPartyUI.Hide();
+        EnemyPartyUI.Hide();
+        BattleMenuUI.Hide();
+    }
+
+    public void ShowAllUI()
+    {
+        EffectsUI.Show();
+        PlayerPartyUI.Show();
+        EnemyPartyUI.Show();
+        BattleMenuUI.Show();
+    }
+
     public void ClearAllPartyMembers()
     {
         ClearContainer(PlayerPartyFrontRowContainer);
@@ -177,6 +199,7 @@ public partial class BattleScene : Control
         // Hide players
         // Hide BattleUI
         // Hide background
+        HideAllUI();
         // emit battle finished
 
     }

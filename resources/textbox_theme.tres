@@ -1,0 +1,59 @@
+[gd_resource type="Theme" format=3 uid="uid://d0fpdagd1encx"]
+
+[ext_resource type="FontFile" uid="uid://cklb3r4r4pk5" path="res://resources/fonts/Neuton-Regular.ttf" id="1_d873u"]
+
+[sub_resource type="Gradient" id="Gradient_d873u"]
+offsets = PackedFloat32Array(0.002368582, 1)
+colors = PackedColorArray(0.75200003, 0.94, 0.88046664, 1, 0.846, 1, 0.79, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_non5j"]
+gradient = SubResource("Gradient_d873u")
+fill_from = Vector2(0.5009025, 0)
+fill_to = Vector2(0.43843576, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ypbpu"]
+texture = SubResource("GradientTexture2D_non5j")
+modulate_color = Color(0.52, 0.52, 0.52, 0.60784316)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_d873u"]
+texture = SubResource("GradientTexture2D_non5j")
+modulate_color = Color(0.59000003, 1, 0.6446667, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_non5j"]
+texture = SubResource("GradientTexture2D_non5j")
+modulate_color = Color(0.5882353, 1, 0.6431373, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_aweay"]
+texture = SubResource("GradientTexture2D_non5j")
+modulate_color = Color(0.5882353, 1, 0.6431373, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4hnk1"]
+texture = SubResource("GradientTexture2D_non5j")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_e7kbc"]
+texture = SubResource("GradientTexture2D_non5j")
+modulate_color = Color(0.48380002, 0.82, 0.5286267, 1)
+
+[resource]
+default_font = ExtResource("1_d873u")
+Button/colors/font_color = Color(0, 0, 0, 1)
+Button/colors/font_disabled_color = Color(0, 0, 0, 0.7254902)
+Button/colors/font_focus_color = Color(0.1, 0.1, 0.1, 1)
+Button/colors/font_hover_color = Color(0.08, 0.08, 0.08, 1)
+Button/colors/font_hover_pressed_color = Color(0.16, 0.16, 0.16, 1)
+Button/colors/font_pressed_color = Color(0, 0, 0, 1)
+Button/colors/icon_focus_color = Color(0.14147624, 0.30208123, 0.8494294, 1)
+Button/colors/icon_hover_color = Color(0.37, 0.48549992, 1, 1)
+Button/colors/icon_hover_pressed_color = Color(0.14117648, 0.3019608, 0.8509804, 1)
+Button/colors/icon_normal_color = Color(0.90999997, 0.9235, 1, 1)
+Button/colors/icon_pressed_color = Color(0.51, 0.5508333, 1, 1)
+Button/styles/disabled = SubResource("StyleBoxTexture_ypbpu")
+Button/styles/focus = SubResource("StyleBoxTexture_d873u")
+Button/styles/hover = SubResource("StyleBoxTexture_non5j")
+Button/styles/hover_pressed = SubResource("StyleBoxTexture_aweay")
+Button/styles/normal = SubResource("StyleBoxTexture_4hnk1")
+Button/styles/pressed = SubResource("StyleBoxTexture_e7kbc")
+RichTextLabel/colors/default_color = Color(0.0048999996, 0.07, 0.040705014, 1)
+RichTextLabel/colors/font_outline_color = Color(0.81, 1, 0.9303333, 1)
+RichTextLabel/colors/font_shadow_color = Color(0, 0, 0, 0.16078432)
+RichTextLabel/constants/outline_size = 0

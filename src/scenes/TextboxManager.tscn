@@ -1,9 +1,22 @@
-[gd_scene load_steps=3 format=3 uid="uid://c7n88tqx78we7"]
+[gd_scene format=3 uid="uid://c7n88tqx78we7"]
 
+[ext_resource type="Theme" uid="uid://d0fpdagd1encx" path="res://resources/textbox_theme.tres" id="1_knpn8"]
 [ext_resource type="Script" uid="uid://qe7ah7suqmss" path="res://src/game/dialogue/TextboxManager.cs" id="1_xrmsa"]
 [ext_resource type="PackedScene" uid="uid://crhpr2qsh3xe3" path="res://src/scenes/ChoiceButton.tscn" id="2_5efo7"]
 
-[node name="TextboxManager" type="Control" node_paths=PackedStringArray("textboxContainer", "textbox", "choiceButtonContainerNode")]
+[sub_resource type="Gradient" id="Gradient_knpn8"]
+offsets = PackedFloat32Array(0, 0.4815118, 1)
+colors = PackedColorArray(0.55862474, 0.8506056, 0.600511, 1, 0.611, 0.94, 0.61648333, 1, 0.48509997, 0.77, 0.60380834, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_3t2yu"]
+gradient = SubResource("Gradient_knpn8")
+fill_from = Vector2(0.6368147, 0.03915454)
+fill_to = Vector2(0.49344933, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_au020"]
+texture = SubResource("GradientTexture2D_3t2yu")
+
+[node name="TextboxManager" type="Control" unique_id=1819209699 node_paths=PackedStringArray("textboxContainer", "textbox", "choiceButtonContainerNode")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,13 +24,14 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
+theme = ExtResource("1_knpn8")
 script = ExtResource("1_xrmsa")
 textboxContainer = NodePath("TextboxContainer")
 textbox = NodePath("TextboxContainer/Textbox")
 choiceButtonContainerNode = NodePath("TextboxContainer/ChoiceButtonContainer")
 choiceButtonScene = ExtResource("2_5efo7")
 
-[node name="Background" type="Panel" parent="."]
+[node name="Background" type="Panel" parent="." unique_id=341216505]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 1.0
@@ -29,8 +43,9 @@ offset_right = -56.0
 offset_bottom = -39.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxTexture_au020")
 
-[node name="TextboxContainer" type="VBoxContainer" parent="."]
+[node name="TextboxContainer" type="VBoxContainer" parent="." unique_id=1952278780]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -43,7 +58,7 @@ offset_bottom = -52.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="Textbox" type="RichTextLabel" parent="TextboxContainer"]
+[node name="Textbox" type="RichTextLabel" parent="TextboxContainer" unique_id=1367369520]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/normal_font_size = 36
@@ -55,5 +70,5 @@ text = "Hello"
 scroll_active = false
 visible_characters = 5
 
-[node name="ChoiceButtonContainer" type="HBoxContainer" parent="TextboxContainer"]
+[node name="ChoiceButtonContainer" type="HBoxContainer" parent="TextboxContainer" unique_id=452374341]
 layout_mode = 2

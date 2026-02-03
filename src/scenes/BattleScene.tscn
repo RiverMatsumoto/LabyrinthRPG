@@ -17,7 +17,7 @@
 [ext_resource type="Script" uid="uid://b7bk8l4b0xv6e" path="res://src/game/scene_scripts/UI/TargetSelectionUI.cs" id="12_tl7b7"]
 [ext_resource type="Script" uid="uid://cihpdvt4pv2hj" path="res://src/game/scene_scripts/UI/ActionSelectionMenu.cs" id="13_tkq1c"]
 
-[node name="BattleScene" type="Control" unique_id=1294911769 node_paths=PackedStringArray("actionExecutor", "PlayerPartyFrontRowContainer", "PlayerPartyBackRowContainer", "battleMenu", "enemyContainer", "targetSelectionUI", "actionSelectionMenu", "backgroundTexture")]
+[node name="BattleScene" type="Control" unique_id=1294911769 node_paths=PackedStringArray("actionExecutor", "PlayerPartyUI", "EnemyPartyUI", "BattleMenuUI", "EffectsUI", "PlayerPartyFrontRowContainer", "PlayerPartyBackRowContainer", "battleMenu", "enemyContainer", "targetSelectionUI", "actionSelectionMenu", "backgroundTexture")]
 z_index = -10
 layout_mode = 3
 anchors_preset = 15
@@ -28,6 +28,10 @@ grow_vertical = 2
 script = ExtResource("1_rubm6")
 actionExecutor = NodePath("Scripts/ActionExecutor")
 enemyRegistry = ExtResource("3_dm5l0")
+PlayerPartyUI = NodePath("PlayerParty")
+EnemyPartyUI = NodePath("EnemyParty")
+BattleMenuUI = NodePath("BattleMenu")
+EffectsUI = NodePath("EffectsUI")
 PlayerPartyFrontRowContainer = NodePath("PlayerParty/VBoxContainer/FrontRow")
 PlayerPartyBackRowContainer = NodePath("PlayerParty/VBoxContainer/BackRow")
 characterUIPackedScene = ExtResource("1_acp3n")

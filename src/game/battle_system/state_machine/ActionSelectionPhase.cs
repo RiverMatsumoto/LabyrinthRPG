@@ -9,7 +9,7 @@ using Godot;
 /// </summary>
 public sealed class ActionSelectionPhase : BattleState
 {
-    private List<Battler> _playerBattlers;
+    private IReadOnlyList<Battler> _playerBattlers;
     private int _currentBattlerIndex;
     private Battler _currentBattler;
     private ActionDef _selectedAction;
@@ -31,7 +31,8 @@ public sealed class ActionSelectionPhase : BattleState
     {
 
         // Get all alive player battlers
-        _playerBattlers = Bs.ctx.Model.playerParty.Where(b => b.IsAlive).ToList();
+        // _playerBattlers = Bs.ctx.Model.playerParty.Where(b => b.IsAlive).ToList();
+        _playerBattlers = Bs.ctx.Model.playerParty.GetAllBattlersAsList();
         _currentBattlerIndex = 0;
 
         if (_playerBattlers.Count == 0)

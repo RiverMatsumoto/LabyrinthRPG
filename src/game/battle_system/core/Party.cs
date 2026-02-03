@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 
 [Serializable]
@@ -66,14 +67,45 @@ public class Party : IEnumerable<Battler>
         for (int i = 0; i < _frontRowCount; i++)
             yield return _members[i];
     }
+
     public IEnumerable<Battler> GetBackRowMembers()
     {
         for (int i = 0; i < _backRowCount; i++)
             yield return _members[MaxMembersRow + i];
     }
+
+    public IReadOnlyList<Battler> GetFrontRowBattlersAsList()
+    {
+        List<Battler> battlers = new List<Battler>();
+        for (int i = 0; i < _frontRowCount; i++)
+            battlers.Add(_members[i]);
+        return battlers;
+    }
+
+    public IReadOnlyList<Battler> GetBackRowBattlersAsList()
+    {
+        List<Battler> battlers = new List<Battler>();
+        for (int i = 0; i < _backRowCount; i++)
+            battlers.Add(_members[MaxMembersRow + i]);
+        return battlers;
+    }
+
+    // Front row battlers are first, mostly if you wanted to index the battlers as if it was an array
+    // You lose front row and back row information using this method
+    public IReadOnlyList<Battler> GetAllBattlersAsList()
+    {
+        List<Battler> battlers = new List<Battler>();
+        for (int i = 0; i < _frontRowCount; i++)
+            battlers.Add(_members[i]);
+        for (int i = 0; i < _backRowCount; i++)
+            battlers.Add(_members[MaxMembersRow + i]);
+        return battlers;
+    }
+
     public Battler GetFrontRowMember(int index) => index < _frontRowCount ? _members[index] : null;
     public Battler GetBackRowMember(int index) => index < _backRowCount ? _members[MaxMembersRow + index] : null;
     public Battler GetMember(int index) => index < _frontRowCount ? _members[index] : _members[MaxMembersRow + index];
+    // public IReadOnlyList<Battler> GetAllBattlers() =>
 
     public IEnumerator<Battler> GetEnumerator()
     {

@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://crhpr2qsh3xe3"]
 
-[node name="ChoiceButton" type="Button"]
+[ext_resource type="Theme" uid="uid://d0fpdagd1encx" path="res://resources/textbox_theme.tres" id="1_jw1lw"]
+
+[node name="ChoiceButton" type="Button" unique_id=2124629847]
 size_flags_horizontal = 3
+theme = ExtResource("1_jw1lw")
 theme_override_font_sizes/font_size = 36
 text = "Choice"
