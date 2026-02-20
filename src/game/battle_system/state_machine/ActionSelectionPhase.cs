@@ -24,7 +24,7 @@ public sealed class ActionSelectionPhase : BattleState
 
     public ActionSelectionPhase(BattleScene bs) : base(bs)
     {
-        Bs.actionSelectionMenu.SelectedAction += OnActionSelected;
+        Bs.ActionSelectionMenu.SelectedAction += OnActionSelected;
     }
 
     public override void Enter()
@@ -32,7 +32,7 @@ public sealed class ActionSelectionPhase : BattleState
 
         // Get all alive player battlers
         // _playerBattlers = Bs.ctx.Model.playerParty.Where(b => b.IsAlive).ToList();
-        _playerBattlers = Bs.ctx.Model.playerParty.GetAllBattlersAsList();
+        _playerBattlers = Bs.Ctx.Model.playerParty.GetAllBattlersAsList();
         _currentBattlerIndex = 0;
 
         if (_playerBattlers.Count == 0)
@@ -53,8 +53,8 @@ public sealed class ActionSelectionPhase : BattleState
     public override void Exit()
     {
         // Clean up UI state
-        Bs.battleMenu?.Hide();
-        Bs.targetSelectionUI?.HideTargetSelection();
+        Bs.BattleMenu.Hide();
+        Bs.TargetSelectionUI.HideTargetSelection();
     }
 
     private void ShowActionMenuForCurrentBattler()
@@ -69,7 +69,7 @@ public sealed class ActionSelectionPhase : BattleState
         // Replace this with actual UI menu logic
         // _selectedAction = Bs._actionRegistry.Get("FireAttack"); // or "BasicAttack"
         // OnActionSelected(_selectedAction);
-        Bs.actionSelectionMenu.Show();
+        Bs.ActionSelectionMenu.Show();
     }
 
     /// <summary>
@@ -79,7 +79,7 @@ public sealed class ActionSelectionPhase : BattleState
     public void OnActionSelected(string actionId)
     {
         // resolve actionId
-        Bs.actionSelectionMenu.Hide();
+        Bs.ActionSelectionMenu.Hide();
         var action = Util.GetGameGlobals(Bs).ActionRegistry.Get(actionId);
 
         _selectedAction = action;
@@ -94,10 +94,10 @@ public sealed class ActionSelectionPhase : BattleState
         GD.Print($"Selecting targets for: {action.Name}");
 
         // Show target selection UI
-        Bs.targetSelectionUI.ShowTargetSelection(
+        Bs.TargetSelectionUI.ShowTargetSelection(
             rule: action.TargetRule,
             source: _currentBattler,
-            ctx: Bs.ctx
+            ctx: Bs.Ctx
         );
 
         // Connect to target selection completion (using method references, not signals)
@@ -108,17 +108,17 @@ public sealed class ActionSelectionPhase : BattleState
     private void ConnectTargetSelectionCallbacks()
     {
         // Connect signals for target selection
-        Bs.targetSelectionUI.TargetSelected += OnTargetSelected;
-        Bs.targetSelectionUI.TargetSelectionCancelled += OnTargetSelectionCancelled;
+        Bs.TargetSelectionUI.TargetSelected += OnTargetSelected;
+        Bs.TargetSelectionUI.TargetSelectionCancelled += OnTargetSelectionCancelled;
     }
 
     private void DisconnectTargetSelectionCallbacks()
     {
         // Disconnect signals
-        if (Bs.targetSelectionUI != null)
+        if (Bs.TargetSelectionUI != null)
         {
-            Bs.targetSelectionUI.TargetSelected -= OnTargetSelected;
-            Bs.targetSelectionUI.TargetSelectionCancelled -= OnTargetSelectionCancelled;
+            Bs.TargetSelectionUI.TargetSelected -= OnTargetSelected;
+            Bs.TargetSelectionUI.TargetSelectionCancelled -= OnTargetSelectionCancelled;
         }
     }
 
@@ -142,7 +142,7 @@ public sealed class ActionSelectionPhase : BattleState
             Priority: CalculatePriority(_currentBattler, _selectedAction)
         );
 
-        Bs.ctx.TurnPlan.AddAction(battleAction);
+        Bs.Ctx.TurnPlan.AddAction(battleAction);
 
         GD.Print($"Added action to turn plan: {_selectedAction.Name} by {_currentBattler.Stats.Name}");
 
@@ -177,8 +177,8 @@ public sealed class ActionSelectionPhase : BattleState
             Targeting.SingleEnemy => new List<Battler> { selectedTarget },
             Targeting.SingleAlly => new List<Battler> { selectedTarget },
             Targeting.Self => new List<Battler> { _currentBattler },
-            Targeting.AllEnemies => Bs.ctx.Model.enemyParty.Where(b => b.IsAlive).ToList(),
-            Targeting.AllAllies => Bs.ctx.Model.playerParty.Where(b => b.IsAlive).ToList(),
+            Targeting.AllEnemies => Bs.Ctx.Model.enemyParty.Where(b => b.IsAlive).ToList(),
+            Targeting.AllAllies => Bs.Ctx.Model.playerParty.Where(b => b.IsAlive).ToList(),
             // TODO: Implement row-based targeting
             // Targeting.RowEnemies => GetEnemiesInSameRow(selectedTarget),
             // Targeting.RowAllies => GetAlliesInSameRow(selectedTarget),
@@ -237,7 +237,7 @@ public sealed class ActionSelectionPhase : BattleState
     {
         GD.Print("Planning enemy actions...");
 
-        foreach (var enemy in Bs.ctx.Model.enemyParty.Where(e => e.IsAlive))
+        foreach (var enemy in Bs.Ctx.Model.enemyParty.Where(e => e.IsAlive))
         {
             // Simple AI: Pick a random action and target
             // TODO: Implement proper AI logic
@@ -251,7 +251,7 @@ public sealed class ActionSelectionPhase : BattleState
                 Priority: CalculatePriority(enemy, action)
             );
 
-            Bs.ctx.TurnPlan.AddAction(battleAction);
+            Bs.Ctx.TurnPlan.AddAction(battleAction);
             GD.Print($"Enemy action planned: {action.Name} by {enemy.Stats.Name}");
         }
     }
@@ -263,7 +263,7 @@ public sealed class ActionSelectionPhase : BattleState
     {
         // TODO: Implement proper AI action selection
         // For now, just return a basic attack or random skill
-        return Bs.actionRegistry.Get("BasicAttack");
+        return Bs.ActionRegistry.Get("BasicAttack");
     }
 
     /// <summary>
@@ -272,7 +272,7 @@ public sealed class ActionSelectionPhase : BattleState
     private List<Battler> SelectEnemyTargets(Battler enemy, ActionDef action)
     {
         // Select targets based on action's targeting rule
-        var validTargets = TargetSelector.GetValidTargets(action.TargetRule, enemy, Bs.ctx.Model, sourceIsEnemy: true);
+        var validTargets = TargetSelector.GetValidTargets(action.TargetRule, enemy, Bs.Ctx.Model, sourceIsEnemy: true);
 
         if (validTargets.Count == 0)
             return new List<Battler>();
@@ -280,7 +280,7 @@ public sealed class ActionSelectionPhase : BattleState
         // For single target, pick randomly (or use AI logic)
         if (action.TargetRule == Targeting.SingleAlly || action.TargetRule == Targeting.SingleEnemy)
         {
-            int randomIndex = Bs.ctx.Rng.RandiRange(0, validTargets.Count - 1);
+            int randomIndex = Bs.Ctx.Rng.RandiRange(0, validTargets.Count - 1);
             return new List<Battler> { validTargets[randomIndex] };
         }
 
@@ -293,7 +293,7 @@ public sealed class ActionSelectionPhase : BattleState
     /// </summary>
     private void SortTurnPlan()
     {
-        Bs.ctx.TurnPlan.PlannedActions.Sort((a, b) => b.Priority.CompareTo(a.Priority));
-        GD.Print($"Turn order determined! {Bs.ctx.TurnPlan.PlannedActions.Count} actions planned.");
+        Bs.Ctx.TurnPlan.PlannedActions.Sort((a, b) => b.Priority.CompareTo(a.Priority));
+        GD.Print($"Turn order determined! {Bs.Ctx.TurnPlan.PlannedActions.Count} actions planned.");
     }
 }

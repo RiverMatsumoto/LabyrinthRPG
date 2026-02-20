@@ -49,7 +49,7 @@ public sealed class TurnResolutionPhase : BattleState
 
     public TurnResolutionPhase(BattleScene bs) : base(bs)
     {
-        _currentTurn = bs.ctx.TurnPlan;
+        _currentTurn = bs.Ctx.TurnPlan;
     }
 
     public override void Enter()
@@ -64,7 +64,7 @@ public sealed class TurnResolutionPhase : BattleState
         }
 
         // Configure action executor
-        Bs.actionExecutor.ActionFinished += OnActionFinished;
+        Bs.ActionExecutor.ActionFinished += OnActionFinished;
 
         // Start executing actions
         ExecuteNextAction();
@@ -72,7 +72,7 @@ public sealed class TurnResolutionPhase : BattleState
 
     public override void Exit()
     {
-        Bs.actionExecutor.ActionFinished -= OnActionFinished;
+        Bs.ActionExecutor.ActionFinished -= OnActionFinished;
     }
 
     private void ExecuteNextAction()
@@ -110,12 +110,12 @@ public sealed class TurnResolutionPhase : BattleState
         GD.Print($"Executing: {battleAction.ActionDef.Name} by {battleAction.Source.Stats.Name}");
 
         // Update context with current action info
-        Bs.ctx.Source = battleAction.Source;
-        Bs.ctx.Targets = battleAction.Targets;
+        Bs.Ctx.Source = battleAction.Source;
+        Bs.Ctx.Targets = battleAction.Targets;
 
         // Configure and execute
-        Bs.actionExecutor.Configure(Bs.ctx);
-        Bs.actionExecutor.ExecutePlanned(battleAction);
+        Bs.ActionExecutor.Configure(Bs.Ctx);
+        Bs.ActionExecutor.ExecutePlanned(battleAction);
     }
 
     private void OnActionFinished()
@@ -126,8 +126,8 @@ public sealed class TurnResolutionPhase : BattleState
 
     private bool CheckBattleEndConditions()
     {
-        bool allEnemiesDead = !Bs.ctx.Model.enemyParty.Any(e => e.IsAlive);
-        bool allPlayersDead = !Bs.ctx.Model.playerParty.Any(p => p.IsAlive);
+        bool allEnemiesDead = !Bs.Ctx.Model.enemyParty.Any(e => e.IsAlive);
+        bool allPlayersDead = !Bs.Ctx.Model.playerParty.Any(p => p.IsAlive);
 
         if (allEnemiesDead)
         {

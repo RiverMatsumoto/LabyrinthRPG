@@ -8,6 +8,8 @@ public partial class ActionAnimator : Node
     [Export] private Node UiRoot; // CanvasLayer or Control to attach sprites to
     [Export] private PackedScene animationScene;
     [Export] private PackedScene damagePopupScene;
+    [Export] private float playerDeathFadeSeconds = 0.15f;
+    [Export] private float enemyDeathFadeSeconds = 0.5f;
     public HashSet<AnimatedSprite2D> animationsRunning;
 
     public override void _Ready()
@@ -54,5 +56,44 @@ public partial class ActionAnimator : Node
     {
         animationsRunning.Remove(anim);
         anim.QueueFree();
+    }
+
+    public Tween PlayDeathAnimPlayer(BattlerUI target, float speed)
+    {
+        if (target == null)
+            throw new System.Exception("ActionAnimator: target not set.");
+
+        var tween = target.CreateTween();
+        var toColor = new Color(0.5f, 0.5f, 0.5f, 1.0f);
+        tween.TweenProperty(
+            target,
+            "modulate",
+            toColor,
+            ScaleSeconds(playerDeathFadeSeconds, speed)
+        ).SetTrans(Tween.TransitionType.Sine).SetEase(Tween.EaseType.Out);
+        return tween;
+    }
+
+    public Tween PlayDeathAnimEnemy(BattlerUI target, float speed)
+    {
+        if (target == null)
+            throw new System.Exception("ActionAnimator: target not set.");
+
+        var tween = target.CreateTween();
+        var current = target.Modulate;
+        var toColor = new Color(current.R, current.G, current.B, 0.0f);
+        tween.TweenProperty(
+            target,
+            "modulate",
+            toColor,
+            ScaleSeconds(enemyDeathFadeSeconds, speed)
+        ).SetTrans(Tween.TransitionType.Sine).SetEase(Tween.EaseType.Out);
+        return tween;
+    }
+
+    private static float ScaleSeconds(float seconds, float speed)
+    {
+        if (speed <= 0.0001f) return seconds;
+        return seconds / speed;
     }
 }

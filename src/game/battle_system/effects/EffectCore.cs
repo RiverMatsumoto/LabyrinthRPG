@@ -65,17 +65,10 @@ public enum Status
     Sleep,
 }
 
-[GlobalClass]
-public partial class BattlePlaybackOptions : RefCounted
+public class BattlePlaybackOptions
 {
     public bool SkipWaits { get; set; } = false;
     public float Speed { get; set; } = 1.0f; // 1 = normal, 2 = 2x, etc.
-}
-
-
-public abstract record EffectDef
-{
-    public abstract Task ExecuteAsync(BattleRunCtx ctx, CancellationToken ct);
 }
 
 public sealed record WaitSecondsEffect(float Seconds) : IEffect

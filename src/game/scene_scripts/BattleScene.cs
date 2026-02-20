@@ -6,8 +6,11 @@ public partial class BattleScene : Control
 {
     [Signal] public delegate void BattleFinishedEventHandler();
 
-    [Export] public GodotActionExecutor actionExecutor;
-    [Export] public EnemyRegistry enemyRegistry;
+    [Export] public GodotActionExecutor ActionExecutor;
+    [Export] public EnemyRegistry EnemyRegistry;
+    [Export] public DamageCalculatorRegistry DamageCalculatorRegistry;
+    [Export] public ActionRegistry ActionRegistry;
+    [Export] public BattlerBaseRegistry BattlerBaseRegistry;
 
     // UI START
     [Export] public CanvasLayer PlayerPartyUI;
@@ -16,32 +19,29 @@ public partial class BattleScene : Control
     [Export] public CanvasLayer EffectsUI;
     [Export] public HBoxContainer PlayerPartyFrontRowContainer;
     [Export] public HBoxContainer PlayerPartyBackRowContainer;
-    [Export] public PackedScene characterUIPackedScene;
-    [Export] public PackedScene enemyUIPackedScene;
-    [Export] public Control battleMenu;
-    [Export] public HBoxContainer enemyContainer;
-    [Export] public TargetSelectionUI targetSelectionUI;
-    [Export] public ActionSelectionMenu actionSelectionMenu;
-    [Export] public TextureRect backgroundTexture;
+    [Export] public PackedScene CharacterUIPackedScene;
+    [Export] public PackedScene EnemyUIPackedScene;
+    [Export] public Control BattleMenu;
+    [Export] public HBoxContainer EnemyContainer;
+    [Export] public TargetSelectionUI TargetSelectionUI;
+    [Export] public ActionSelectionMenu ActionSelectionMenu;
+    [Export] public TextureRect BackgroundTexture;
     // UI END
 
-    [Export] public DamageCalculatorRegistry damageCalculatorRegistry;
-    [Export] public ActionRegistry actionRegistry;
-    [Export] public BattlerBaseRegistry battlerBaseRegistry;
+    public EncounterData EncounterData;
     private BattleStateMachine battleStateMachine;
     private Queue<ActionDef> actionQueue;
-    public EncounterData encounterData;
 
     // Context for the current battle.
-    public BattleRunCtx ctx;
+    public BattleRunCtx Ctx;
 
     public override void _Ready()
     {
         LoadSaveData();
         // gameState =
         actionQueue = new();
-        backgroundTexture.Hide();
-        actionSelectionMenu.Hide();
+        BackgroundTexture.Hide();
+        ActionSelectionMenu.Hide();
     }
 
     public void LoadSaveData()
@@ -52,7 +52,7 @@ public partial class BattleScene : Control
 
     public void StartBattle(EncounterData encounterData)
     {
-        this.encounterData = encounterData;
+        this.EncounterData = encounterData;
         GD.Print("=== Battle System Start ===");
         // unhide battle ui canvas layers on for battle scene, gets
         ShowAllUI();
@@ -66,12 +66,12 @@ public partial class BattleScene : Control
     private (Party playerParty, Party enemyParty) SetupParties(EncounterData encounterData)
     {
         // TODO: Replace with actual character creator/loader later
-        Party playerParty = battlerBaseRegistry.GetDebugParty();
+        Party playerParty = BattlerBaseRegistry.GetDebugParty();
 
         Party enemyParty = new Party(maxMembersRow: 5);
         for (int i = 0; i < encounterData.Enemies.Count; i++)
         {
-            var enemy = new Battler(enemyRegistry.GetEnemy(encounterData.Enemies[i]));
+            var enemy = new Battler(EnemyRegistry.GetEnemy(encounterData.Enemies[i]));
             enemyParty.AddToFrontRow(enemy);
         }
 
@@ -84,17 +84,17 @@ public partial class BattleScene : Control
 
         foreach (Battler member in playerParty.GetFrontRowMembers())
         {
-            var memberNode = AddBattlerUI(member, characterUIPackedScene, PlayerPartyFrontRowContainer);
+            var memberNode = AddBattlerUI(member, CharacterUIPackedScene, PlayerPartyFrontRowContainer);
             battlerUINodes.Add(member, memberNode);
         }
         foreach (Battler member in playerParty.GetBackRowMembers())
         {
-            var memberNode = AddBattlerUI(member, characterUIPackedScene, PlayerPartyBackRowContainer);
+            var memberNode = AddBattlerUI(member, CharacterUIPackedScene, PlayerPartyBackRowContainer);
             battlerUINodes.Add(member, memberNode);
         }
         foreach (Battler enemy in enemyParty)
         {
-            var enemyNode = AddBattlerUI(enemy, enemyUIPackedScene, enemyContainer);
+            var enemyNode = AddBattlerUI(enemy, EnemyUIPackedScene, EnemyContainer);
             battlerUINodes.Add(enemy, enemyNode);
         }
 
@@ -109,15 +109,15 @@ public partial class BattleScene : Control
             enemyParty = enemyParty
         };
 
-        ctx = new BattleRunCtx(
+        Ctx = new BattleRunCtx(
             model: battleModel,
             turnPlan: new TurnPlan(),
             targetNodes: battlerUINodes,
-            damageRegistry: damageCalculatorRegistry,
+            damageRegistry: DamageCalculatorRegistry,
             rng: new RandomNumberGenerator()
         );
 
-        actionExecutor.Configure(ctx);
+        ActionExecutor.Configure(Ctx);
 
         // Initialize battle state machine BEFORE it starts transitioning states
         battleStateMachine = new BattleStateMachine(this);
@@ -126,8 +126,8 @@ public partial class BattleScene : Control
 
     public void InitializeUI()
     {
-        backgroundTexture.Show();
-        battleMenu.Show();
+        BackgroundTexture.Show();
+        BattleMenu.Show();
     }
 
     private BattlerUI AddBattlerUI(Battler battler, PackedScene scene, Control container)
@@ -142,20 +142,20 @@ public partial class BattleScene : Control
     // Kept for compatibility if other scripts call these specific methods,
     // but they now use the generic helper.
     public BattlerUI AddPartyMemberFrontRow(Battler member) =>
-        AddBattlerUI(member, characterUIPackedScene, PlayerPartyFrontRowContainer);
+        AddBattlerUI(member, CharacterUIPackedScene, PlayerPartyFrontRowContainer);
 
     public BattlerUI AddPartyMemberBackRow(Battler member) =>
-        AddBattlerUI(member, characterUIPackedScene, PlayerPartyBackRowContainer);
+        AddBattlerUI(member, CharacterUIPackedScene, PlayerPartyBackRowContainer);
 
     public BattlerUI AddEnemyToBattle(Battler enemy) =>
-        AddBattlerUI(enemy, enemyUIPackedScene, enemyContainer);
+        AddBattlerUI(enemy, EnemyUIPackedScene, EnemyContainer);
 
     private void OnBattlerUIClicked(BattlerUI battlerUI)
     {
         // Forward click to target selection UI if it's active
-        if (targetSelectionUI != null && targetSelectionUI.IsActive())
+        if (TargetSelectionUI != null && TargetSelectionUI.IsActive())
         {
-            targetSelectionUI.HandleTargetClick(battlerUI.Battler);
+            TargetSelectionUI.HandleTargetClick(battlerUI.Battler);
         }
     }
 
@@ -179,7 +179,7 @@ public partial class BattleScene : Control
     {
         ClearContainer(PlayerPartyFrontRowContainer);
         ClearContainer(PlayerPartyBackRowContainer);
-        ClearContainer(enemyContainer);
+        ClearContainer(EnemyContainer);
     }
 
     private void ClearContainer(Control container)

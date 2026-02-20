@@ -19,6 +19,8 @@ public sealed partial class GodotActionExecutor : Node, IActionExecutor
     [Signal] public delegate void ActionFinishedEventHandler();
 
     [Export] private ActionAnimator actionAnimator = default!;
+    [Export] private string playerDeathAnimId = "death_player";
+    [Export] private string enemyDeathAnimId = "death_enemy";
 
     public bool IsRunning => _isRunning;
 
@@ -32,9 +34,13 @@ public sealed partial class GodotActionExecutor : Node, IActionExecutor
     private DamagePopup _currentPopup;
     private SceneTreeTimer _activeTimer;
     private AnimatedSprite2D _currentSprite;
+    private Tween _currentTween;
 
-    private enum ExecutionState { Idle, WaitingTimer, WaitingAnim, WaitingPopup }
+    private enum ExecutionState { Idle, WaitingTimer, WaitingAnim, WaitingPopup, WaitingDeathAnim, WaitingDeathTween }
     private ExecutionState _state = ExecutionState.Idle;
+
+    private readonly HashSet<Battler> _handledDeaths = new();
+    private readonly Queue<Battler> _pendingDeaths = new();
 
     public void Configure(BattleRunCtx ctx) => _ctx = ctx;
 
@@ -87,10 +93,23 @@ public sealed partial class GodotActionExecutor : Node, IActionExecutor
                 }
                 _currentPopup = null;
                 break;
+            case ExecutionState.WaitingDeathAnim:
+                if (_currentSprite != null) _currentSprite.AnimationFinished -= OnDeathAnimationFinished;
+                if (_currentSprite != null) actionAnimator.CleanupAnimation(_currentSprite);
+                _currentSprite = null;
+                break;
+            case ExecutionState.WaitingDeathTween:
+                if (_currentTween != null) _currentTween.Finished -= OnDeathTweenFinished;
+                _currentTween?.Kill();
+                _currentTween = null;
+                break;
         }
 
         _state = ExecutionState.Idle;
-        ExecuteNextEffect();
+        if (_state == ExecutionState.WaitingDeathAnim)
+            ExecuteNextDeathAnim();
+        else
+            ExecuteNextEffect();
     }
 
     private void ExecuteNextEffect()
@@ -153,7 +172,56 @@ public sealed partial class GodotActionExecutor : Node, IActionExecutor
             }
         }
 
-        FinishAction();
+        BeginDeathSequenceOrFinish();
+    }
+
+    private void BeginDeathSequenceOrFinish()
+    {
+        _state = ExecutionState.Idle;
+        _pendingDeaths.Clear();
+
+        foreach (var battler in _ctx.Model.playerParty.Concat(_ctx.Model.enemyParty))
+        {
+            if (!battler.IsAlive && !_handledDeaths.Contains(battler))
+                _pendingDeaths.Enqueue(battler);
+        }
+
+        if (_pendingDeaths.Count == 0)
+        {
+            FinishAction();
+            return;
+        }
+
+        ExecuteNextDeathAnim();
+    }
+
+    private void ExecuteNextDeathAnim()
+    {
+        if (_pendingDeaths.Count == 0)
+        {
+            FinishAction();
+            return;
+        }
+
+        var battler = _pendingDeaths.Dequeue();
+        _handledDeaths.Add(battler);
+
+        var node = _ctx.TargetNodes[battler];
+
+        bool isEnemy = _ctx.Model.enemyParty.Contains(battler);
+        var speed = Util.GetGameGlobals(this).GameSettings.PlaybackOptions.Speed;
+
+        if (isEnemy)
+        {
+            _state = ExecutionState.WaitingDeathTween;
+            _currentTween = actionAnimator.PlayDeathAnimEnemy(node, speed);
+            _currentTween.Finished += OnDeathTweenFinished;
+            return;
+        }
+
+        _state = ExecutionState.WaitingDeathTween;
+        _currentTween = actionAnimator.PlayDeathAnimPlayer(node, speed);
+        _currentTween.Finished += OnDeathTweenFinished;
     }
 
     private void FinishAction()
@@ -195,5 +263,20 @@ public sealed partial class GodotActionExecutor : Node, IActionExecutor
         if (_currentPopup != null) _currentPopup.FinishedDamagePopup -= OnDamagePopupFinished;
         _currentPopup = null;
         ExecuteNextEffect();
+    }
+
+    private void OnDeathAnimationFinished()
+    {
+        if (_currentSprite != null) _currentSprite.AnimationFinished -= OnDeathAnimationFinished;
+        if (_currentSprite != null) actionAnimator.CleanupAnimation(_currentSprite);
+        _currentSprite = null;
+        ExecuteNextDeathAnim();
+    }
+
+    private void OnDeathTweenFinished()
+    {
+        if (_currentTween != null) _currentTween.Finished -= OnDeathTweenFinished;
+        _currentTween = null;
+        ExecuteNextDeathAnim();
     }
 }

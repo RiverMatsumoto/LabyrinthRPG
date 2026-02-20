@@ -14,11 +14,17 @@ public partial class TargetSelectionUI : Node
     [Signal] public delegate void TargetSelectedEventHandler(Battler target);
     [Signal] public delegate void TargetSelectionCancelledEventHandler();
 
+    private enum SelectionState
+    {
+        Inactive,
+        Active
+    }
+
     private BattleRunCtx _ctx = default!;
 
     private List<Battler> _validTargets = new();
     private int _currentIndex = 0;
-    private bool _isActive = false;
+    private SelectionState _state = SelectionState.Inactive;
     private Targeting _currentRule;
 
     // Grid navigation structure: [row][column] = battler
@@ -32,7 +38,7 @@ public partial class TargetSelectionUI : Node
 
     public override void _Input(InputEvent @event)
     {
-        if (!_isActive || _validTargets.Count == 0)
+        if (_state != SelectionState.Active || _validTargets.Count == 0)
             return;
 
         if (@event.IsActionPressed("ui_cancel"))
@@ -57,7 +63,7 @@ public partial class TargetSelectionUI : Node
     /// </summary>
     public void ShowTargetSelection(Targeting rule, Battler source, BattleRunCtx ctx)
     {
-        _ctx = ctx ?? throw new ArgumentNullException(nameof(ctx));
+        _ctx = ctx;
         _currentRule = rule;
 
         // bool sourceIsEnemy = _ctx.Model.enemyParty.Contains(source);
@@ -75,7 +81,19 @@ public partial class TargetSelectionUI : Node
             return;
         }
 
-        _isActive = true;
+        EnterActiveState();
+
+        GD.Print($"Target selection active. {_validTargets.Count} valid targets.");
+    }
+
+    public void HideTargetSelection()
+    {
+        ExitActiveState();
+    }
+
+    private void EnterActiveState()
+    {
+        _state = SelectionState.Active;
         SetProcessInput(true);
 
         BuildTargetGrid();
@@ -85,13 +103,11 @@ public partial class TargetSelectionUI : Node
         UpdateCaretPosition();
         targetCaret.Show();
         targetCaret.Play("default");
-
-        GD.Print($"Target selection active. {_validTargets.Count} valid targets.");
     }
 
-    public void HideTargetSelection()
+    private void ExitActiveState()
     {
-        _isActive = false;
+        _state = SelectionState.Inactive;
         SetProcessInput(false);
         targetCaret.Hide();
         ClearHighlights();
@@ -247,18 +263,20 @@ public partial class TargetSelectionUI : Node
 
         var selected = _validTargets[_currentIndex];
         GD.Print($"Target confirmed: {selected.Stats?.Name ?? "Unknown"}");
+        ExitActiveState();
         EmitSignal(SignalName.TargetSelected, selected);
     }
 
     private void CancelSelection()
     {
         GD.Print("Target selection cancelled");
+        ExitActiveState();
         EmitSignal(SignalName.TargetSelectionCancelled);
     }
 
     public void HandleTargetClick(Battler target)
     {
-        if (!_isActive || !_validTargets.Contains(target))
+        if (_state != SelectionState.Active || !_validTargets.Contains(target))
         {
             GD.Print("Click on invalid or inactive target ignored");
             return;
@@ -272,5 +290,5 @@ public partial class TargetSelectionUI : Node
     public Battler GetCurrentTarget()
         => (_currentIndex >= 0 && _currentIndex < _validTargets.Count) ? _validTargets[_currentIndex] : null;
 
-    public bool IsActive() => _isActive;
+    public bool IsActive() => _state == SelectionState.Active;
 }
