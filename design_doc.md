@@ -46,6 +46,7 @@ Outside of scope but cool ideas:
 ## Allowing player to test new team comps
 * Fundamentally I want the player to play around with many team comps and synergies
   * level dependent buffs and abilities
+  * Allow exp funneling to other (level up gathering party)
 * punish same strategy over and over again
 
 

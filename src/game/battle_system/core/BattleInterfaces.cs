@@ -2,16 +2,16 @@ using System.Collections.Generic;
 using Godot;
 
 
-public interface IEffectBuilder
-{
-    string EffectName { get; }
-    IEffect Build(EffectDef def);
-}
+// public interface IEffectBuilder
+// {
+//     string EffectName { get; }
+//     IEffect Build(EffectDef def);
+// }
 
-public interface IEffectFactory
-{
-    IEffect Create(EffectDef def);
-}
+// public interface IEffectFactory
+// {
+//     IEffect Create(EffectDef def);
+// }
 
 public interface IDamageCalculator
 {
